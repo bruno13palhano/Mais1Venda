@@ -1,4 +1,4 @@
-package com.bruno13palhano.mais1venda.ui.screens.login.presenter
+package com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.ui.screens.components.CircularProgress
-import com.bruno13palhano.mais1venda.ui.screens.login.viewmodel.LoginViewModel
+import com.bruno13palhano.mais1venda.ui.screens.authentication.login.viewmodel.LoginViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 
 @Composable
