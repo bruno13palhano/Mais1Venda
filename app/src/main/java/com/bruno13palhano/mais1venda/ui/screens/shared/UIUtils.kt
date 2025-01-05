@@ -11,10 +11,11 @@ import kotlinx.coroutines.flow.Flow
 fun <T> rememberFlowWithLifecycle(
     flow: Flow<T>,
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
-    minActiveState: Lifecycle.State = Lifecycle.State.STARTED
-): Flow<T> = remember(flow, lifecycle) {
-    flow.flowWithLifecycle(
-        lifecycle = lifecycle,
-        minActiveState = minActiveState
-    )
-}
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+): Flow<T> =
+    remember(flow, lifecycle) {
+        flow.flowWithLifecycle(
+            lifecycle = lifecycle,
+            minActiveState = minActiveState,
+        )
+    }

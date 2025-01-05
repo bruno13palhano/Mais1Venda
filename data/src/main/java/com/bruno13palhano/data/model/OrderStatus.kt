@@ -12,5 +12,5 @@ enum class OrderStatus {
     DELIVERED,
     PICKED_UP,
     CANCELED,
-    FINISHED
+    FINISHED,
 }

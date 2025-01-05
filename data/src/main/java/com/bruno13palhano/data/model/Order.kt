@@ -7,5 +7,5 @@ data class Order(
     val orderDate: Long,
     val deliveryDate: Long,
     val status: OrderStatus,
-    val timestamp: Long
+    val timestamp: Long,
 )

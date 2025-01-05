@@ -8,5 +8,5 @@ data class Product(
     val code: String,
     val quantity: Int,
     val exhibitToCatalog: Boolean,
-    val timestamp: Long
+    val timestamp: Long,
 )
