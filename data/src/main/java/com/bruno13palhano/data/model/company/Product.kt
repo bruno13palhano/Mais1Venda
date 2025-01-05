@@ -1,4 +1,4 @@
-package com.bruno13palhano.data.model
+package com.bruno13palhano.data.model.company
 
 data class Product(
     val name: String,
@@ -8,5 +8,5 @@ data class Product(
     val code: String,
     val quantity: Int,
     val exhibitToCatalog: Boolean,
-    val timestamp: Long,
+    val lastModifiedTimestamp: Long,
 )

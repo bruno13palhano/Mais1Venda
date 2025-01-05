@@ -1,4 +1,4 @@
-package com.bruno13palhano.data.model
+package com.bruno13palhano.data.model.shared
 
 enum class OrderStatus {
     AWAITING_PAYMENT,
