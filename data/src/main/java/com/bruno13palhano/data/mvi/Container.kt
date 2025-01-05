@@ -13,9 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 class Container<STATE, EFFECT>(
     initialState: STATE,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
     private val _state: MutableStateFlow<STATE> = MutableStateFlow(initialState)
     val state: StateFlow<STATE> = _state.asStateFlow()
@@ -40,7 +41,6 @@ class Container<STATE, EFFECT>(
     }
 
     companion object {
-        @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
         private val SINGLE_THREAD = newSingleThreadContext("SingleThread")
     }
 }
