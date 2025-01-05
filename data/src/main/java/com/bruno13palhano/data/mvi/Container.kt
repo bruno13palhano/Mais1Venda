@@ -1,7 +1,8 @@
 package com.bruno13palhano.data.mvi
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
 class Container<STATE, EFFECT>(
@@ -38,6 +40,7 @@ class Container<STATE, EFFECT>(
     }
 
     companion object {
-        private val SINGLE_THREAD = Dispatchers.IO.limitedParallelism(1)
+        @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
+        private val SINGLE_THREAD = newSingleThreadContext("SingleThread")
     }
 }
