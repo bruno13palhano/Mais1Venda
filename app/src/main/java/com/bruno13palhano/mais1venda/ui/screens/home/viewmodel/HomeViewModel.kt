@@ -1,4 +1,42 @@
 package com.bruno13palhano.mais1venda.ui.screens.home.viewmodel
 
-class HomeViewModel {
-}
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.mvi.Container
+import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeEvent
+import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeSideEffect
+import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.delay
+
+@HiltViewModel
+internal class HomeViewModel
+    @Inject
+    constructor() : ViewModel() {
+        val container =
+            Container<HomeState, HomeSideEffect>(
+                initialState = HomeState(),
+                scope = viewModelScope,
+            )
+
+        fun handleEvent(event: HomeEvent) {
+            when (event) {
+                HomeEvent.LoadOrders -> loadOrders()
+
+                HomeEvent.ToggleMenu -> navigateToHome()
+            }
+        }
+
+        private fun loadOrders() =
+            container.intent {
+                reduce { copy(isLoading = true) }
+                delay(3000)
+                reduce { copy(isLoading = false) }
+            }
+
+        private fun navigateToHome() =
+            container.intent {
+                postSideEffect(HomeSideEffect.ToggleMenu)
+            }
+    }
