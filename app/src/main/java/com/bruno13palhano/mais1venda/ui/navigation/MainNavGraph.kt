@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeRoute
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginRoute
+import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeRoute
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -39,4 +39,7 @@ internal sealed interface MainRoutes {
 
     @Serializable
     data object Login : MainRoutes
+
+    @Serializable
+    data object Settings : MainRoutes
 }
