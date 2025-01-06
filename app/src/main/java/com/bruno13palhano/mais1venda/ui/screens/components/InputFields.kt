@@ -27,7 +27,7 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    icon: @Composable (()-> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
     label: String,
     placeholder: String,
     isError: Boolean = false,
@@ -43,19 +43,19 @@ fun CustomTextField(
         label = {
             Text(
                 text = label,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         placeholder = {
             Text(
                 text = placeholder,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         singleLine = singleLine,
         readOnly = readOnly,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) })
+        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
     )
 }
 
@@ -65,13 +65,13 @@ fun CustomPasswordTextField(
     visibility: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
-    leadingIcon: @Composable (()-> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     togglePasswordVisibility: () -> Unit,
     label: String,
     placeholder: String,
     isError: Boolean = false,
     singleLine: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -84,14 +84,14 @@ fun CustomPasswordTextField(
                 IconButton(onClick = togglePasswordVisibility) {
                     Icon(
                         imageVector = Icons.Filled.Visibility,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             } else {
                 IconButton(onClick = togglePasswordVisibility) {
                     Icon(
                         imageVector = Icons.Filled.VisibilityOff,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -99,27 +99,29 @@ fun CustomPasswordTextField(
         label = {
             Text(
                 text = label,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         placeholder = {
             Text(
                 text = placeholder,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         singleLine = singleLine,
         readOnly = readOnly,
-        visualTransformation = if (visibility) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) })
+        visualTransformation =
+            if (visibility) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
     )
 }
 
@@ -128,7 +130,7 @@ fun CustomIntegerField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    leadingIcon: @Composable (()-> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     label: String,
     placeholder: String,
     isError: Boolean = false,
@@ -150,22 +152,23 @@ fun CustomIntegerField(
         label = {
             Text(
                 text = label,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         placeholder = {
             Text(
                 text = placeholder,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         singleLine = singleLine,
         readOnly = readOnly,
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Number
-        ),
-        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) })
+        keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number,
+            ),
+        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
     )
 }
 
@@ -174,12 +177,12 @@ fun CustomFloatField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (value: String) -> Unit,
-    leadingIcon: @Composable (()-> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     label: String,
     placeholder: String,
     isError: Boolean = false,
     singleLine: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
 ) {
     val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
     val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
@@ -198,22 +201,23 @@ fun CustomFloatField(
         label = {
             Text(
                 text = label,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         placeholder = {
             Text(
                 text = placeholder,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Decimal
-        ),
+        keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Decimal,
+            ),
         keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
         singleLine = singleLine,
-        readOnly = readOnly
+        readOnly = readOnly,
     )
 }
 
@@ -222,35 +226,36 @@ fun CustomClickField(
     modifier: Modifier = Modifier,
     value: String,
     onClick: () -> Unit,
-    leadingIcon: @Composable (()-> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     label: String,
     placeholder: String,
     singleLine: Boolean = true,
-    readOnly: Boolean = true
+    readOnly: Boolean = true,
 ) {
     OutlinedTextField(
-        modifier = modifier
-            .onFocusChanged { focusState ->
-                if (focusState.hasFocus) {
-                    onClick()
-                }
-            },
+        modifier =
+            modifier
+                .onFocusChanged { focusState ->
+                    if (focusState.hasFocus) {
+                        onClick()
+                    }
+                },
         value = value,
         onValueChange = {},
         leadingIcon = leadingIcon,
         label = {
             Text(
                 text = label,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         placeholder = {
             Text(
                 text = placeholder,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         },
         singleLine = singleLine,
-        readOnly = readOnly
+        readOnly = readOnly,
     )
 }
