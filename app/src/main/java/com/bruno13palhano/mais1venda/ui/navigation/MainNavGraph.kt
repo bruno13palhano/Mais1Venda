@@ -13,6 +13,8 @@ import kotlinx.serialization.Serializable
 internal fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    gesturesEnabled: (enabled: Boolean) -> Unit,
+    onIconMenuCLick: () -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -29,20 +31,16 @@ internal fun MainNavGraph(
             LoginRoute(
                 navigateToHome = { navController.navigate(MainRoutes.Home) },
                 navigateToForgotPassword = {},
-                navigateToCreateAccount = {}
+                navigateToCreateAccount = {},
             )
         }
 
-        composable<MainRoutes.ForgotPassword> {
-
-        }
-
-        composable<MainRoutes.CreateAccount> {
-
-        }
+        loginNavGraph(
+            navController = navController,
+            gesturesEnabled = gesturesEnabled,
+        )
 
         composable<MainRoutes.Settings> {
-
         }
     }
 }
@@ -53,12 +51,6 @@ internal sealed interface MainRoutes {
 
     @Serializable
     data object Login : MainRoutes
-
-    @Serializable
-    data object ForgotPassword : MainRoutes
-
-    @Serializable
-    data object CreateAccount : MainRoutes
 
     @Serializable
     data object Settings : MainRoutes
