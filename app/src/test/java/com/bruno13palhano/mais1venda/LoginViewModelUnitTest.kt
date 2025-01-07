@@ -27,119 +27,133 @@ internal class LoginViewModelUnitTest {
     }
 
     @Test
-    fun `test email changed`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test email changed`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val expected = "some@email"
+            val expected = "some@email"
 
-        val collectJob = launch {
-            viewModel.container.state.collect()
+            val collectJob =
+                launch {
+                    viewModel.container.state.collect()
+                }
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = expected))
+            advanceUntilIdle()
+
+            assertThat(expected).isEqualTo(viewModel.container.state.value.email)
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.EmailChanged(email = expected))
-        advanceUntilIdle()
-
-        assertThat(expected).isEqualTo(viewModel.container.state.value.email)
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test password changed`() = runTest {
-        val viewModel = LoginViewModel(TestCompanyRepository())
+    fun `test password changed`() =
+        runTest {
+            val viewModel = LoginViewModel(TestCompanyRepository())
 
-        val expected = "somePassword"
+            val expected = "somePassword"
 
-        val collectJob = launch {
-            viewModel.container.state.collect()
+            val collectJob =
+                launch {
+                    viewModel.container.state.collect()
+                }
+
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = expected))
+            advanceUntilIdle()
+
+            assertThat(viewModel.container.state.value.password).isEqualTo(expected)
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.PasswordChanged(password = expected))
-        advanceUntilIdle()
-
-        assertThat(viewModel.container.state.value.password).isEqualTo(expected)
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test toggle password visibility`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test toggle password visibility`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val collectJob = launch {
-            viewModel.container.state.collect()
+            val collectJob =
+                launch {
+                    viewModel.container.state.collect()
+                }
+
+            viewModel.handleEvent(LoginEvent.TogglePasswordVisibility)
+            advanceUntilIdle()
+
+            assertThat(viewModel.container.state.value.passwordVisibility).isEqualTo(true)
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.TogglePasswordVisibility)
-        advanceUntilIdle()
-
-        assertThat(viewModel.container.state.value.passwordVisibility).isEqualTo(true)
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test dismiss keyboard`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test dismiss keyboard`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val collectJob = launch {
-            viewModel.container.sideEffect.collect {
-                assertThat(it).isEqualTo(LoginSideEffect.DismissKeyboard)
-            }
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(LoginSideEffect.DismissKeyboard)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.DismissKeyboard)
+            advanceUntilIdle()
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.DismissKeyboard)
-        advanceUntilIdle()
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test forgot password`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test forgot password`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val collectJob = launch {
-            viewModel.container.sideEffect.collect {
-                assertThat(it).isEqualTo(LoginSideEffect.NavigateToForgotPassword)
-            }
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(LoginSideEffect.NavigateToForgotPassword)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.ForgotPassword)
+            advanceUntilIdle()
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.ForgotPassword)
-        advanceUntilIdle()
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test create account`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test create account`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val collectJob = launch {
-            viewModel.container.sideEffect.collect {
-                println(it)
-                assertThat(it).isEqualTo(LoginSideEffect.NavigateToCreateAccount)
-            }
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        println(it)
+                        assertThat(it).isEqualTo(LoginSideEffect.NavigateToCreateAccount)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.CreateAccount)
+            advanceUntilIdle()
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.CreateAccount)
-        advanceUntilIdle()
-
-        collectJob.cancel()
-    }
 
     @Test
-    fun `test login`() = runTest {
-        val viewModel = LoginViewModel(companyRepository)
+    fun `test login`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
 
-        val collectJob = launch {
-            viewModel.container.sideEffect.collect {
-                assertThat(it).isEqualTo(LoginSideEffect.NavigateToHome)
-            }
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(LoginSideEffect.NavigateToHome)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
+            advanceUntilIdle()
+
+            collectJob.cancel()
         }
-
-        viewModel.handleEvent(LoginEvent.Login)
-        advanceUntilIdle()
-
-        collectJob.cancel()
-    }
 }
