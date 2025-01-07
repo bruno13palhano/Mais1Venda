@@ -28,8 +28,17 @@ internal fun MainNavGraph(
         composable<MainRoutes.Login> {
             LoginRoute(
                 navigateToHome = { navController.navigate(MainRoutes.Home) },
-                navigateToForgotPassword = {}
+                navigateToForgotPassword = {},
+                navigateToCreateAccount = {}
             )
+        }
+
+        composable<MainRoutes.ForgotPassword> {
+
+        }
+
+        composable<MainRoutes.CreateAccount> {
+
         }
 
         composable<MainRoutes.Settings> {
@@ -44,6 +53,12 @@ internal sealed interface MainRoutes {
 
     @Serializable
     data object Login : MainRoutes
+
+    @Serializable
+    data object ForgotPassword : MainRoutes
+
+    @Serializable
+    data object CreateAccount : MainRoutes
 
     @Serializable
     data object Settings : MainRoutes
