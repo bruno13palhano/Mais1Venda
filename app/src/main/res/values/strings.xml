@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Mais1Venda</string>
+    <string name="email">Email</string>
+    <string name="enter_email">Enter email</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="login">Login</string>
+    <string name="settings">Settings</string>
 </resources>
