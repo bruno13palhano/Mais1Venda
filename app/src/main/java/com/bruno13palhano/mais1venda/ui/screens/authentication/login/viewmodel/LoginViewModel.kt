@@ -28,6 +28,12 @@ internal class LoginViewModel
 
                 is LoginEvent.PasswordChanged -> passwordChanged(event.password)
 
+                LoginEvent.TogglePasswordVisibility -> togglePasswordVisibility()
+
+                LoginEvent.DismissKeyboard -> dismissKeyboard()
+
+                LoginEvent.ForgotPassword -> forgotPassword()
+
                 LoginEvent.CreateAccount -> createAccount()
 
                 LoginEvent.Login -> login()
@@ -44,17 +50,24 @@ internal class LoginViewModel
                 reduce { copy(password = password) }
             }
 
+        private fun togglePasswordVisibility() =
+            container.intent {
+                reduce { copy(passwordVisibility = !passwordVisibility) }
+            }
+
+        private fun dismissKeyboard() =
+            container.intent {
+                postSideEffect(LoginSideEffect.DismissKeyboard)
+            }
+
+        private fun forgotPassword() =
+            container.intent {
+                postSideEffect(LoginSideEffect.NavigateToForgotPassword)
+            }
+
         private fun createAccount() =
             container.intent {
-                //Extract to a function and implement validation logic
-                if (state.value.email.isNotBlank() && state.value.password.isNotBlank()) {
-                    reduce { copy(isLoading = true) }
-                    //get result from repository
-                    postSideEffect(LoginSideEffect.NavigateToHome)
-                    reduce { copy(isLoading = false) }
-                } else {
-                    postSideEffect(LoginSideEffect.ShowError(message = "Email and password are required"))
-                }
+                postSideEffect(LoginSideEffect.NavigateToCreateAccount)
             }
 
         private fun login() =
