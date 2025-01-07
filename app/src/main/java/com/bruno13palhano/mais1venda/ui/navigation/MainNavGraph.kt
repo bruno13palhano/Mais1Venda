@@ -28,7 +28,12 @@ internal fun MainNavGraph(
         composable<MainRoutes.Login> {
             LoginRoute(
                 navigateToHome = { navController.navigate(MainRoutes.Home) },
+                navigateToForgotPassword = {}
             )
+        }
+
+        composable<MainRoutes.Settings> {
+
         }
     }
 }
