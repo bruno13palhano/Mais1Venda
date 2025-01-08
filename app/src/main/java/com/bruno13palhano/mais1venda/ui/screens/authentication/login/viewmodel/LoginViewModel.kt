@@ -57,17 +57,17 @@ internal class LoginViewModel
 
         private fun dismissKeyboard() =
             container.intent {
-                postSideEffect(LoginSideEffect.DismissKeyboard)
+                postSideEffect(effect = LoginSideEffect.DismissKeyboard)
             }
 
         private fun forgotPassword() =
             container.intent {
-                postSideEffect(LoginSideEffect.NavigateToForgotPassword)
+                postSideEffect(effect = LoginSideEffect.NavigateToForgotPassword)
             }
 
         private fun createAccount() =
             container.intent {
-                postSideEffect(LoginSideEffect.NavigateToCreateAccount)
+                postSideEffect(effect = LoginSideEffect.NavigateToCreateAccount)
             }
 
         private fun login() =
@@ -76,22 +76,34 @@ internal class LoginViewModel
                 val password = state.value.password
 
                 if (!isEmailValid(email = email)) {
-                    return@intent postSideEffect(LoginSideEffect.ShowError(message = "Invalid email format"))
+                    return@intent postSideEffect(
+                        effect = LoginSideEffect.ShowError(message = "Invalid email format"),
+                    )
                 }
 
                 if (!isPasswordValid(password = password)) {
-                    return@intent postSideEffect(LoginSideEffect.ShowError(message = "Password must be at least 8 characters long"))
+                    return@intent postSideEffect(
+                        effect =
+                            LoginSideEffect.ShowError(
+                                message = "Password must be at least 8 characters long",
+                            ),
+                    )
                 }
 
                 reduce { copy(isLoading = true) }
                 val result =
-                    companyRepository.authenticate(email, password)
+                    companyRepository.authenticate(email = email, password = password)
                 if (result) {
-                    postSideEffect(LoginSideEffect.NavigateToHome)
+                    postSideEffect(effect = LoginSideEffect.NavigateToHome)
                     reduce { copy(isLoading = false) }
                 } else {
                     reduce { copy(isLoading = false) }
-                    postSideEffect(LoginSideEffect.ShowError(message = "Email or password is incorrect"))
+                    postSideEffect(
+                        effect =
+                            LoginSideEffect.ShowError(
+                                message = "Email or password is incorrect",
+                            ),
+                    )
                 }
             }
 

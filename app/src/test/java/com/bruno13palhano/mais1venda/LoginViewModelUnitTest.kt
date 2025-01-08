@@ -150,8 +150,10 @@ internal class LoginViewModelUnitTest {
             val collectJob =
                 launch {
                     viewModel.container.sideEffect.collect {
-                        assertThat(it).isEqualTo(LoginSideEffect.ShowError(
-                            message = "Invalid email format")
+                        assertThat(it).isEqualTo(
+                            LoginSideEffect.ShowError(
+                                message = "Invalid email format",
+                            ),
                         )
                     }
                 }
@@ -173,8 +175,10 @@ internal class LoginViewModelUnitTest {
             val collectJob =
                 launch {
                     viewModel.container.sideEffect.collect {
-                        assertThat(it).isEqualTo(LoginSideEffect.ShowError(
-                            message = "Password must be at least 8 characters long")
+                        assertThat(it).isEqualTo(
+                            LoginSideEffect.ShowError(
+                                message = "Password must be at least 8 characters long",
+                            ),
                         )
                     }
                 }
@@ -198,8 +202,8 @@ internal class LoginViewModelUnitTest {
                     viewModel.container.sideEffect.collect {
                         assertThat(it).isEqualTo(
                             LoginSideEffect.ShowError(
-                                message = "Email or password is incorrect"
-                            )
+                                message = "Email or password is incorrect",
+                            ),
                         )
                     }
                 }
