@@ -21,11 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -122,10 +119,6 @@ private fun LoginContent(
                         .fillMaxSize(),
             )
         } else {
-            // workaround needed to TextField work properly
-            var email by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-
             Column(
                 modifier =
                     Modifier
@@ -137,13 +130,11 @@ private fun LoginContent(
                     Modifier
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
-                    value = email,
-                    onValueChange = { newEmail ->
-                        email = newEmail
-                        onEvent(LoginEvent.EmailChanged(email = newEmail))
-                    },
+                    value = state.email,
+                    onValueChange = { email -> onEvent(LoginEvent.EmailChanged(email = email)) },
                     label = stringResource(R.string.email),
                     placeholder = stringResource(R.string.enter_email),
+                    isError = state.emailError,
                 )
 
                 CustomPasswordTextField(
@@ -151,14 +142,12 @@ private fun LoginContent(
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
                     visibility = state.passwordVisibility,
-                    value = password,
-                    onValueChange = { newPassword ->
-                        password = newPassword
-                        onEvent(LoginEvent.PasswordChanged(password = newPassword))
-                    },
+                    value = state.password,
+                    onValueChange = { password -> onEvent(LoginEvent.PasswordChanged(password = password)) },
                     togglePasswordVisibility = { onEvent(LoginEvent.TogglePasswordVisibility) },
                     label = stringResource(R.string.password),
                     placeholder = stringResource(R.string.enter_password),
+                    isError = state.passwordError,
                 )
             }
         }

@@ -8,6 +8,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -134,6 +135,49 @@ internal class LoginViewModelUnitTest {
                 }
 
             viewModel.handleEvent(LoginEvent.CreateAccount)
+            advanceUntilIdle()
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun `Login Event with invalid email should set emailError to true`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "someemail.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "somePassword"))
+
+            val collectJob =
+                launch {
+                    viewModel.container.state.collectLatest {
+                        assertThat(it.emailError).isEqualTo(true)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
+            advanceUntilIdle()
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun `Login Event with invalid password should set passwordError to true`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "some@email.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "1234567"))
+
+            val collectJob =
+                launch {
+                    viewModel.container.state.collectLatest {
+                        println(it)
+                        assertThat(it.passwordError).isEqualTo(true)
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
             advanceUntilIdle()
 
             collectJob.cancel()

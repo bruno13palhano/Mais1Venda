@@ -76,28 +76,34 @@ internal class LoginViewModel
                 val password = state.value.password
 
                 if (!isEmailValid(email = email)) {
-                    return@intent postSideEffect(
+                    reduce { copy(emailError = true) }
+                    postSideEffect(
                         effect = LoginSideEffect.ShowError(message = "Invalid email format"),
                     )
+
+                    return@intent
                 }
 
                 if (!isPasswordValid(password = password)) {
-                    return@intent postSideEffect(
+                    reduce { copy(passwordError = true) }
+                    postSideEffect(
                         effect =
                             LoginSideEffect.ShowError(
                                 message = "Password must be at least 8 characters long",
                             ),
                     )
+
+                    return@intent
                 }
 
-                reduce { copy(isLoading = true) }
+                reduce { copy(emailError = false, passwordError = false, isLoading = true) }
                 val result =
                     companyRepository.authenticate(email = email, password = password)
                 if (result) {
                     postSideEffect(effect = LoginSideEffect.NavigateToHome)
-                    reduce { copy(isLoading = false) }
+                    reduce { copy(isLoading = false, isError = false) }
                 } else {
-                    reduce { copy(isLoading = false) }
+                    reduce { copy(isLoading = false, isError = true) }
                     postSideEffect(
                         effect =
                             LoginSideEffect.ShowError(

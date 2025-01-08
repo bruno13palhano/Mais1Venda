@@ -6,6 +6,8 @@ import androidx.compose.runtime.Immutable
 internal data class LoginState(
     val email: String = "",
     val password: String = "",
+    val emailError: Boolean = false,
+    val passwordError: Boolean = false,
     val passwordVisibility: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
