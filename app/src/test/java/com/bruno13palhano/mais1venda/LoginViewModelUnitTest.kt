@@ -27,7 +27,7 @@ internal class LoginViewModelUnitTest {
     }
 
     @Test
-    fun `test email changed`() =
+    fun `EmailChanged Event should update email property in the State with the provided email`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
 
@@ -47,7 +47,7 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test password changed`() =
+    fun `PasswordChanged Event should update password property in the State with the provided password`() =
         runTest {
             val viewModel = LoginViewModel(TestCompanyRepository())
 
@@ -67,7 +67,7 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test toggle password visibility`() =
+    fun `TogglePasswordVisibility Event should toggle passwordVisibility property in the State`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
 
@@ -85,7 +85,7 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test dismiss keyboard`() =
+    fun `DismissKeyboard Event should emit DismissKeyboard side effect`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
 
@@ -103,7 +103,7 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test forgot password`() =
+    fun `ForgotPassword Event should emit NavigateToForgotPassword side effect`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
 
@@ -121,7 +121,7 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test create account`() =
+    fun `CreateAccount Event should emit NavigateToCreateAccount side effect`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
 
@@ -140,9 +140,83 @@ internal class LoginViewModelUnitTest {
         }
 
     @Test
-    fun `test login`() =
+    fun `Login Event with invalid email should emit ShowError side effect`() =
         runTest {
             val viewModel = LoginViewModel(companyRepository)
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "someemail.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "somePassword"))
+
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(LoginSideEffect.ShowError(
+                            message = "Invalid email format")
+                        )
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
+            advanceUntilIdle()
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun `Login Event with invalid password should emit ShowError side effect`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "some@email.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "1234567"))
+
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(LoginSideEffect.ShowError(
+                            message = "Password must be at least 8 characters long")
+                        )
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
+            advanceUntilIdle()
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun `Login Event with valid email and password with invalid response should emit ShowError side effect`() =
+        runTest {
+            val viewModel = LoginViewModel(TestCompanyRepository(shouldReturnError = true))
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "some@email.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "somePassword"))
+
+            val collectJob =
+                launch {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(
+                            LoginSideEffect.ShowError(
+                                message = "Email or password is incorrect"
+                            )
+                        )
+                    }
+                }
+
+            viewModel.handleEvent(LoginEvent.Login)
+            advanceUntilIdle()
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun `Login Event with valid email and password with valid response should emit NavigateToHome side effect`() =
+        runTest {
+            val viewModel = LoginViewModel(companyRepository)
+
+            viewModel.handleEvent(LoginEvent.EmailChanged(email = "some@email.com"))
+            viewModel.handleEvent(LoginEvent.PasswordChanged(password = "somePassword"))
 
             val collectJob =
                 launch {

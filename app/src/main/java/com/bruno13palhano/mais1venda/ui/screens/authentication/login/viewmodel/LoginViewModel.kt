@@ -72,8 +72,20 @@ internal class LoginViewModel
 
         private fun login() =
             container.intent {
+                val email = state.value.email
+                val password = state.value.password
+
+                if (!isEmailValid(email = email)) {
+                    return@intent postSideEffect(LoginSideEffect.ShowError(message = "Invalid email format"))
+                }
+
+                if (!isPasswordValid(password = password)) {
+                    return@intent postSideEffect(LoginSideEffect.ShowError(message = "Password must be at least 8 characters long"))
+                }
+
                 reduce { copy(isLoading = true) }
-                val result = companyRepository.authenticate(state.value.email, state.value.password)
+                val result =
+                    companyRepository.authenticate(email, password)
                 if (result) {
                     postSideEffect(LoginSideEffect.NavigateToHome)
                     reduce { copy(isLoading = false) }
@@ -82,4 +94,13 @@ internal class LoginViewModel
                     postSideEffect(LoginSideEffect.ShowError(message = "Email or password is incorrect"))
                 }
             }
+
+        private fun isEmailValid(email: String): Boolean {
+            val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)"
+            return email.matches(emailRegex.toRegex())
+        }
+
+        private fun isPasswordValid(password: String): Boolean {
+            return password.length >= 8
+        }
     }
