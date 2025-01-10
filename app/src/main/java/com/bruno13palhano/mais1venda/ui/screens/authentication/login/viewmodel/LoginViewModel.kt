@@ -7,6 +7,8 @@ import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginEvent
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginState
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isEmailValid
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isPasswordValid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -112,13 +114,4 @@ internal class LoginViewModel
                     )
                 }
             }
-
-        private fun isEmailValid(email: String): Boolean {
-            val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)"
-            return email.matches(emailRegex.toRegex())
-        }
-
-        private fun isPasswordValid(password: String): Boolean {
-            return password.length >= 8
-        }
     }
