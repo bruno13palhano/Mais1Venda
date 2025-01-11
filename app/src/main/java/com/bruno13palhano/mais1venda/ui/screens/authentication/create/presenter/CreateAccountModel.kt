@@ -10,7 +10,6 @@ internal data class CreateAccountState(
     val address: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val confirmPasswordError: Boolean = false,
     val passwordVisibility: Boolean = false,
     val confirmPasswordVisibility: Boolean = false,
     val isLoading: Boolean = false,
