@@ -8,3 +8,14 @@ fun isEmailValid(email: String): Boolean {
 fun isPasswordValid(password: String): Boolean {
     return password.length >= 8
 }
+
+fun isPhoneValid(phone: String): Boolean {
+    return phone.length == 11
+}
+
+fun isConfirmPasswordValid(
+    password: String,
+    confirmPassword: String,
+): Boolean {
+    return password == confirmPassword
+}
