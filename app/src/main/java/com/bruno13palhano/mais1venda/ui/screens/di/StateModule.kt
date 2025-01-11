@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object StateModule {
-
     @Provides
     @Singleton
     fun bindLoginState() = LoginState()
