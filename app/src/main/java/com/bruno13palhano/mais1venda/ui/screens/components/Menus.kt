@@ -60,21 +60,19 @@ internal fun DrawerMenu(
         gesturesEnabled = gesturesEnabled,
         drawerContent = {
             ModalDrawerSheet(
-                modifier =
-                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        Modifier.fillMaxWidth(.78F)
-                    } else {
-                        Modifier
-                    },
+                modifier = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    Modifier.fillMaxWidth(.78F)
+                } else {
+                    Modifier
+                },
                 drawerShape = RectangleShape,
             ) {
                 LazyColumn {
                     stickyHeader {
                         Text(
-                            modifier =
-                                Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth(),
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .fillMaxWidth(),
                             text = stringResource(id = R.string.app_name),
                             textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.titleLarge,
@@ -102,10 +100,9 @@ internal fun DrawerMenu(
                                     drawerState.close()
                                 }
                             },
-                            modifier =
-                                Modifier
-                                    .padding(top = 4.dp, bottom = 4.dp, end = 8.dp)
-                                    .height(52.dp),
+                            modifier = Modifier
+                                .padding(top = 4.dp, bottom = 4.dp, end = 8.dp)
+                                .height(52.dp),
                         )
                     }
                 }

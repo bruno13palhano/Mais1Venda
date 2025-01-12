@@ -16,5 +16,7 @@ internal abstract class RepositoryModule {
     @Binds
     @CompanyRep
     @Singleton
-    abstract fun bindCompanyRepository(companyRepositoryImpl: CompanyRepositoryImpl): CompanyRepository
+    abstract fun bindCompanyRepository(
+        companyRepositoryImpl: CompanyRepositoryImpl,
+    ): CompanyRepository
 }

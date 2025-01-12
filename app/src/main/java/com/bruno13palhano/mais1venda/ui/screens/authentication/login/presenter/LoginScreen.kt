@@ -102,10 +102,9 @@ private fun LoginContent(
     onEvent: (LoginEvent) -> Unit,
 ) {
     Scaffold(
-        modifier =
-            Modifier
-                .clickableWithoutRipple { onEvent(LoginEvent.DismissKeyboard) }
-                .consumeWindowInsets(WindowInsets.safeDrawing),
+        modifier = Modifier
+            .clickableWithoutRipple { onEvent(LoginEvent.DismissKeyboard) }
+            .consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.login)) },
@@ -115,22 +114,20 @@ private fun LoginContent(
     ) {
         if (state.isLoading) {
             CircularProgress(
-                modifier =
-                    Modifier
-                        .padding(it)
-                        .fillMaxSize(),
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
             )
         } else {
             Column(
-                modifier =
-                    Modifier
-                        .padding(it)
-                        .consumeWindowInsets(it)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .padding(it)
+                    .consumeWindowInsets(it)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 CustomTextField(
-                    Modifier
+                    modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
                     value = state.email,
@@ -141,12 +138,16 @@ private fun LoginContent(
                 )
 
                 CustomPasswordTextField(
-                    Modifier
+                    modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .fillMaxWidth(),
                     visibility = state.passwordVisibility,
                     value = state.password,
-                    onValueChange = { password -> onEvent(LoginEvent.PasswordChanged(password = password)) },
+                    onValueChange = { password ->
+                        onEvent(
+                            LoginEvent.PasswordChanged(password = password),
+                        )
+                    },
                     togglePasswordVisibility = { onEvent(LoginEvent.TogglePasswordVisibility) },
                     label = stringResource(R.string.password),
                     placeholder = stringResource(R.string.enter_password),
@@ -167,10 +168,9 @@ private fun LoginContent(
                 }
 
                 Button(
-                    modifier =
-                        Modifier
-                            .padding(start = 24.dp, top = 32.dp, bottom = 8.dp, end = 24.dp)
-                            .fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(start = 24.dp, top = 32.dp, bottom = 8.dp, end = 24.dp)
+                        .fillMaxWidth(),
                     onClick = { onEvent(LoginEvent.Login) },
                 ) {
                     Text(text = stringResource(id = R.string.login))
@@ -181,28 +181,25 @@ private fun LoginContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     HorizontalDivider(
-                        modifier =
-                            Modifier
-                                .padding(12.dp)
-                                .weight(1f),
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .weight(1f),
                     )
                     Text(
                         text = stringResource(R.string.or),
                         fontWeight = FontWeight.Medium,
                     )
                     HorizontalDivider(
-                        modifier =
-                            Modifier
-                                .padding(12.dp)
-                                .weight(1f),
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .weight(1f),
                     )
                 }
 
                 Button(
-                    modifier =
-                        Modifier
-                            .padding(start = 24.dp, top = 8.dp, bottom = 32.dp, end = 24.dp)
-                            .fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(start = 24.dp, top = 8.dp, bottom = 32.dp, end = 24.dp)
+                        .fillMaxWidth(),
                     onClick = { onEvent(LoginEvent.CreateAccount) },
                 ) {
                     Text(text = stringResource(id = R.string.create_account))

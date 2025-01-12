@@ -23,10 +23,7 @@ import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 import kotlin.random.Random
 
 @Composable
-internal fun HomeRoute(
-    navigateToLogin: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
+internal fun HomeRoute(navigateToLogin: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
     val state = viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
@@ -55,10 +52,7 @@ internal fun HomeRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeContent(
-    state: HomeState,
-    onEvent: (HomeEvent) -> Unit,
-) {
+private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -69,18 +63,16 @@ private fun HomeContent(
     ) {
         if (state.isLoading) {
             CircularProgressIndicator(
-                modifier =
-                    Modifier
-                        .padding(it)
-                        .fillMaxSize(),
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
             )
         } else {
             Column(
-                modifier =
-                    Modifier
-                        .padding(it)
-                        .consumeWindowInsets(it)
-                        .verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .padding(it)
+                    .consumeWindowInsets(it)
+                    .verticalScroll(rememberScrollState()),
             ) {
             }
         }

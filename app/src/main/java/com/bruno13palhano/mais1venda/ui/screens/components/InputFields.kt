@@ -110,17 +110,16 @@ fun CustomPasswordTextField(
         },
         singleLine = singleLine,
         readOnly = readOnly,
-        visualTransformation =
-            if (visibility) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
+        visualTransformation = if (visibility) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
         keyboardOptions =
-            KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-            ),
+        KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
+        ),
         keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
     )
 }
@@ -163,11 +162,10 @@ fun CustomIntegerField(
         },
         singleLine = singleLine,
         readOnly = readOnly,
-        keyboardOptions =
-            KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number,
-            ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Number,
+        ),
         keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
     )
 }
@@ -210,11 +208,10 @@ fun CustomFloatField(
                 fontStyle = FontStyle.Italic,
             )
         },
-        keyboardOptions =
-            KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Decimal,
-            ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Decimal,
+        ),
         keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
         singleLine = singleLine,
         readOnly = readOnly,
@@ -233,13 +230,12 @@ fun CustomClickField(
     readOnly: Boolean = true,
 ) {
     OutlinedTextField(
-        modifier =
-            modifier
-                .onFocusChanged { focusState ->
-                    if (focusState.hasFocus) {
-                        onClick()
-                    }
-                },
+        modifier = modifier
+            .onFocusChanged { focusState ->
+                if (focusState.hasFocus) {
+                    onClick()
+                }
+            },
         value = value,
         onValueChange = {},
         leadingIcon = leadingIcon,

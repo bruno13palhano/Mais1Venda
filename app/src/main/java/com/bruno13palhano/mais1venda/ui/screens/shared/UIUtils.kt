@@ -44,52 +44,49 @@ private fun rememberIsKeyboardOpen(): State<Boolean> {
     }
 }
 
-fun Modifier.clearFocusOnKeyboardDismiss(): Modifier =
-    composed {
-        var isFocused by remember { mutableStateOf(false) }
-        var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
+fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
+    var isFocused by remember { mutableStateOf(false) }
+    var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
 
-        if (isFocused) {
-            val isKeyboardOpen by rememberIsKeyboardOpen()
+    if (isFocused) {
+        val isKeyboardOpen by rememberIsKeyboardOpen()
 
-            val focusManager = LocalFocusManager.current
-            LaunchedEffect(key1 = isKeyboardOpen) {
-                if (isKeyboardOpen) {
-                    keyboardAppearedSinceLastFocused = true
-                } else if (keyboardAppearedSinceLastFocused) {
-                    focusManager.clearFocus()
-                }
-            }
-        }
-
-        onFocusEvent {
-            if (isFocused != it.isFocused) {
-                isFocused = it.isFocused
-                if (isFocused) {
-                    keyboardAppearedSinceLastFocused = false
-                }
+        val focusManager = LocalFocusManager.current
+        LaunchedEffect(key1 = isKeyboardOpen) {
+            if (isKeyboardOpen) {
+                keyboardAppearedSinceLastFocused = true
+            } else if (keyboardAppearedSinceLastFocused) {
+                focusManager.clearFocus()
             }
         }
     }
 
-fun Modifier.clickableWithoutRipple(onClick: () -> Unit): Modifier =
-    composed {
-        clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() },
-            onClick = onClick,
-        )
+    onFocusEvent {
+        if (isFocused != it.isFocused) {
+            isFocused = it.isFocused
+            if (isFocused) {
+                keyboardAppearedSinceLastFocused = false
+            }
+        }
     }
+}
+
+fun Modifier.clickableWithoutRipple(onClick: () -> Unit): Modifier = composed {
+    clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() },
+        onClick = onClick,
+    )
+}
 
 @Composable
 fun <T> rememberFlowWithLifecycle(
     flow: Flow<T>,
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-): Flow<T> =
-    remember(flow, lifecycle) {
-        flow.flowWithLifecycle(
-            lifecycle = lifecycle,
-            minActiveState = minActiveState,
-        )
-    }
+): Flow<T> = remember(flow, lifecycle) {
+    flow.flowWithLifecycle(
+        lifecycle = lifecycle,
+        minActiveState = minActiveState,
+    )
+}

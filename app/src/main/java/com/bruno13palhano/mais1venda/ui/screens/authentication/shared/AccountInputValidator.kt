@@ -13,9 +13,6 @@ fun isPhoneValid(phone: String): Boolean {
     return phone.length == 11
 }
 
-fun isConfirmPasswordValid(
-    password: String,
-    confirmPassword: String,
-): Boolean {
+fun isConfirmPasswordValid(password: String, confirmPassword: String): Boolean {
     return password == confirmPassword
 }

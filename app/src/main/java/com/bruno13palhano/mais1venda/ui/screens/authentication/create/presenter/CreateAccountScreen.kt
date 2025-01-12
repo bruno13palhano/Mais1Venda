@@ -80,11 +80,10 @@ private fun CreateAccountContent(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
     ) {
         Column(
-            modifier =
-                Modifier
-                    .padding(it)
-                    .consumeWindowInsets(it)
-                    .verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .padding(it)
+                .consumeWindowInsets(it)
+                .verticalScroll(rememberScrollState()),
         ) {
         }
     }
@@ -96,7 +95,7 @@ private fun CreateAccountContentPreview() {
     MaterialTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             CreateAccountContent(
                 state = CreateAccountState(),
