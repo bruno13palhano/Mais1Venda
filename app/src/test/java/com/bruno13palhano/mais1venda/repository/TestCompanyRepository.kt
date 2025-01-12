@@ -11,4 +11,14 @@ internal class TestCompanyRepository(
     ): Boolean {
         return !shouldReturnError
     }
+
+    override suspend fun createAccount(
+        email: String,
+        password: String,
+        companyName: String,
+        phone: String,
+        address: String,
+    ): Boolean {
+        return !shouldReturnError
+    }
 }
