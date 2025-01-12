@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.viewmodel.CreateAccountViewModel
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.getErrorMessages
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,7 @@ internal fun CreateAccountRoute(
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val errorMessages = getErrorMessages()
 
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->
@@ -54,11 +56,13 @@ internal fun CreateAccountRoute(
                 CreateAccountSideEffect.NavigateBack -> navigateBack()
 
                 is CreateAccountSideEffect.ShowError -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = sideEffect.codeError.name,
-                            withDismissAction = true,
-                        )
+                    errorMessages[sideEffect.codeError]?.let { message ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = message,
+                                withDismissAction = true,
+                            )
+                        }
                     }
                 }
             }

@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.R
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.viewmodel.LoginViewModel
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.getErrorMessages
 import com.bruno13palhano.mais1venda.ui.screens.components.CircularProgress
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomPasswordTextField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomTextField
@@ -60,6 +61,7 @@ internal fun LoginRoute(
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val errorMessages = getErrorMessages()
 
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->
@@ -76,11 +78,13 @@ internal fun LoginRoute(
                 }
 
                 is LoginSideEffect.ShowError -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = sideEffect.codeError.name,
-                            withDismissAction = true,
-                        )
+                    errorMessages[sideEffect.codeError]?.let { message ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = message,
+                                withDismissAction = true,
+                            )
+                        }
                     }
                 }
             }

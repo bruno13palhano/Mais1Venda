@@ -9,4 +9,13 @@
     <string name="create_account">Create account</string>
     <string name="forgot_your_password">Forgot password?</string>
     <string name="or">or</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Password must be at least 8 characters</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="invalid_company_name">Invalid company name</string>
+    <string name="invalid_phone">Invalid phone</string>
+    <string name="invalid_address">Invalid address</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+    <string name="empty_fields">All fields must be filled</string>
+    <string name="error_creating_account">Error creating account</string>
 </resources>
