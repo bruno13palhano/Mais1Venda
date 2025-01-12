@@ -1,6 +1,7 @@
 package com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter
 
 import androidx.compose.runtime.Immutable
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 
 @Immutable
 internal data class CreateAccountState(
@@ -49,5 +50,5 @@ internal sealed interface CreateAccountSideEffect {
 
     data object NavigateBack : CreateAccountSideEffect
 
-    data class ShowError(val message: String) : CreateAccountSideEffect
+    data class ShowError(val codeError: CodeError) : CreateAccountSideEffect
 }

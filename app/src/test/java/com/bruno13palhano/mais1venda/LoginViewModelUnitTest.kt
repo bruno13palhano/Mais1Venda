@@ -4,6 +4,7 @@ import com.bruno13palhano.mais1venda.repository.TestCompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginEvent
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.viewmodel.LoginViewModel
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -153,9 +154,7 @@ internal class LoginViewModelUnitTest {
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
-                        LoginSideEffect.ShowError(
-                            message = "Invalid email format",
-                        ),
+                        LoginSideEffect.ShowError(codeError = CodeError.INVALID_EMAIL),
                     )
                 }
             },
@@ -175,9 +174,7 @@ internal class LoginViewModelUnitTest {
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
-                        LoginSideEffect.ShowError(
-                            message = "Password must be at least 8 characters long",
-                        ),
+                        LoginSideEffect.ShowError(codeError = CodeError.INVALID_PASSWORD),
                     )
                 }
             },
@@ -197,9 +194,7 @@ internal class LoginViewModelUnitTest {
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
-                        LoginSideEffect.ShowError(
-                            message = "Email or password is incorrect",
-                        ),
+                        LoginSideEffect.ShowError(codeError = CodeError.INVALID_CREDENTIALS),
                     )
                 }
             },

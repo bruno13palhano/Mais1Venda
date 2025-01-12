@@ -5,6 +5,7 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountState
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.viewmodel.CreateAccountViewModel
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -185,7 +186,7 @@ internal class CreateAccountViewModelTest {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
                         CreateAccountSideEffect.ShowError(
-                            message = "Invalid email format",
+                            codeError = CodeError.INVALID_EMAIL,
                         ),
                     )
                 }
@@ -209,9 +210,7 @@ internal class CreateAccountViewModelTest {
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
-                        CreateAccountSideEffect.ShowError(
-                            message = "Password must be at least 8 characters long",
-                        ),
+                        CreateAccountSideEffect.ShowError(codeError = CodeError.INVALID_PASSWORD),
                     )
                 }
             },
@@ -238,7 +237,7 @@ internal class CreateAccountViewModelTest {
                     viewModel.container.sideEffect.collect {
                         assertThat(it).isEqualTo(
                             CreateAccountSideEffect.ShowError(
-                                message = "Passwords do not match",
+                                codeError = CodeError.PASSWORD_MISMATCH,
                             ),
                         )
                     }
@@ -268,7 +267,7 @@ internal class CreateAccountViewModelTest {
                     viewModel.container.sideEffect.collect {
                         assertThat(it).isEqualTo(
                             CreateAccountSideEffect.ShowError(
-                                message = "Company name is required",
+                                codeError = CodeError.INVALID_COMPANY_NAME,
                             ),
                         )
                     }
@@ -297,7 +296,7 @@ internal class CreateAccountViewModelTest {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
                         CreateAccountSideEffect.ShowError(
-                            message = "Invalid phone number",
+                            codeError = CodeError.INVALID_PHONE,
                         ),
                     )
                 }
@@ -324,7 +323,7 @@ internal class CreateAccountViewModelTest {
                 viewModel.container.sideEffect.collect {
                     assertThat(it).isEqualTo(
                         CreateAccountSideEffect.ShowError(
-                            message = "Address is required",
+                            codeError = CodeError.INVALID_ADDRESS,
                         ),
                     )
                 }

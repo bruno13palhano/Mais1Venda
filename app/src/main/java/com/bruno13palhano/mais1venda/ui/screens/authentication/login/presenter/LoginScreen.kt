@@ -78,7 +78,7 @@ internal fun LoginRoute(
                 is LoginSideEffect.ShowError -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = sideEffect.message,
+                            message = sideEffect.codeError.name,
                             withDismissAction = true,
                         )
                     }

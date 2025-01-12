@@ -7,6 +7,7 @@ import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginEvent
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginState
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isEmailValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isPasswordValid
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -69,7 +70,9 @@ internal class LoginViewModel @Inject constructor(
 
         if (!isEmailValid(email = email)) {
             reduce { copy(emailError = true) }
-            postSideEffect(effect = LoginSideEffect.ShowError(message = "Invalid email format"))
+            postSideEffect(
+                effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_EMAIL),
+            )
 
             return@intent
         }
@@ -77,9 +80,7 @@ internal class LoginViewModel @Inject constructor(
         if (!isPasswordValid(password = password)) {
             reduce { copy(passwordError = true) }
             postSideEffect(
-                effect = LoginSideEffect.ShowError(
-                    message = "Password must be at least 8 characters long",
-                ),
+                effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_PASSWORD),
             )
 
             return@intent
@@ -94,7 +95,7 @@ internal class LoginViewModel @Inject constructor(
         } else {
             reduce { copy(isLoading = false, isError = true) }
             postSideEffect(
-                effect = LoginSideEffect.ShowError(message = "Email or password is incorrect"),
+                effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_CREDENTIALS),
             )
         }
     }

@@ -7,6 +7,7 @@ import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountEvent
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountState
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isConfirmPasswordValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isEmailValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isPasswordValid
@@ -19,11 +20,10 @@ internal class CreateAccountViewModel @Inject constructor(
     initialState: CreateAccountState,
     private val companyRepository: CompanyRepository,
 ) : ViewModel() {
-    val container =
-        Container<CreateAccountState, CreateAccountSideEffect>(
-            initialState = initialState,
-            scope = viewModelScope,
-        )
+    val container = Container<CreateAccountState, CreateAccountSideEffect>(
+        initialState = initialState,
+        scope = viewModelScope,
+    )
 
     fun handleEvent(event: CreateAccountEvent) {
         when (event) {
@@ -112,7 +112,7 @@ internal class CreateAccountViewModel @Inject constructor(
             reduce { copy(isError = true) }
             postSideEffect(
                 effect = CreateAccountSideEffect.ShowError(
-                    message = "Error creating account",
+                    codeError = CodeError.ERROR_CREATING_ACCOUNT,
                 ),
             )
         }
@@ -124,12 +124,12 @@ internal class CreateAccountViewModel @Inject constructor(
 
     private fun validateInput(): Boolean {
         if (!isEmailValid(email = container.state.value.email)) {
-            setErrorMessage(message = "Invalid email format")
+            setErrorMessage(codeError = CodeError.INVALID_EMAIL)
             return false
         }
 
         if (!isPasswordValid(password = container.state.value.password)) {
-            setErrorMessage(message = "Password must be at least 8 characters long")
+            setErrorMessage(codeError = CodeError.INVALID_PASSWORD)
             return false
         }
 
@@ -139,30 +139,30 @@ internal class CreateAccountViewModel @Inject constructor(
                 confirmPassword = container.state.value.confirmPassword,
             )
         ) {
-            setErrorMessage(message = "Passwords do not match")
+            setErrorMessage(codeError = CodeError.PASSWORD_MISMATCH)
             return false
         }
 
         if (container.state.value.companyName.isBlank()) {
-            setErrorMessage(message = "Company name is required")
+            setErrorMessage(codeError = CodeError.INVALID_COMPANY_NAME)
             return false
         }
 
         if (!isPhoneValid(phone = container.state.value.phone)) {
-            setErrorMessage(message = "Invalid phone number")
+            setErrorMessage(codeError = CodeError.INVALID_PHONE)
             return false
         }
 
         if (container.state.value.address.isBlank()) {
-            setErrorMessage(message = "Address is required")
+            setErrorMessage(codeError = CodeError.INVALID_ADDRESS)
             return false
         }
 
         return true
     }
 
-    private fun setErrorMessage(message: String) = container.intent {
+    private fun setErrorMessage(codeError: CodeError) = container.intent {
         reduce { copy(isError = true) }
-        postSideEffect(effect = CreateAccountSideEffect.ShowError(message = message))
+        postSideEffect(effect = CreateAccountSideEffect.ShowError(codeError = codeError))
     }
 }
