@@ -5,4 +5,12 @@ interface CompanyRepository {
         email: String,
         password: String,
     ): Boolean
+
+    suspend fun createAccount(
+        email: String,
+        password: String,
+        companyName: String,
+        phone: String,
+        address: String,
+    ): Boolean
 }

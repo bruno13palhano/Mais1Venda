@@ -14,4 +14,15 @@ internal class CompanyRepositoryImpl
             delay(3000)
             return Random.nextBoolean()
         }
+
+        override suspend fun createAccount(
+            email: String,
+            password: String,
+            companyName: String,
+            phone: String,
+            address: String,
+        ): Boolean {
+            delay(3000)
+            return Random.nextBoolean()
+        }
     }
