@@ -9,10 +9,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -472,32 +469,5 @@ internal class CreateAccountViewModelTest {
             },
             assertationsBlock = { assertThat(viewModel.container.state.value).isEqualTo(expected) },
         )
-    }
-
-    private fun TestScope.collectEffectHelper(
-        verifyEffects: suspend () -> Unit,
-        eventsBlock: () -> Unit,
-    ) {
-        val collectJob = launch { verifyEffects() }
-
-        eventsBlock()
-        advanceUntilIdle()
-
-        collectJob.cancel()
-    }
-
-    private fun TestScope.collectStateHelper(
-        stateCollector: suspend () -> Unit,
-        eventsBlock: () -> Unit,
-        assertationsBlock: () -> Unit,
-    ) {
-        val collectJob = launch { stateCollector() }
-
-        eventsBlock()
-
-        advanceUntilIdle()
-        assertationsBlock()
-
-        collectJob.cancel()
     }
 }
