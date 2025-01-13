@@ -411,9 +411,7 @@ internal class CreateAccountViewModelTest {
                 viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
             assertationsBlock = {
-                assertThat(
-                    viewModel.container.state.value,
-                ).isEqualTo(expected)
+                assertThat(viewModel.container.state.value).isEqualTo(expected)
             },
         )
     }
@@ -436,9 +434,7 @@ internal class CreateAccountViewModelTest {
                     viewModel.handleEvent(CreateAccountEvent.CreateAccount)
                 },
                 assertationsBlock = {
-                    assertThat(
-                        viewModel.container.state.value,
-                    ).isEqualTo(expected)
+                    assertThat(viewModel.container.state.value).isEqualTo(expected)
                 },
             )
         }
