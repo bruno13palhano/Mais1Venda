@@ -355,8 +355,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid email should set isError to true`() = runTest {
-        val expected = state.copy(email = "someemail.com", isError = true)
+    fun `CreateAccount Event with invalid email should set emailError to true`() = runTest {
+        val expected = state.copy(email = "someemail.com", emailError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -373,8 +373,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid password should set isError to true`() = runTest {
-        val expected = state.copy(password = "1234567", isError = true)
+    fun `CreateAccount Event with invalid password should set passwordError to true`() = runTest {
+        val expected = state.copy(password = "1234567", passwordError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -393,8 +393,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid confirmPassword should set isError to true`() = runTest {
-        val expected = state.copy(confirmPassword = "1234567", isError = true)
+    fun `CreateAccount Event with mismatch password should set mismatchError to true`() = runTest {
+        val expected = state.copy(confirmPassword = "1234567", mismatchError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -410,33 +410,42 @@ internal class CreateAccountViewModelTest {
                 )
                 viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
-            assertationsBlock = { assertThat(viewModel.container.state.value).isEqualTo(expected) },
-        )
-    }
-
-    @Test
-    fun `CreateAccount Event with invalid companyName should set isError to true`() = runTest {
-        val expected = state.copy(companyName = "", isError = true)
-        val viewModel = CreateAccountViewModel(
-            initialState = state,
-            companyRepository = TestCompanyRepository(),
-        )
-
-        collectStateHelper(
-            stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = {
-                viewModel.handleEvent(
-                    CreateAccountEvent.CompanyNameChanged(companyName = expected.companyName),
-                )
-                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
+            assertationsBlock = {
+                assertThat(
+                    viewModel.container.state.value,
+                ).isEqualTo(expected)
             },
-            assertationsBlock = { assertThat(viewModel.container.state.value).isEqualTo(expected) },
         )
     }
 
     @Test
-    fun `CreateAccount Event with invalid phone should set isError to true`() = runTest {
-        val expected = state.copy(phone = "1234567891", isError = true)
+    fun `CreateAccount Event with invalid companyName should set companyNameError to true`() =
+        runTest {
+            val expected = state.copy(companyName = "", companyNameError = true)
+            val viewModel = CreateAccountViewModel(
+                initialState = state,
+                companyRepository = TestCompanyRepository(),
+            )
+
+            collectStateHelper(
+                stateCollector = { viewModel.container.state.collect() },
+                eventsBlock = {
+                    viewModel.handleEvent(
+                        CreateAccountEvent.CompanyNameChanged(companyName = expected.companyName),
+                    )
+                    viewModel.handleEvent(CreateAccountEvent.CreateAccount)
+                },
+                assertationsBlock = {
+                    assertThat(
+                        viewModel.container.state.value,
+                    ).isEqualTo(expected)
+                },
+            )
+        }
+
+    @Test
+    fun `CreateAccount Event with invalid phone should set phoneError to true`() = runTest {
+        val expected = state.copy(phone = "1234567891", phoneError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -453,8 +462,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid address should set isError to true`() = runTest {
-        val expected = state.copy(address = "", isError = true)
+    fun `CreateAccount Event with invalid address should set addressError to true`() = runTest {
+        val expected = state.copy(address = "", addressError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),

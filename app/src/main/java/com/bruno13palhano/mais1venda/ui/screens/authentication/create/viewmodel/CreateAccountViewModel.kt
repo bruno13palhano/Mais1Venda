@@ -124,12 +124,18 @@ internal class CreateAccountViewModel @Inject constructor(
 
     private fun validateInput(): Boolean {
         if (!isEmailValid(email = container.state.value.email)) {
-            setErrorMessage(codeError = CodeError.INVALID_EMAIL)
+            setErrorMessage(
+                codeError = CodeError.INVALID_EMAIL,
+                newState = container.state.value.copy(emailError = true),
+            )
             return false
         }
 
         if (!isPasswordValid(password = container.state.value.password)) {
-            setErrorMessage(codeError = CodeError.INVALID_PASSWORD)
+            setErrorMessage(
+                codeError = CodeError.INVALID_PASSWORD,
+                newState = container.state.value.copy(passwordError = true),
+            )
             return false
         }
 
@@ -139,30 +145,43 @@ internal class CreateAccountViewModel @Inject constructor(
                 confirmPassword = container.state.value.confirmPassword,
             )
         ) {
-            setErrorMessage(codeError = CodeError.PASSWORD_MISMATCH)
+            setErrorMessage(
+                codeError = CodeError.PASSWORD_MISMATCH,
+                newState = container.state.value.copy(mismatchError = true),
+            )
             return false
         }
 
         if (container.state.value.companyName.isBlank()) {
-            setErrorMessage(codeError = CodeError.INVALID_COMPANY_NAME)
+            setErrorMessage(
+                codeError = CodeError.INVALID_COMPANY_NAME,
+                newState = container.state.value.copy(companyNameError = true),
+            )
             return false
         }
 
         if (!isPhoneValid(phone = container.state.value.phone)) {
-            setErrorMessage(codeError = CodeError.INVALID_PHONE)
+            setErrorMessage(
+                codeError = CodeError.INVALID_PHONE,
+                newState = container.state.value.copy(phoneError = true),
+            )
             return false
         }
 
         if (container.state.value.address.isBlank()) {
-            setErrorMessage(codeError = CodeError.INVALID_ADDRESS)
+            setErrorMessage(
+                codeError = CodeError.INVALID_ADDRESS,
+                newState = container.state.value.copy(addressError = true),
+            )
             return false
         }
 
         return true
     }
 
-    private fun setErrorMessage(codeError: CodeError) = container.intent {
-        reduce { copy(isError = true) }
-        postSideEffect(effect = CreateAccountSideEffect.ShowError(codeError = codeError))
-    }
+    private fun setErrorMessage(codeError: CodeError, newState: CreateAccountState) =
+        container.intent {
+            reduce { newState }
+            postSideEffect(effect = CreateAccountSideEffect.ShowError(codeError = codeError))
+        }
 }
