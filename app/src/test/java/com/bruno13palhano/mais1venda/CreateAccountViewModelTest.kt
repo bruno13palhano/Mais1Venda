@@ -174,7 +174,7 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid email should emit ShowError side effect`() = runTest {
+    fun `EmailChanged with invalid email should emit ShowError INVALID_EMAIL`() = runTest {
         val initialState = state.copy(email = "someemail.com")
         val viewModel = CreateAccountViewModel(
             initialState = initialState,
@@ -193,13 +193,34 @@ internal class CreateAccountViewModelTest {
             },
             eventsBlock = {
                 viewModel.handleEvent(CreateAccountEvent.EmailChanged(email = initialState.email))
-                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
         )
     }
 
     @Test
-    fun `CreateAccount Event with invalid password should emit ShowError side effect`() = runTest {
+    fun `CreateAccount with invalid email should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(email = "someemail.com")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(
+                            codeError = CodeError.EMPTY_FIELDS,
+                        ),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
+        )
+    }
+
+    @Test
+    fun `PasswordChanged with invalid password should emit ShowError INVALID_PASSWORD`() = runTest {
         val initialState = state.copy(password = "1234567")
         val viewModel = CreateAccountViewModel(
             initialState = initialState,
@@ -218,13 +239,32 @@ internal class CreateAccountViewModelTest {
                 viewModel.handleEvent(
                     CreateAccountEvent.PasswordChanged(password = initialState.password),
                 )
-                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
         )
     }
 
     @Test
-    fun `CreateAccount Event with invalid confirmPassword should emit ShowError side effect`() =
+    fun `CreateAccount with invalid password should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(password = "1234567")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(codeError = CodeError.EMPTY_FIELDS),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
+        )
+    }
+
+    @Test
+    fun `ConfirmPasswordChanged with mismatch password should emit ShowError PASSWORD_MISMATCH`() =
         runTest {
             val initialState = state.copy(confirmPassword = "1234567")
             val viewModel = CreateAccountViewModel(
@@ -248,13 +288,34 @@ internal class CreateAccountViewModelTest {
                             confirmPassword = initialState.confirmPassword,
                         ),
                     )
-                    viewModel.handleEvent(CreateAccountEvent.CreateAccount)
                 },
             )
         }
 
     @Test
-    fun `CreateAccount Event with invalid companyName should emit ShowError side effect`() =
+    fun `CreateAccount with mismatch password should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(confirmPassword = "1234567")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(
+                            codeError = CodeError.EMPTY_FIELDS,
+                        ),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
+        )
+    }
+
+    @Test
+    fun `CompanyNameChanged with invalid companyName should emit ShowError INVALID_COMPANY_NAME`() =
         runTest {
             val initialState = state.copy(companyName = "")
             val viewModel = CreateAccountViewModel(
@@ -278,13 +339,34 @@ internal class CreateAccountViewModelTest {
                             companyName = initialState.companyName,
                         ),
                     )
-                    viewModel.handleEvent(CreateAccountEvent.CreateAccount)
                 },
             )
         }
 
     @Test
-    fun `CreateAccount Event with invalid phone should emit ShowError side effect`() = runTest {
+    fun `CreateAccount with invalid companyName should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(companyName = "")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(
+                            codeError = CodeError.EMPTY_FIELDS,
+                        ),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
+        )
+    }
+
+    @Test
+    fun `PhoneChanged with invalid phone should emit ShowError INVALID_PHONE`() = runTest {
         val initialState = state.copy(phone = "1234567891")
         val viewModel = CreateAccountViewModel(
             initialState = initialState,
@@ -305,13 +387,34 @@ internal class CreateAccountViewModelTest {
                 viewModel.handleEvent(
                     CreateAccountEvent.PhoneChanged(phone = initialState.phone),
                 )
-                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
         )
     }
 
     @Test
-    fun `CreateAccount Event with invalid address should emit ShowError side effect`() = runTest {
+    fun `CreateAccount with invalid phone should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(phone = "1234567891")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(
+                            codeError = CodeError.EMPTY_FIELDS,
+                        ),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
+        )
+    }
+
+    @Test
+    fun `AddressChanged with invalid address should emit ShowError INVALID_ADDRESS`() = runTest {
         val initialState = state.copy(address = "")
         val viewModel = CreateAccountViewModel(
             initialState = initialState,
@@ -332,8 +435,29 @@ internal class CreateAccountViewModelTest {
                 viewModel.handleEvent(
                     CreateAccountEvent.AddressChanged(address = initialState.address),
                 )
-                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
             },
+        )
+    }
+
+    @Test
+    fun `CreateAccount with invalid address should emit ShowError EMPTY_FIELDS`() = runTest {
+        val initialState = state.copy(address = "")
+        val viewModel = CreateAccountViewModel(
+            initialState = initialState,
+            companyRepository = TestCompanyRepository(),
+        )
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(
+                        CreateAccountSideEffect.ShowError(
+                            codeError = CodeError.EMPTY_FIELDS,
+                        ),
+                    )
+                }
+            },
+            eventsBlock = { viewModel.handleEvent(CreateAccountEvent.CreateAccount) },
         )
     }
 
@@ -355,8 +479,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid email should set emailError to true`() = runTest {
-        val expected = state.copy(email = "someemail.com", emailError = true)
+    fun `CreateAccount Event with invalid email should set isError to true`() = runTest {
+        val expected = state.copy(email = "someemail.com", isError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -373,8 +497,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid password should set passwordError to true`() = runTest {
-        val expected = state.copy(password = "1234567", passwordError = true)
+    fun `CreateAccount Event with invalid password should set isError to true`() = runTest {
+        val expected = state.copy(password = "1234567", isError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -393,8 +517,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with mismatch password should set mismatchError to true`() = runTest {
-        val expected = state.copy(confirmPassword = "1234567", mismatchError = true)
+    fun `CreateAccount Event with mismatch password should set isError to true`() = runTest {
+        val expected = state.copy(confirmPassword = "1234567", isError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -417,31 +541,30 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid companyName should set companyNameError to true`() =
-        runTest {
-            val expected = state.copy(companyName = "", companyNameError = true)
-            val viewModel = CreateAccountViewModel(
-                initialState = state,
-                companyRepository = TestCompanyRepository(),
-            )
+    fun `CreateAccount Event with invalid companyName should set isError to true`() = runTest {
+        val expected = state.copy(companyName = "", isError = true)
+        val viewModel = CreateAccountViewModel(
+            initialState = state,
+            companyRepository = TestCompanyRepository(),
+        )
 
-            collectStateHelper(
-                stateCollector = { viewModel.container.state.collect() },
-                eventsBlock = {
-                    viewModel.handleEvent(
-                        CreateAccountEvent.CompanyNameChanged(companyName = expected.companyName),
-                    )
-                    viewModel.handleEvent(CreateAccountEvent.CreateAccount)
-                },
-                assertationsBlock = {
-                    assertThat(viewModel.container.state.value).isEqualTo(expected)
-                },
-            )
-        }
+        collectStateHelper(
+            stateCollector = { viewModel.container.state.collect() },
+            eventsBlock = {
+                viewModel.handleEvent(
+                    CreateAccountEvent.CompanyNameChanged(companyName = expected.companyName),
+                )
+                viewModel.handleEvent(CreateAccountEvent.CreateAccount)
+            },
+            assertationsBlock = {
+                assertThat(viewModel.container.state.value).isEqualTo(expected)
+            },
+        )
+    }
 
     @Test
-    fun `CreateAccount Event with invalid phone should set phoneError to true`() = runTest {
-        val expected = state.copy(phone = "1234567891", phoneError = true)
+    fun `CreateAccount Event with invalid phone should set isError to true`() = runTest {
+        val expected = state.copy(phone = "1234567891", isError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
@@ -458,8 +581,8 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid address should set addressError to true`() = runTest {
-        val expected = state.copy(address = "", addressError = true)
+    fun `CreateAccount Event with invalid address should set isError to true`() = runTest {
+        val expected = state.copy(address = "", isError = true)
         val viewModel = CreateAccountViewModel(
             initialState = state,
             companyRepository = TestCompanyRepository(),
