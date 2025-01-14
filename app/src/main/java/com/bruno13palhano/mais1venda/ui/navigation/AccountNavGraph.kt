@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountRoute
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginRoute
 import kotlinx.serialization.Serializable
 
@@ -36,6 +37,15 @@ internal fun NavGraphBuilder.loginNavGraph(
 
         composable<LoginRoutes.CreateAccount> {
             gesturesEnabled(false)
+            CreateAccountRoute(
+                navigateToHome = {
+                    navController.navigate(route = MainRoutes.Home) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
+                },
+                navigateBack = { navController.navigateUp() },
+            )
         }
     }
 }
