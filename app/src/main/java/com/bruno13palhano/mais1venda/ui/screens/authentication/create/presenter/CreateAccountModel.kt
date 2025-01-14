@@ -17,7 +17,7 @@ internal data class CreateAccountState(
     val addressError: Boolean = false,
     val passwordError: Boolean = false,
     val mismatchError: Boolean = false,
-    val emptyFieldsError: Boolean = false,
+    val fieldsError: Boolean = false,
     val passwordVisibility: Boolean = false,
     val confirmPasswordVisibility: Boolean = false,
     val isLoading: Boolean = false,

@@ -224,12 +224,11 @@ internal class CreateAccountViewModel @Inject constructor(
             stateError = container.state.value.copy(addressError = true)
         }
 
-        // If has more than one error set a generic error to fill the missing fields or
-        // (fix the invalid fields -> not implemented yet).
+        // If has more than one error set a generic error to fix the invalid fields
         if (codeErrors.size > 1) {
             setErrorMessage(
-                codeError = CodeError.EMPTY_FIELDS,
-                newState = container.state.value.copy(emptyFieldsError = true),
+                codeError = CodeError.INVALID_FIELDS,
+                newState = container.state.value.copy(fieldsError = true),
             )
         } else {
             codeErrors.lastOrNull()?.let {

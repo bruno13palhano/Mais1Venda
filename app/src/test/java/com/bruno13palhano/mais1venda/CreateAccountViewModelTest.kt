@@ -581,13 +581,13 @@ internal class CreateAccountViewModelTest {
     }
 
     @Test
-    fun `CreateAccount Event with invalid fields should set emptyFieldsError to true`() = runTest {
+    fun `CreateAccount Event with invalid fields should set fieldsError to true`() = runTest {
         val expected = state.copy(
             email = "",
             address = "",
             emailError = true,
             addressError = true,
-            emptyFieldsError = true,
+            fieldsError = true,
         )
         val viewModel = CreateAccountViewModel(
             initialState = state,

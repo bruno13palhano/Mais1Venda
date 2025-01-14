@@ -24,7 +24,7 @@
     <string name="invalid_phone">Invalid phone</string>
     <string name="invalid_address">Invalid address</string>
     <string name="invalid_credentials">Invalid credentials</string>
-    <string name="empty_fields">All fields must be filled</string>
+    <string name="invalid_fields">Invalid fields</string>
     <string name="error_creating_account">Error creating account</string>
     <string name="navigate_back">Navigate back</string>
 </resources>
