@@ -16,3 +16,11 @@ fun isPhoneValid(phone: String): Boolean {
 fun isConfirmPasswordValid(password: String, confirmPassword: String): Boolean {
     return password == confirmPassword
 }
+
+fun isCompanyNameValid(companyName: String): Boolean {
+    return companyName.isNotBlank() && companyName.length >= 3
+}
+
+fun isAddressValid(address: String): Boolean {
+    return address.isNotBlank() && address.length >= 3
+}
