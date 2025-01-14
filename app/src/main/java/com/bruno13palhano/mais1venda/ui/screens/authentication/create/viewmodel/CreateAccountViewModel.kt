@@ -8,6 +8,8 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountState
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isAddressValid
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isCompanyNameValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isConfirmPasswordValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isEmailValid
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.isPasswordValid
@@ -57,89 +59,89 @@ internal class CreateAccountViewModel @Inject constructor(
 
     private fun emailChanged(email: String) = container.intent {
         reduce { copy(email = email) }
-        if (!isEmailValid(email = email)) {
+        if (isEmailValid(email = email)) {
+            reduce { copy(emailError = false) }
+        } else {
             if (container.state.value.emailError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.INVALID_EMAIL,
                 newState = container.state.value.copy(emailError = true),
             )
-        } else {
-            reduce { copy(emailError = false) }
         }
     }
 
     private fun companyNameChanged(companyName: String) = container.intent {
         reduce { copy(companyName = companyName) }
-        if (companyName.isBlank()) {
+        if (companyName.isNotBlank()) {
+            reduce { copy(companyNameError = false) }
+        } else {
             if (container.state.value.companyNameError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.INVALID_COMPANY_NAME,
                 newState = container.state.value.copy(mismatchError = true),
             )
-        } else {
-            reduce { copy(companyNameError = false) }
         }
     }
 
     private fun phoneChanged(phone: String) = container.intent {
         reduce { copy(phone = phone) }
-        if (!isPhoneValid(phone = phone)) {
+        if (isPhoneValid(phone = phone)) {
+            reduce { copy(phoneError = false) }
+        } else {
             if (container.state.value.phoneError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.INVALID_PHONE,
                 newState = container.state.value.copy(phoneError = true),
             )
-        } else {
-            reduce { copy(phoneError = false) }
         }
     }
 
     private fun addressChanged(address: String) = container.intent {
         reduce { copy(address = address) }
-        if (address.isBlank()) {
+        if (address.isNotBlank()) {
+            reduce { copy(addressError = false) }
+        } else {
             if (container.state.value.addressError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.INVALID_ADDRESS,
                 newState = container.state.value.copy(mismatchError = true),
             )
-        } else {
-            reduce { copy(addressError = false) }
         }
     }
 
     private fun passwordChanged(password: String) = container.intent {
         reduce { copy(password = password) }
-        if (!isPasswordValid(password = password)) {
+        if (isPasswordValid(password = password)) {
+            reduce { copy(passwordError = false) }
+        } else {
             if (container.state.value.passwordError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.INVALID_PASSWORD,
                 newState = container.state.value.copy(passwordError = true),
             )
-        } else {
-            reduce { copy(passwordError = false) }
         }
     }
 
     private fun confirmPasswordChanged(confirmPassword: String) = container.intent {
         reduce { copy(confirmPassword = confirmPassword) }
-        if (!isConfirmPasswordValid(
+        if (isConfirmPasswordValid(
                 password = container.state.value.password,
                 confirmPassword = confirmPassword,
             )
         ) {
+            reduce { copy(mismatchError = false) }
+        } else {
             if (container.state.value.mismatchError) return@intent
 
             setErrorMessage(
                 codeError = CodeError.PASSWORD_MISMATCH,
                 newState = container.state.value.copy(mismatchError = true),
             )
-        } else {
-            reduce { copy(mismatchError = false) }
         }
     }
 
@@ -198,9 +200,9 @@ internal class CreateAccountViewModel @Inject constructor(
                 password = container.state.value.password,
                 confirmPassword = container.state.value.confirmPassword,
             ) &&
-            container.state.value.companyName.isNotBlank() &&
+            isCompanyNameValid(companyName = container.state.value.companyName) &&
             isPhoneValid(phone = container.state.value.phone) &&
-            container.state.value.address.isNotBlank()
+            isAddressValid(address = container.state.value.address)
     }
 
     private fun setErrorMessage(codeError: CodeError, newState: CreateAccountState) =
