@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginRoute
 import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeRoute
+import com.bruno13palhano.mais1venda.ui.screens.settings.presenter.SettingsRoute
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -27,20 +27,13 @@ internal fun MainNavGraph(
             )
         }
 
-        composable<MainRoutes.Login> {
-            LoginRoute(
-                navigateToHome = { navController.navigate(MainRoutes.Home) },
-                navigateToForgotPassword = {},
-                navigateToCreateAccount = {},
-            )
-        }
-
-        loginNavGraph(
+        accountNavGraph(
             navController = navController,
             gesturesEnabled = gesturesEnabled,
         )
 
         composable<MainRoutes.Settings> {
+            SettingsRoute(onIconMenuClick = onIconMenuClick)
         }
     }
 }
