@@ -1,8 +1,13 @@
 package com.bruno13palhano.mais1venda.ui.screens.settings.presenter
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +59,7 @@ private fun SettingsContent(
     onEvent: (event: SettingsEvent) -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.settings)) },
@@ -68,8 +74,12 @@ private fun SettingsContent(
             )
         },
     ) {
-        Column(modifier = Modifier.padding(it)) {
-
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .consumeWindowInsets(it)
+                .verticalScroll(rememberScrollState()),
+        ) {
         }
     }
 }
