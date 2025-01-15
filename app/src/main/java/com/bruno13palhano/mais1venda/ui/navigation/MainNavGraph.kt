@@ -14,7 +14,7 @@ internal fun MainNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     gesturesEnabled: (enabled: Boolean) -> Unit,
-    onIconMenuCLick: () -> Unit,
+    onIconMenuClick: () -> Unit,
 ) {
     NavHost(
         modifier = modifier,

@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding),
                                 navController = navController,
                                 gesturesEnabled = { enabled -> gesturesEnabled = enabled },
-                                onIconMenuCLick = {
+                                onIconMenuClick = {
                                     scope.launch {
                                         drawerState.open()
                                     }
