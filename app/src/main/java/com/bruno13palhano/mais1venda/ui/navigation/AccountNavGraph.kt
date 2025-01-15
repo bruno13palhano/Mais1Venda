@@ -8,7 +8,7 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginRoute
 import kotlinx.serialization.Serializable
 
-internal fun NavGraphBuilder.loginNavGraph(
+internal fun NavGraphBuilder.accountNavGraph(
     navController: NavController,
     gesturesEnabled: (enabled: Boolean) -> Unit,
 ) {
