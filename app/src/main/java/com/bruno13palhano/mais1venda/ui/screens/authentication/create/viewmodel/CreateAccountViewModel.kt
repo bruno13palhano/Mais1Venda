@@ -70,7 +70,7 @@ internal class CreateAccountViewModel @Inject constructor(
     private fun companyNameChanged(companyName: String) = container.intent {
         reduce { copy(companyName = companyName) }
 
-        if (companyName.isNotBlank()) {
+        if (isCompanyNameValid(companyName)) {
             reduce { copy(companyNameError = false) }
         } else {
             reduce { copy(companyNameError = true) }
