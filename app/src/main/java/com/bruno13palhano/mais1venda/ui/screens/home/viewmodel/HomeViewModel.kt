@@ -11,9 +11,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.delay
 
 @HiltViewModel
-internal class HomeViewModel @Inject constructor() : ViewModel() {
+internal class HomeViewModel @Inject constructor(
+    initialState: HomeState
+) : ViewModel() {
     val container = Container<HomeState, HomeSideEffect>(
-        initialState = HomeState(),
+        initialState = initialState,
         scope = viewModelScope,
     )
 
@@ -21,7 +23,7 @@ internal class HomeViewModel @Inject constructor() : ViewModel() {
         when (event) {
             HomeEvent.LoadOrders -> loadOrders()
 
-            HomeEvent.ToggleMenu -> navigateToHome()
+            HomeEvent.ToggleMenu -> toggleMenu()
         }
     }
 
@@ -31,7 +33,7 @@ internal class HomeViewModel @Inject constructor() : ViewModel() {
         reduce { copy(isLoading = false) }
     }
 
-    private fun navigateToHome() = container.intent {
+    private fun toggleMenu() = container.intent {
         postSideEffect(HomeSideEffect.ToggleMenu)
     }
 }

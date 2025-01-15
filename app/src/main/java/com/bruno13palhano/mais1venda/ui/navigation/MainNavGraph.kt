@@ -23,6 +23,7 @@ internal fun MainNavGraph(
     ) {
         composable<MainRoutes.Home> {
             HomeRoute(
+                openDrawer = onIconMenuClick,
                 navigateToLogin = { navController.navigate(MainRoutes.Login) },
             )
         }
