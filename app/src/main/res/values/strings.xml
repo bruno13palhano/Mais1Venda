@@ -27,4 +27,5 @@
     <string name="invalid_fields">Invalid fields</string>
     <string name="error_creating_account">Error creating account</string>
     <string name="navigate_back">Navigate back</string>
+    <string name="burger_menu">Burger menu</string>
 </resources>
