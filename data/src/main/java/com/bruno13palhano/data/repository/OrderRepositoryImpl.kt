@@ -1,9 +1,10 @@
 package com.bruno13palhano.data.repository
 
 import com.bruno13palhano.data.model.shared.Order
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-internal class OrderRepositoryImpl : OrderRepository {
+internal class OrderRepositoryImpl @Inject constructor() : OrderRepository {
     override suspend fun insert(order: Order) {
         TODO("Not yet implemented")
     }
@@ -12,7 +13,7 @@ internal class OrderRepositoryImpl : OrderRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun delete(order: Order) {
+    override suspend fun delete(id: Long) {
         TODO("Not yet implemented")
     }
 

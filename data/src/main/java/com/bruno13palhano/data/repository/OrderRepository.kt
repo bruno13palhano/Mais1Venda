@@ -8,7 +8,7 @@ interface OrderRepository {
 
     suspend fun update(order: Order)
 
-    suspend fun delete(order: Order)
+    suspend fun delete(id: Long)
 
     suspend fun getAll(): Flow<List<Order>>
 }

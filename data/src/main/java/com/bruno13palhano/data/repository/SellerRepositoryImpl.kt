@@ -4,7 +4,7 @@ import com.bruno13palhano.data.model.company.Seller
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-internal class SellerRepositoryImpl @Inject constructor(): SellerRepository {
+internal class SellerRepositoryImpl @Inject constructor() : SellerRepository {
     override suspend fun insert(seller: Seller) {
         TODO("Not yet implemented")
     }

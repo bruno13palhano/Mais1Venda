@@ -8,7 +8,7 @@ interface ProductRepository {
 
     suspend fun update(product: Product)
 
-    suspend fun delete(product: Product)
+    suspend fun delete(id: Long)
 
     suspend fun getAll(): Flow<List<Product>>
 }
