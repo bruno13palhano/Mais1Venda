@@ -1,6 +1,6 @@
 package com.bruno13palhano.data.datasource.local.data
 
-interface CompanyLocalData<T> {
+internal interface CompanyLocalData<T> {
     suspend fun insert(company: T)
 
     suspend fun update(company: T)

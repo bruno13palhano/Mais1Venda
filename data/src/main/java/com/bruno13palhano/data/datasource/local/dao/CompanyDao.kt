@@ -9,7 +9,7 @@ import com.bruno13palhano.data.datasource.local.data.CompanyLocalData
 import com.bruno13palhano.data.datasource.local.entity.CompanyEntity
 
 @Dao
-interface CompanyDao : CompanyLocalData<CompanyEntity> {
+internal interface CompanyDao : CompanyLocalData<CompanyEntity> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     override suspend fun insert(company: CompanyEntity)
 
