@@ -1,13 +1,11 @@
 package com.bruno13palhano.data.datasource.local.data
 
-import com.bruno13palhano.data.model.company.Company
+interface CompanyLocalData<T> {
+    suspend fun insert(company: T)
 
-interface CompanyLocalData {
-    suspend fun insert(company: Company)
-
-    suspend fun update(company: Company)
+    suspend fun update(company: T)
 
     suspend fun delete(uid: String)
 
-    suspend fun getCompany(uid: String): Company?
+    suspend fun getCompany(uid: String): T?
 }
