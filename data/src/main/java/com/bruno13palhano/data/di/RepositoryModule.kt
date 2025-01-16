@@ -31,9 +31,7 @@ internal abstract class RepositoryModule {
     @Binds
     @OrderRep
     @Singleton
-    abstract fun bindOrderRepository(
-        orderRepositoryImpl: OrderRepositoryImpl,
-    ): OrderRepository
+    abstract fun bindOrderRepository(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository
 
     @Binds
     @ProductRep

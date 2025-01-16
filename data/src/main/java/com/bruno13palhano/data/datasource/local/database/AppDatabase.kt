@@ -17,7 +17,7 @@ import com.bruno13palhano.data.datasource.local.entity.CompanyEntity
     value = [
         SellerListConverter::class,
         SocialMediaConverter::class,
-    ]
+    ],
 )
 internal abstract class AppDatabase : RoomDatabase() {
     abstract fun companyDao(): CompanyDao
