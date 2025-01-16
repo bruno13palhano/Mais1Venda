@@ -33,7 +33,7 @@ internal class HomeViewModelTest {
                     assertThat(it).isEqualTo(HomeSideEffect.ToggleMenu)
                 }
             },
-            eventsBlock = { homeViewModel.handleEvent(HomeEvent.ToggleMenu) }
+            eventsBlock = { homeViewModel.handleEvent(HomeEvent.ToggleMenu) },
         )
     }
 }

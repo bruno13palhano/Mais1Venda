@@ -35,7 +35,7 @@ import kotlin.random.Random
 internal fun HomeRoute(
     openDrawer: () -> Unit,
     navigateToLogin: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
@@ -77,7 +77,7 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
                             contentDescription = stringResource(R.string.burger_menu),
                         )
                     }
-                }
+                },
             )
         },
     ) {

@@ -11,11 +11,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
-    initialState: SettingsState
+    initialState: SettingsState,
 ) : ViewModel() {
     val container = Container<SettingsState, SettingsSideEffect>(
         initialState = initialState,
-        scope = viewModelScope
+        scope = viewModelScope,
     )
 
     fun handleEvent(event: SettingsEvent) {

@@ -54,10 +54,7 @@ internal fun SettingsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsContent(
-    state: SettingsState,
-    onEvent: (event: SettingsEvent) -> Unit,
-) {
+private fun SettingsContent(state: SettingsState, onEvent: (event: SettingsEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -92,7 +89,6 @@ private fun SettingsContentPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-
         }
     }
 }

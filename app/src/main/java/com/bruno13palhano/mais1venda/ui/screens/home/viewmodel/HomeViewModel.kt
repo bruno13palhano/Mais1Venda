@@ -12,7 +12,7 @@ import kotlinx.coroutines.delay
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    initialState: HomeState
+    initialState: HomeState,
 ) : ViewModel() {
     val container = Container<HomeState, HomeSideEffect>(
         initialState = initialState,
