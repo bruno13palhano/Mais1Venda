@@ -2,7 +2,6 @@ package com.bruno13palhano.data.di
 
 import com.bruno13palhano.data.BuildConfig
 import com.bruno13palhano.data.datasource.remote.service.Service
-import com.bruno13palhano.data.datasource.remote.service.ServiceImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -40,7 +39,7 @@ internal object ServiceModule {
             .client(client)
             .build()
 
-        val apiService: Service by lazy { retrofit.create(ServiceImpl::class.java) }
+        val apiService: Service by lazy { retrofit.create(Service::class.java) }
 
         return apiService
     }
