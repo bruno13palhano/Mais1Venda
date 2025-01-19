@@ -1,6 +1,6 @@
 package com.bruno13palhano.data.datasource.remote.source
 
-import com.bruno13palhano.data.datasource.remote.service.Service
+import com.bruno13palhano.data.datasource.remote.service.ApiService
 import com.bruno13palhano.data.model.company.Company
 import com.bruno13palhano.data.model.resource.ErrorType
 import com.bruno13palhano.data.model.resource.RemoteResponseError
@@ -13,7 +13,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 internal class CompanyRemoteData @Inject constructor(
-    private val api: Service,
+    private val api: ApiService,
 ) {
     suspend fun createCompany(company: Company): Resource<Company> {
         return safeApiCall { api.createCompany(company = company) }

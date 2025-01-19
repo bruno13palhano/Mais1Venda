@@ -1,7 +1,7 @@
 package com.bruno13palhano.data.di
 
 import com.bruno13palhano.data.BuildConfig
-import com.bruno13palhano.data.datasource.remote.service.Service
+import com.bruno13palhano.data.datasource.remote.service.ApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -18,10 +18,10 @@ private const val SERVER_URL = BuildConfig.serverUrl
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object ServiceModule {
+internal object ApiServiceModule {
     @Provides
     @Singleton
-    fun provideService(): Service {
+    fun provideService(): ApiService {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -39,7 +39,7 @@ internal object ServiceModule {
             .client(client)
             .build()
 
-        val apiService: Service by lazy { retrofit.create(Service::class.java) }
+        val apiService: ApiService by lazy { retrofit.create(ApiService::class.java) }
 
         return apiService
     }
