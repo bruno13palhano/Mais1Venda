@@ -5,20 +5,19 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bruno13palhano.data.datasource.local.data.CompanyLocalData
 import com.bruno13palhano.data.datasource.local.entity.CompanyEntity
 
 @Dao
-internal interface CompanyDao : CompanyLocalData<CompanyEntity> {
+internal interface CompanyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    override suspend fun insert(company: CompanyEntity)
+    suspend fun insert(company: CompanyEntity)
 
     @Update
-    override suspend fun update(company: CompanyEntity)
+    suspend fun update(company: CompanyEntity)
 
     @Query("DELETE FROM company WHERE uid = :uid")
-    override suspend fun delete(uid: String)
+    suspend fun delete(uid: String)
 
     @Query("SELECT * FROM company WHERE uid = :uid")
-    override suspend fun getCompany(uid: String): CompanyEntity?
+    suspend fun getCompany(uid: String): CompanyEntity?
 }
