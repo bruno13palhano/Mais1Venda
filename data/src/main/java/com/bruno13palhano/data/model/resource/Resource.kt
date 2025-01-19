@@ -11,4 +11,3 @@ sealed class Resource<T>(
         remoteResponseError: RemoteResponseError?,
     ) : Resource<T>(null, null, remoteResponseError)
 }
-
