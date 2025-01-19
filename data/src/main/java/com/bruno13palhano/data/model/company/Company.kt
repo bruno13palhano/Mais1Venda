@@ -12,5 +12,5 @@ data class Company(
     val address: Address,
     val sellers: List<Seller>,
     val socialMedia: List<SocialMedia>,
-    val lastModifiedTimestamp: Long,
+    val lastModifiedTimestamp: String,
 )
