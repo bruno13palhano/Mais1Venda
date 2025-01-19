@@ -14,5 +14,5 @@ internal data class ProductEntity(
     val code: String,
     val quantity: Int,
     val exhibitToCatalog: Boolean,
-    val lastModifiedTimestamp: Long,
+    val lastModifiedTimestamp: String,
 )

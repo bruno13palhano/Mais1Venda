@@ -13,5 +13,5 @@ data class Seller(
     val address: Address,
     val socialMedia: List<SocialMedia>,
     val sector: String,
-    val lastModifiedTimestamp: Long,
+    val lastModifiedTimestamp: String,
 )

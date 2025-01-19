@@ -16,5 +16,5 @@ internal data class CustomerEntity(
     val address: Address,
     val socialMedia: List<SocialMedia>,
     val orders: List<Order>,
-    val lastModifiedTimestamp: Long,
+    val lastModifiedTimestamp: String,
 )

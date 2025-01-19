@@ -12,5 +12,5 @@ data class Product(
     val code: String,
     val quantity: Int,
     val exhibitToCatalog: Boolean,
-    val lastModifiedTimestamp: Long,
+    val lastModifiedTimestamp: String,
 )
