@@ -19,7 +19,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.bruno13palhano.data.CustomTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -49,6 +49,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.truth)
     testImplementation(libs.mockWebServer)
     testImplementation(libs.coroutines.test)
     ksp(libs.hilt.android.compiler)
@@ -56,6 +59,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
+    implementation(libs.moshi.adapters)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.hilt.android)
