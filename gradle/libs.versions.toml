@@ -29,6 +29,7 @@ truthVersion = "1.4.4"
 turbineVerson = "1.1.0"
 mockitoCoreVersion = "5.12.0"
 mockitoKotlinVersion = "5.4.0"
+mockkVersion = "1.13.16"
 materialIconsExtended = "1.7.6"
 
 [libraries]
@@ -74,6 +75,7 @@ truth = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbineVerson" }
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreVersion" }
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlinVersion" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

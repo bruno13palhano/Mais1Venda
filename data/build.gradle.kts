@@ -55,6 +55,7 @@ dependencies {
     testImplementation(libs.mockWebServer)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.truth)
+    testImplementation(libs.mockk)
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.retrofit)
