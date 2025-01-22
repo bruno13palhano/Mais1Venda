@@ -219,7 +219,9 @@ internal class CompanyRepositoryUnitTest {
     fun `failure login should return SERVER ErrorType`() = runTest {
         coEvery {
             mockApi.login(expectedCompany.email, expectedCompany.password)
-        }.throws(HttpException(Response.error<Any>(500, "".toResponseBody("plain/text".toMediaType()))))
+        }.throws(
+            HttpException(Response.error<Any>(500, "".toResponseBody("plain/text".toMediaType()))),
+        )
 
         val result: Resource<Boolean> = testSut.login(
             email = expectedCompany.email,
@@ -233,7 +235,12 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `login without connection should return NO_INTERNET ErrorType`() = runTest {
-        coEvery { mockApi.login(expectedCompany.email, expectedCompany.password) }.throws(IOException())
+        coEvery {
+            mockApi.login(
+                expectedCompany.email,
+                expectedCompany.password,
+            )
+        }.throws(IOException())
 
         val result: Resource<Boolean> = testSut.login(
             email = expectedCompany.email,
@@ -247,7 +254,12 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `login with other exception should return UNKNOWN ErrorType`() = runTest {
-        coEvery { mockApi.login(expectedCompany.email, expectedCompany.password) }.throws(Exception())
+        coEvery {
+            mockApi.login(
+                expectedCompany.email,
+                expectedCompany.password,
+            )
+        }.throws(Exception())
 
         val result: Resource<Boolean> = testSut.login(
             email = expectedCompany.email,
