@@ -95,7 +95,7 @@ internal class CompanyRepositoryUnitTest {
         val expectedJson = adapter.toJson(expected)
 
         coEvery {
-            mockApi.createCompany(any())
+            mockApi.createCompany(expectedCompany)
         } returns
             Response.error(
                 500,
@@ -117,7 +117,7 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `failure createAccount should return SERVER ErrorType`() = runTest {
-        coEvery { mockApi.createCompany(any()) }.throws(
+        coEvery { mockApi.createCompany(expectedCompany) }.throws(
             HttpException(
                 Response.error<Any>(500, "".toResponseBody("plain/text".toMediaType())),
             ),
@@ -131,7 +131,7 @@ internal class CompanyRepositoryUnitTest {
             address = expectedCompany.address,
         )
 
-        coVerify(exactly = 1) { mockApi.createCompany(any()) }
+        coVerify(exactly = 1) { mockApi.createCompany(expectedCompany) }
         verify { mockDao wasNot called }
 
         assertThat(result.errorType).isEqualTo(ErrorType.SERVER)
@@ -139,7 +139,7 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `createAccount without connection should return NO_INTERNET ErrorType`() = runTest {
-        coEvery { mockApi.createCompany(any()) }.throws(IOException())
+        coEvery { mockApi.createCompany(expectedCompany) }.throws(IOException())
 
         val result: Resource<Company> = testSut.createAccount(
             email = expectedCompany.email,
@@ -149,7 +149,7 @@ internal class CompanyRepositoryUnitTest {
             address = expectedCompany.address,
         )
 
-        coVerify(exactly = 1) { mockApi.createCompany(any()) }
+        coVerify(exactly = 1) { mockApi.createCompany(expectedCompany) }
         verify { mockDao wasNot called }
 
         assertThat(result.errorType).isEqualTo(ErrorType.NO_INTERNET)
@@ -157,18 +157,104 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `createAccount with other exception should return UNKNOWN ErrorType`() = runTest {
-        coEvery { mockApi.createCompany(any()) }.throws(Exception())
+        coEvery { mockApi.createCompany(expectedCompany) }.throws(Exception())
 
         val result: Resource<Company> = testSut.createAccount(
             email = expectedCompany.email,
             password = expectedCompany.password,
             companyName = expectedCompany.name,
             phone = expectedCompany.phone,
-            address =expectedCompany.address,
+            address = expectedCompany.address,
         )
 
-        coVerify(exactly = 1) { mockApi.createCompany(any()) }
+        coVerify(exactly = 1) { mockApi.createCompany(expectedCompany) }
         verify { mockDao wasNot called }
+
+        assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+    }
+
+    @Test
+    fun `successful login should return true`() = runTest {
+        coEvery {
+            mockApi.login(expectedCompany.email, expectedCompany.password)
+        } returns Response.success(true)
+
+        val result: Resource<Boolean> = testSut.login(
+            email = expectedCompany.email,
+            password = expectedCompany.password,
+        )
+
+        coVerify(exactly = 1) { mockApi.login(expectedCompany.email, expectedCompany.password) }
+
+        assertThat(result.data).isEqualTo(true)
+    }
+
+    @Test
+    fun `failure login should return false`() = runTest {
+        val expected = RemoteResponseError(code = "500", description = "Server Error")
+
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        val adapter = moshi.adapter(RemoteResponseError::class.java)
+        val expectedJson = adapter.toJson(expected)
+
+        coEvery {
+            mockApi.login(expectedCompany.email, expectedCompany.password)
+        } returns
+            Response.error(
+                500,
+                expectedJson.toResponseBody("application/json".toMediaType()),
+            )
+
+        val result: Resource<Boolean> = testSut.login(
+            email = expectedCompany.email,
+            password = expectedCompany.password,
+        )
+
+        coVerify(exactly = 1) { mockApi.login(expectedCompany.email, expectedCompany.password) }
+
+        assertThat(result.remoteResponseError).isEqualTo(expected)
+    }
+
+    @Test
+    fun `failure login should return SERVER ErrorType`() = runTest {
+        coEvery {
+            mockApi.login(expectedCompany.email, expectedCompany.password)
+        }.throws(HttpException(Response.error<Any>(500, "".toResponseBody("plain/text".toMediaType()))))
+
+        val result: Resource<Boolean> = testSut.login(
+            email = expectedCompany.email,
+            password = expectedCompany.password,
+        )
+
+        coVerify(exactly = 1) { mockApi.login(expectedCompany.email, expectedCompany.password) }
+
+        assertThat(result.errorType).isEqualTo(ErrorType.SERVER)
+    }
+
+    @Test
+    fun `login without connection should return NO_INTERNET ErrorType`() = runTest {
+        coEvery { mockApi.login(expectedCompany.email, expectedCompany.password) }.throws(IOException())
+
+        val result: Resource<Boolean> = testSut.login(
+            email = expectedCompany.email,
+            password = expectedCompany.password,
+        )
+
+        coVerify(exactly = 1) { mockApi.login(expectedCompany.email, expectedCompany.password) }
+
+        assertThat(result.errorType).isEqualTo(ErrorType.NO_INTERNET)
+    }
+
+    @Test
+    fun `login with other exception should return UNKNOWN ErrorType`() = runTest {
+        coEvery { mockApi.login(expectedCompany.email, expectedCompany.password) }.throws(Exception())
+
+        val result: Resource<Boolean> = testSut.login(
+            email = expectedCompany.email,
+            password = expectedCompany.password,
+        )
+
+        coVerify(exactly = 1) { mockApi.login(expectedCompany.email, expectedCompany.password) }
 
         assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
     }
