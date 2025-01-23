@@ -34,3 +34,21 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Build project
+        run: ./gradlew build
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Mais1Venda.apk
+          path: build/outputs/apk/debug/app-debug.apk
