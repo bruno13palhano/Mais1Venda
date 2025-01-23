@@ -20,7 +20,7 @@ internal object ApiServiceModule {
     @Provides
     @Singleton
     fun provideService(): ApiService {
-        val serverUrl = BuildConfig.serverUrl
+        val serverUrl = BuildConfig.ServerUrl
 
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())

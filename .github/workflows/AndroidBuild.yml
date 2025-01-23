@@ -46,7 +46,7 @@ jobs:
 
       - name: Setup local.properties
         env:
-          serverUrl: ${{ secrets.serverUrl }}
+          SERVERURL: ${{ secrets.SERVERURL }}
         run: |
             sed "s|SERVERURL|$SERVERURL|g;" local.defaults.properties > local.properties
 
