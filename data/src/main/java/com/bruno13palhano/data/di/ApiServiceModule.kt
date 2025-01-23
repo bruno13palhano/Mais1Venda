@@ -14,14 +14,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-private const val SERVER_URL = BuildConfig.serverUrl
-
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ApiServiceModule {
     @Provides
     @Singleton
     fun provideService(): ApiService {
+        val serverUrl = BuildConfig.serverUrl
+
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -35,7 +35,7 @@ internal object ApiServiceModule {
 
         val retrofit = Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(SERVER_URL)
+            .baseUrl(serverUrl)
             .client(client)
             .build()
 
