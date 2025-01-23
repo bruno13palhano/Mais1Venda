@@ -2,6 +2,7 @@ package com.bruno13palhano.mais1venda.ui.screens.authentication.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginEvent
@@ -87,16 +88,37 @@ internal class LoginViewModel @Inject constructor(
         }
 
         reduce { copy(emailError = false, passwordError = false, isLoading = true) }
-        val result = companyRepository.authenticate(email = email, password = password)
 
-        if (result) {
-            postSideEffect(effect = LoginSideEffect.NavigateToHome)
-            reduce { copy(isLoading = false, isError = false) }
-        } else {
-            reduce { copy(isLoading = false, isError = true) }
-            postSideEffect(
-                effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_CREDENTIALS),
-            )
+        when (val result = companyRepository.login(email = email, password = password)) {
+            is Resource.Success -> {
+                result.data?.let { success ->
+                    if (success) {
+                        postSideEffect(effect = LoginSideEffect.NavigateToHome)
+                        reduce { copy(isLoading = false, isError = false) }
+                    } else {
+                        reduce { copy(isLoading = false, isError = true) }
+                        postSideEffect(
+                            effect = LoginSideEffect.ShowError(
+                                codeError = CodeError.INVALID_CREDENTIALS,
+                            ),
+                        )
+                    }
+                }
+            }
+
+            is Resource.ResponseError -> {
+                reduce { copy(isLoading = false, isError = true) }
+                postSideEffect(
+                    effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_CREDENTIALS),
+                )
+            }
+
+            is Resource.Error -> {
+                reduce { copy(isLoading = false, isError = true) }
+                postSideEffect(
+                    effect = LoginSideEffect.ShowError(codeError = CodeError.INVALID_CREDENTIALS),
+                )
+            }
         }
     }
 }

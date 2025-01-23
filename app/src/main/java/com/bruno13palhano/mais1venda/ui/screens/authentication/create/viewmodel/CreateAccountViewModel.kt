@@ -2,6 +2,8 @@ package com.bruno13palhano.mais1venda.ui.screens.authentication.create.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.model.resource.Resource
+import com.bruno13palhano.data.model.shared.Address
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountEvent
@@ -152,19 +154,36 @@ internal class CreateAccountViewModel @Inject constructor(
             password = container.state.value.password,
             companyName = container.state.value.companyName,
             phone = container.state.value.phone,
-            address = container.state.value.address,
+            address = Address(container.state.value.address, "", "", ""),
         )
 
-        if (response) {
-            postSideEffect(effect = CreateAccountSideEffect.NavigateToHome)
-            reduce { copy(isLoading = false) }
-        } else {
-            reduce { copy(isError = true, isLoading = false) }
-            postSideEffect(
-                effect = CreateAccountSideEffect.ShowError(
-                    codeError = CodeError.ERROR_CREATING_ACCOUNT,
-                ),
-            )
+        when (response) {
+            is Resource.Success -> {
+                if (response.data != null) {
+                    postSideEffect(effect = CreateAccountSideEffect.NavigateToHome)
+                    reduce { copy(isLoading = false) }
+                }
+            }
+
+            // TODO: Handle errors
+            is Resource.ResponseError -> {
+                reduce { copy(isError = true, isLoading = false) }
+                postSideEffect(
+                    effect = CreateAccountSideEffect.ShowError(
+                        codeError = CodeError.ERROR_CREATING_ACCOUNT,
+                    ),
+                )
+            }
+
+            // TODO: Handle errors
+            is Resource.Error -> {
+                reduce { copy(isError = true, isLoading = false) }
+                postSideEffect(
+                    effect = CreateAccountSideEffect.ShowError(
+                        codeError = CodeError.ERROR_CREATING_ACCOUNT,
+                    ),
+                )
+            }
         }
     }
 
