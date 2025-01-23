@@ -16,6 +16,10 @@ android {
         buildConfig = true
     }
 
+    secrets {
+        defaultPropertiesFileName = "local.defaults.properties"
+    }
+
     defaultConfig {
         minSdk = 26
 
