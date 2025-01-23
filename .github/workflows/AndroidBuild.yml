@@ -48,7 +48,7 @@ jobs:
         env:
           serverUrl: ${{ secrets.serverUrl }}
         run: |
-            sed "s|serverUrl|serverUrl|g;" local.defaults.properties > local.properties
+            sed "s|serverUrl|$serverUrl|g;" local.defaults.properties > local.properties
 
       - name: Build project
         run: ./gradlew assembleDebug
