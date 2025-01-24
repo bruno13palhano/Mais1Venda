@@ -29,7 +29,6 @@ internal class HomeViewModelTest {
         collectEffectHelper(
             verifyEffects = {
                 homeViewModel.container.sideEffect.collect {
-                    println(it)
                     assertThat(it).isEqualTo(HomeSideEffect.ToggleMenu)
                 }
             },
