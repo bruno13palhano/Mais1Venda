@@ -10,7 +10,7 @@ internal class TestCompanyRepository(
     private val shouldReturnError: Boolean = false,
 ) : CompanyRepository {
     override suspend fun login(email: String, password: String): Resource<Boolean> {
-        return if (shouldReturnError) {
+        return if (!shouldReturnError) {
             Resource.Success(data = true)
         } else {
             Resource.Error(errorType = ErrorType.SERVER)
@@ -24,7 +24,7 @@ internal class TestCompanyRepository(
         phone: String,
         address: Address,
     ): Resource<Company> {
-        return if (shouldReturnError) {
+        return if (!shouldReturnError) {
             Resource.Success(
                 data = Company(
                     uid = "",
