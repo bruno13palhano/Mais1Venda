@@ -28,4 +28,6 @@
     <string name="error_creating_account">Error creating account</string>
     <string name="navigate_back">Navigate back</string>
     <string name="burger_menu">Burger menu</string>
+    <string name="products">Products</string>
+    <string name="more_options_menu">More options menu</string>
 </resources>
