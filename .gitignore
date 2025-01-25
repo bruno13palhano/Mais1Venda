@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+import_list
+import_list_script.sh
