@@ -1,0 +1,3 @@
+package com.bruno13palhano.mais1venda
+
+internal class ProductsViewModelUnitTest
