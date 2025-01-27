@@ -2,6 +2,7 @@ package com.bruno13palhano.data.di
 
 import com.bruno13palhano.data.datasource.remote.service.ApiService
 import com.bruno13palhano.data.datasource.remote.source.CompanyRemoteData
+import com.bruno13palhano.data.datasource.remote.source.ProductRemoteData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,4 +16,9 @@ internal object RemoteModule {
     @Singleton
     fun provideCompanyRemoteDataSource(api: ApiService): CompanyRemoteData =
         CompanyRemoteData(api = api)
+
+    @Provides
+    @Singleton
+    fun provideProductRemoteDataSource(api: ApiService): ProductRemoteData =
+        ProductRemoteData(api = api)
 }
