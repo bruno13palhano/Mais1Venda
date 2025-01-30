@@ -88,7 +88,7 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
             )
         },
     ) {
-        LazyColumn (
+        LazyColumn(
             modifier = Modifier
                 .padding(it)
                 .consumeWindowInsets(it),
@@ -115,7 +115,7 @@ private fun ProductsContentPreview() {
         ) {
             ProductsContent(
                 state = ProductsState(
-                    products = productListPreview
+                    products = productListPreview,
                 ),
                 onEvent = {},
             )
@@ -124,14 +124,134 @@ private fun ProductsContentPreview() {
 }
 
 private val productListPreview = listOf(
-    Product(id = 1, name = "Product 1", description = "Description 1", price = 124.5F, category = listOf("Category 1"), code = "Code 1", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 2, name = "Product 2", description = "Description 2", price = 124.5F, category = listOf("Category 2"), code = "Code 2", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 3, name = "Product 3", description = "Description 3", price = 124.5F, category = listOf("Category 3"), code = "Code 3", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 4, name = "Product 4", description = "Description 4", price = 124.5F, category = listOf("Category 4"), code = "Code 4", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 5, name = "Product 5", description = "Description 5", price = 124.5F, category = listOf("Category 5"), code = "Code 5", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 6, name = "Product 6", description = "Description 6", price = 124.5F, category = listOf("Category 6"), code = "Code 6", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 7, name = "Product 7", description = "Description 7", price = 124.5F, category = listOf("Category 7"), code = "Code 7", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 8, name = "Product 8", description = "Description 8", price = 124.5F, category = listOf("Category 8"), code = "Code 8", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 9, name = "Product 9", description = "Description 9", price = 124.5F, category = listOf("Category 9"), code = "Code 9", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
-    Product(id = 10, name = "Product 10", description = "Description 10", price = 124.5F, category = listOf("Category 10"), code = "Code 10", quantity = 1, exhibitToCatalog = true, lastModifiedTimestamp = ""),
+    Product(
+        id = 1,
+        name = "Product 1",
+        description = "Description 1",
+        price = 124.5F,
+        category = listOf(
+            "Category 1",
+        ),
+        code = "Code 1",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 2,
+        name = "Product 2",
+        description = "Description 2",
+        price = 124.5F,
+        category = listOf(
+            "Category 2",
+        ),
+        code = "Code 2",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 3,
+        name = "Product 3",
+        description = "Description 3",
+        price = 124.5F,
+        category = listOf(
+            "Category 3",
+        ),
+        code = "Code 3",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 4,
+        name = "Product 4",
+        description = "Description 4",
+        price = 124.5F,
+        category = listOf(
+            "Category 4",
+        ),
+        code = "Code 4",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 5,
+        name = "Product 5",
+        description = "Description 5",
+        price = 124.5F,
+        category = listOf(
+            "Category 5",
+        ),
+        code = "Code 5",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 6,
+        name = "Product 6",
+        description = "Description 6",
+        price = 124.5F,
+        category = listOf(
+            "Category 6",
+        ),
+        code = "Code 6",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 7,
+        name = "Product 7",
+        description = "Description 7",
+        price = 124.5F,
+        category = listOf(
+            "Category 7",
+        ),
+        code = "Code 7",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 8,
+        name = "Product 8",
+        description = "Description 8",
+        price = 124.5F,
+        category = listOf(
+            "Category 8",
+        ),
+        code = "Code 8",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 9,
+        name = "Product 9",
+        description = "Description 9",
+        price = 124.5F,
+        category = listOf(
+            "Category 9",
+        ),
+        code = "Code 9",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
+    Product(
+        id = 10,
+        name = "Product 10",
+        description = "Description 10",
+        price = 124.5F,
+        category = listOf(
+            "Category 10",
+        ),
+        code = "Code 10",
+        quantity = 1,
+        exhibitToCatalog = true,
+        lastModifiedTimestamp = "",
+    ),
 )
