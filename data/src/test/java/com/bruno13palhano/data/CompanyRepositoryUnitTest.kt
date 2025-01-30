@@ -27,17 +27,12 @@ import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import retrofit2.HttpException
 import retrofit2.Response
 
 internal class CompanyRepositoryUnitTest {
-    @get:Rule
-    val mockWebServer = MockWebServer()
-
     @MockK
     lateinit var mockApi: ApiService
 
