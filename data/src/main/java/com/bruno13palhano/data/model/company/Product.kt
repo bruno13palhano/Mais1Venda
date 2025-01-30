@@ -27,3 +27,15 @@ internal fun Product.asInternal() = ProductEntity(
     exhibitToCatalog = exhibitToCatalog,
     lastModifiedTimestamp = lastModifiedTimestamp,
 )
+
+internal fun ProductEntity.asExternal() = Product(
+    id = id,
+    name = name,
+    price = price,
+    category = category,
+    description = description,
+    code = code,
+    quantity = quantity,
+    exhibitToCatalog = exhibitToCatalog,
+    lastModifiedTimestamp = lastModifiedTimestamp,
+)
