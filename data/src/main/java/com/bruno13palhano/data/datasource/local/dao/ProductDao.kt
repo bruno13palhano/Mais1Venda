@@ -16,7 +16,7 @@ internal interface ProductDao {
     suspend fun update(product: ProductEntity): Int
 
     @Query("DELETE FROM product WHERE id = :id")
-    suspend fun delete(id: Long)
+    suspend fun delete(id: Long): Int
 
     @Query("SELECT * FROM product WHERE id = :id")
     suspend fun getById(id: Long): ProductEntity?
