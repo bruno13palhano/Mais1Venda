@@ -11,6 +11,7 @@ import com.bruno13palhano.data.model.resource.Resource
 import javax.inject.Inject
 
 private const val SERVER_TAG = "ProductRepository-Remote"
+private const val LOCAL_TAG = "ProductRepository-Local"
 
 internal class ProductRepositoryImpl @Inject constructor(
     private val productRemoteData: ProductRemoteData,
@@ -22,19 +23,26 @@ internal class ProductRepositoryImpl @Inject constructor(
             val id = productDao.insert(product = product.asInternal())
             val response = productRemoteData.insert(product.copy(id = id))
 
-            response.data?.let { success ->
-                if (success) {
-                    log.logInfo(tag = SERVER_TAG, message = "Product inserted successfully")
-                } else {
-                    log.logInfo(tag = SERVER_TAG, message = "Product not inserted")
+            if (id > 0) {
+                response.data?.let { success ->
+                    if (success) {
+                        log.logInfo(tag = SERVER_TAG, message = "Product inserted successfully")
+                    } else {
+                        log.logInfo(tag = SERVER_TAG, message = "Product not inserted")
+                    }
                 }
+
+                log.logInfo(tag = LOCAL_TAG, message = "Product inserted successfully")
+
+                Resource.Success(data = true)
+            } else {
+                log.logInfo(tag = LOCAL_TAG, message = "Product not inserted")
+
+                Resource.Success(data = false)
             }
-
-            // TODO: check if id is not zero?
-
-            Resource.Success(data = true)
         } catch (e: Exception) {
-            e.printStackTrace()
+            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
@@ -52,30 +60,44 @@ internal class ProductRepositoryImpl @Inject constructor(
                         log.logInfo(tag = SERVER_TAG, message = "Product not updated")
                     }
                 }
-            } else {
-                // TODO: retry and log info?
-            }
 
-            Resource.Success(data = true)
+                log.logInfo(tag = LOCAL_TAG, message = "Product updated successfully")
+
+                Resource.Success(data = true)
+            } else {
+                log.logInfo(tag = LOCAL_TAG, message = "Product not updated")
+
+                Resource.Success(data = false)
+            }
         } catch (e: Exception) {
+            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
 
     override suspend fun delete(id: Long): Resource<Boolean> {
         return try {
-            productDao.delete(id = id)
+            val rowsAffected = productDao.delete(id = id)
 
-            val response = productRemoteData.deleteById(id = id)
-            response.data?.let { success ->
-                if (success) {
-                    log.logInfo(tag = SERVER_TAG, message = "Product deleted successfully")
-                } else {
-                    log.logInfo(tag = SERVER_TAG, message = "Product not deleted")
+            if (rowsAffected > 0) {
+                val response = productRemoteData.deleteById(id = id)
+                response.data?.let { success ->
+                    if (success) {
+                        log.logInfo(tag = SERVER_TAG, message = "Product deleted successfully")
+                    } else {
+                        log.logInfo(tag = SERVER_TAG, message = "Product not deleted")
+                    }
                 }
-            }
 
-            return Resource.Success(true)
+                log.logInfo(tag = LOCAL_TAG, message = "Product deleted successfully")
+
+                return Resource.Success(true)
+            } else {
+                log.logInfo(tag = LOCAL_TAG, message = "Product not deleted")
+
+                return Resource.Success(false)
+            }
         } catch (e: Exception) {
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
@@ -83,8 +105,14 @@ internal class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getAll(): Resource<List<Product>> {
         return try {
-            Resource.Success(productDao.getAll().map { it.asExternal() })
+            val products = productDao.getAll().map { it.asExternal() }
+
+            log.logInfo(tag = LOCAL_TAG, message = "Products retrieved successfully")
+
+            Resource.Success(data = products)
         } catch (e: Exception) {
+            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
