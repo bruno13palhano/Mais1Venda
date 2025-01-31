@@ -73,6 +73,7 @@ internal class ProductRepositoryImpl @Inject constructor(
 
             return Resource.Success(true)
         } catch (e: Exception) {
+            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
