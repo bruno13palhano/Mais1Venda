@@ -9,23 +9,6 @@ import java.io.IOException
 import retrofit2.HttpException
 import retrofit2.Response
 
-internal suspend fun <T> retryApiCall(
-    tries: Int = 3,
-    call: suspend () -> Resource<T>,
-    success: (response: T?) -> Unit,
-    retry: suspend () -> Unit,
-) {
-    val resource = call()
-    var remainingTries = tries
-
-    while (resource.data == null && remainingTries > 0) {
-        remainingTries--
-        retry()
-    }
-
-    if (resource.data != null) success(resource.data)
-}
-
 internal suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): Resource<T> {
     return try {
         getResponse(apiCall.invoke())
