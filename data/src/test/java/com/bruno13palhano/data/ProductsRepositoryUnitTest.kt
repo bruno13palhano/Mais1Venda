@@ -105,6 +105,22 @@ internal class ProductsRepositoryUnitTest {
     }
 
     @Test
+    fun `remote insertion failure should retry`() = runTest {
+        coEvery { mockDao.insert(expectedProduct.asInternal()) } returns 1
+        coEvery { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
+            .throwsMany(listOf(Exception()))
+            .andThen(Response.success(true))
+
+        val result: Resource<Boolean> = testSut.insert(product = expectedProduct)
+
+        coVerify(exactly = 1) { mockDao.insert(expectedProduct.asInternal()) }
+        // 2 = 1 original + 1 retry
+        coVerify(exactly = 2) { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
+
+        assertThat(result.data!!).isEqualTo(true)
+    }
+
+    @Test
     fun `successful update should return true`() = runTest {
         val expected = expectedProduct.copy(id = 1, name = "updated")
 
@@ -150,6 +166,24 @@ internal class ProductsRepositoryUnitTest {
     }
 
     @Test
+    fun `remote update failure should retry`() = runTest {
+        val expected = expectedProduct.copy(id = 1, name = "updated")
+
+        coEvery { mockDao.update(expected.asInternal()) } returns 1
+        coEvery { mockApi.updateProduct(expected) }
+            .throwsMany(listOf(Exception(), Exception()))
+            .andThen(Response.success(true))
+
+        val result: Resource<Boolean> = testSut.update(product = expected)
+
+        coVerify(exactly = 1) { mockDao.update(expected.asInternal()) }
+        // 3 = 1 original + 2 retries
+        coVerify(exactly = 3) { mockApi.updateProduct(expected) }
+
+        assertThat(result.data!!).isEqualTo(true)
+    }
+
+    @Test
     fun `successful delete should return true`() = runTest {
         val id = 1L
 
@@ -192,6 +226,24 @@ internal class ProductsRepositoryUnitTest {
         coVerify(exactly = 0) { mockApi.deleteProductById(id) }
 
         assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+    }
+
+    @Test
+    fun `remote delete failure should retry`() = runTest {
+        val id = 1L
+
+        coEvery { mockDao.delete(id) } returns 1
+        coEvery { mockApi.deleteProductById(id) }
+            .throwsMany(listOf(Exception(), Exception(), Exception()))
+            .andThen(Response.success(true))
+
+        val result: Resource<Boolean> = testSut.delete(id = id)
+
+        coVerify(exactly = 1) { mockDao.delete(id) }
+        // 4 = 1 original + 3 retries
+        coVerify(exactly = 4) { mockApi.deleteProductById(id) }
+
+        assertThat(result.data!!).isEqualTo(true)
     }
 
     @Test
