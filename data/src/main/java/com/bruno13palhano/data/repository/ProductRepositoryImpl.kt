@@ -33,7 +33,7 @@ internal class ProductRepositoryImpl @Inject constructor(
 
             Resource.Success(data = true)
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
@@ -53,7 +53,7 @@ internal class ProductRepositoryImpl @Inject constructor(
 
             Resource.Success(data = true)
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
@@ -73,20 +73,22 @@ internal class ProductRepositoryImpl @Inject constructor(
 
             return Resource.Success(true)
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
             Resource.Error(errorType = ErrorType.UNKNOWN)
         }
     }
 
     override suspend fun getAll(): Resource<List<Product>> {
+        var logMessage = "Products retrieved successfully"
+
         return try {
             val products = productDao.getAll().map { it.asExternal() }
-            log.logInfo(tag = LOCAL_TAG, message = "Products retrieved successfully")
-
             Resource.Success(data = products)
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: "Unknown error")
+            logMessage = e.message ?: ErrorType.UNKNOWN.name
             Resource.Error(errorType = ErrorType.UNKNOWN)
+        } finally {
+            log.logInfo(tag = LOCAL_TAG, message = logMessage)
         }
     }
 
