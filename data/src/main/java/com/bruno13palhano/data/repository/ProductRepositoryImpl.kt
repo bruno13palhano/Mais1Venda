@@ -8,6 +8,7 @@ import com.bruno13palhano.data.model.company.asExternal
 import com.bruno13palhano.data.model.company.asInternal
 import com.bruno13palhano.data.model.resource.ErrorType
 import com.bruno13palhano.data.model.resource.Resource
+import com.bruno13palhano.data.repository.shared.remoteCallWithRetry
 import javax.inject.Inject
 
 private const val REMOTE_TAG = "ProductRepository-Remote"
@@ -21,7 +22,6 @@ internal class ProductRepositoryImpl @Inject constructor(
     override suspend fun insert(product: Product): Resource<Boolean> {
         return try {
             val id = productDao.insert(product = product.asInternal())
-            val response = productRemoteData.insert(product.copy(id = id))
 
             if (id <= 0) {
                 log.logInfo(tag = LOCAL_TAG, message = "Product not inserted")
@@ -29,7 +29,10 @@ internal class ProductRepositoryImpl @Inject constructor(
             }
             log.logInfo(tag = LOCAL_TAG, message = "Product inserted successfully")
 
-            response.data?.let { success -> logRemoteProductInsertion(success = success) }
+            remoteCallWithRetry(
+                call = { productRemoteData.insert(product.copy(id = id)) },
+                success = { it?.let { success -> logRemoteProductInsertion(success = success) } },
+            )
 
             Resource.Success(data = true)
         } catch (e: Exception) {
@@ -48,8 +51,10 @@ internal class ProductRepositoryImpl @Inject constructor(
             }
             log.logInfo(tag = LOCAL_TAG, message = "Product updated successfully")
 
-            val response = productRemoteData.update(product)
-            response.data?.let { success -> logRemoteProductUpdate(success = success) }
+            remoteCallWithRetry(
+                call = { productRemoteData.update(product = product) },
+                success = { it?.let { success -> logRemoteProductUpdate(success = success) } },
+            )
 
             Resource.Success(data = true)
         } catch (e: Exception) {
@@ -68,8 +73,10 @@ internal class ProductRepositoryImpl @Inject constructor(
             }
             log.logInfo(tag = LOCAL_TAG, message = "Product deleted successfully")
 
-            val response = productRemoteData.deleteById(id = id)
-            response.data?.let { success -> logRemoteProductDeletion(success = success) }
+            remoteCallWithRetry(
+                call = { productRemoteData.deleteById(id = id) },
+                success = { it?.let { success -> logRemoteProductDeletion(success = success) } },
+            )
 
             return Resource.Success(true)
         } catch (e: Exception) {
