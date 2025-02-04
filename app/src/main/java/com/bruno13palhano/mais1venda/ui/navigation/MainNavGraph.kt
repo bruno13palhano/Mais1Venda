@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeRoute
 import com.bruno13palhano.mais1venda.ui.screens.settings.presenter.SettingsRoute
 import kotlinx.serialization.Serializable
 
@@ -21,12 +20,11 @@ internal fun MainNavGraph(
         navController = navController,
         startDestination = MainRoutes.Home,
     ) {
-        composable<MainRoutes.Home> {
-            HomeRoute(
-                openDrawer = onIconMenuClick,
-                navigateToLogin = { navController.navigate(MainRoutes.Login) },
-            )
-        }
+        homeNavGraph(
+            navController = navController,
+            gesturesEnabled = gesturesEnabled,
+            openDrawer = onIconMenuClick,
+        )
 
         accountNavGraph(
             navController = navController,
