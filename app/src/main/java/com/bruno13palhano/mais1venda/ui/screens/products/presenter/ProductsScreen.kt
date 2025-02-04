@@ -1,5 +1,6 @@
 package com.bruno13palhano.mais1venda.ui.screens.products.presenter
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -10,8 +11,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -37,6 +40,7 @@ import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 @Composable
 internal fun ProductsRoute(
     navigateToProduct: (id: Long) -> Unit,
+    navigateToNewProduct: () -> Unit,
     navigateBack: () -> Unit,
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
@@ -49,6 +53,8 @@ internal fun ProductsRoute(
                 ProductsSideEffect.OpenOptionsMenu -> {}
 
                 is ProductsSideEffect.NavigateToProduct -> navigateToProduct(effect.productId)
+
+                ProductsSideEffect.NavigateToNewProduct -> navigateToNewProduct()
 
                 ProductsSideEffect.NavigateBack -> navigateBack()
             }
@@ -87,6 +93,16 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
                 },
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onEvent(ProductsEvents.NavigateToNewProduct) },
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.new_product),
+                )
+            }
+        },
     ) {
         LazyColumn(
             modifier = Modifier
@@ -96,7 +112,9 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
         ) {
             items(items = state.products, key = { product -> product.id }) {
                 ListItem(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .clickable { onEvent(ProductsEvents.NavigateToProduct(it.id)) }
+                        .fillMaxSize(),
                     headlineContent = { Text(text = it.name) },
                     supportingContent = { Text(text = it.description) },
                 )

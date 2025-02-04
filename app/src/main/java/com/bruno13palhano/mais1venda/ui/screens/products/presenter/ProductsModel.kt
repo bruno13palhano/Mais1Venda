@@ -15,6 +15,7 @@ internal sealed interface ProductsEvents {
     data object OpenOptionsMenu : ProductsEvents
     data class OptionsItemSelected(val option: String) : ProductsEvents
     data class NavigateToProduct(val productId: Long) : ProductsEvents
+    data object NavigateToNewProduct : ProductsEvents
     data object NavigateBack : ProductsEvents
 }
 
@@ -22,5 +23,6 @@ internal sealed interface ProductsEvents {
 internal sealed interface ProductsSideEffect {
     data object OpenOptionsMenu : ProductsSideEffect
     data class NavigateToProduct(val productId: Long) : ProductsSideEffect
+    data object NavigateToNewProduct : ProductsSideEffect
     data object NavigateBack : ProductsSideEffect
 }
