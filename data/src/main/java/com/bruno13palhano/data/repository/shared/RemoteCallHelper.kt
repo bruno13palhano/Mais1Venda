@@ -11,6 +11,7 @@ internal suspend fun <T> remoteCallWithRetry(
     retries: Int = 3,
     call: suspend () -> Resource<T>,
     success: (response: T?) -> Unit,
+    error: (message: String?) -> Unit,
 ) {
     var resource = call()
     var remainingTries = retries
@@ -20,5 +21,11 @@ internal suspend fun <T> remoteCallWithRetry(
         resource = call()
     }
 
-    if (resource.data != null) success(resource.data)
+    when (resource) {
+        is Resource.Success -> success(resource.data)
+
+        is Resource.ResponseError -> error(resource.remoteResponseError?.description)
+
+        is Resource.Error -> error(resource.errorType?.name)
+    }
 }
