@@ -24,6 +24,8 @@ internal class HomeViewModel @Inject constructor(
             HomeEvent.LoadOrders -> loadOrders()
 
             HomeEvent.ToggleMenu -> toggleMenu()
+
+            HomeEvent.NavigateToProducts -> navigateToProducts()
         }
     }
 
@@ -35,5 +37,9 @@ internal class HomeViewModel @Inject constructor(
 
     private fun toggleMenu() = container.intent {
         postSideEffect(HomeSideEffect.ToggleMenu)
+    }
+
+    private fun navigateToProducts() = container.intent {
+        postSideEffect(effect = HomeSideEffect.NavigateToProducts)
     }
 }
