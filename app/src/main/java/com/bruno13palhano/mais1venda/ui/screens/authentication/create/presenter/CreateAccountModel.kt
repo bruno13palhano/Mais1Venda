@@ -27,35 +27,22 @@ internal data class CreateAccountState(
 @Immutable
 internal sealed interface CreateAccountEvent {
     data class EmailChanged(val email: String) : CreateAccountEvent
-
     data class CompanyNameChanged(val companyName: String) : CreateAccountEvent
-
     data class PhoneChanged(val phone: String) : CreateAccountEvent
-
     data class AddressChanged(val address: String) : CreateAccountEvent
-
     data class PasswordChanged(val password: String) : CreateAccountEvent
-
     data class ConfirmPasswordChanged(val confirmPassword: String) : CreateAccountEvent
-
     data object TogglePasswordVisibility : CreateAccountEvent
-
     data object ToggleConfirmPasswordVisibility : CreateAccountEvent
-
     data object DismissKeyboard : CreateAccountEvent
-
     data object CreateAccount : CreateAccountEvent
-
     data object NavigateBack : CreateAccountEvent
 }
 
 @Immutable
 internal sealed interface CreateAccountSideEffect {
     data object DismissKeyboard : CreateAccountSideEffect
-
     data object NavigateToHome : CreateAccountSideEffect
-
     data object NavigateBack : CreateAccountSideEffect
-
     data class ShowError(val codeError: CodeError) : CreateAccountSideEffect
 }
