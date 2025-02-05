@@ -13,13 +13,13 @@ internal data class HomeState(
 @Immutable
 internal sealed interface HomeEvent {
     data object LoadOrders : HomeEvent
-
     data object ToggleMenu : HomeEvent
+    data object NavigateToProducts : HomeEvent
 }
 
 @Immutable
 internal sealed interface HomeSideEffect {
     data object ToggleMenu : HomeSideEffect
-
     data class ShowError(val message: String) : HomeSideEffect
+    data object NavigateToProducts : HomeSideEffect
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import kotlin.random.Random
 internal fun HomeRoute(
     openDrawer: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToProducts: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.container.state.collectAsStateWithLifecycle()
@@ -52,6 +54,8 @@ internal fun HomeRoute(
                 HomeSideEffect.ToggleMenu -> openDrawer()
 
                 is HomeSideEffect.ShowError -> {}
+
+                HomeSideEffect.NavigateToProducts -> navigateToProducts()
             }
         }
     }
@@ -94,6 +98,9 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
                     .consumeWindowInsets(it)
                     .verticalScroll(rememberScrollState()),
             ) {
+                Button(onClick = { onEvent(HomeEvent.NavigateToProducts) }) {
+                    Text(text = stringResource(R.string.products))
+                }
             }
         }
     }
