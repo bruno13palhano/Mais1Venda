@@ -30,8 +30,12 @@ internal class ProductRepositoryImpl @Inject constructor(
             log.logInfo(tag = LOCAL_TAG, message = "Product inserted successfully")
 
             remoteCallWithRetry(
-                call = { productRemoteData.insert(product.copy(id = id)) },
+                call = { productRemoteData.insert(product = product.copy(id = id)) },
                 success = { it?.let { success -> logRemoteProductInsertion(success = success) } },
+                error = {
+                    log.logError(tag = REMOTE_TAG, message = ErrorType.NOT_SYNCHRONIZED.name)
+                    // TODO: notify out of sync?
+                },
             )
 
             Resource.Success(data = true)
@@ -54,6 +58,10 @@ internal class ProductRepositoryImpl @Inject constructor(
             remoteCallWithRetry(
                 call = { productRemoteData.update(product = product) },
                 success = { it?.let { success -> logRemoteProductUpdate(success = success) } },
+                error = {
+                    log.logError(tag = REMOTE_TAG, message = ErrorType.NOT_SYNCHRONIZED.name)
+                    // TODO: notify out of sync?
+                },
             )
 
             Resource.Success(data = true)
@@ -76,6 +84,10 @@ internal class ProductRepositoryImpl @Inject constructor(
             remoteCallWithRetry(
                 call = { productRemoteData.deleteById(id = id) },
                 success = { it?.let { success -> logRemoteProductDeletion(success = success) } },
+                error = {
+                    log.logError(tag = REMOTE_TAG, message = it ?: ErrorType.NOT_SYNCHRONIZED.name)
+                    // TODO: notify out of sync?
+                },
             )
 
             return Resource.Success(true)
