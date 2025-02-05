@@ -3,6 +3,7 @@ package com.bruno13palhano.mais1venda.ui.screens.products.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.data.di.ProductRep
+import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsEvents
@@ -31,14 +32,25 @@ internal class ProductsViewModel @Inject constructor(
 
             is ProductsEvents.NavigateToProduct -> navigateToProduct(productId = event.productId)
 
+            ProductsEvents.NavigateToNewProduct -> navigateToNewProduct()
+
             ProductsEvents.NavigateBack -> navigateBack()
         }
     }
 
     private fun loadProducts() = container.intent {
-        // remove flow?
-        productRepository.getAll().collect { products ->
-            reduce { copy(products = products) }
+        val response = productRepository.getAll()
+
+        when (response) {
+            is Resource.Success -> {
+                reduce { copy(products = response.data ?: emptyList()) }
+            }
+
+            is Resource.ResponseError -> {
+            }
+
+            is Resource.Error -> {
+            }
         }
     }
 
@@ -52,6 +64,10 @@ internal class ProductsViewModel @Inject constructor(
 
     private fun navigateToProduct(productId: Long) = container.intent {
         postSideEffect(effect = ProductsSideEffect.NavigateToProduct(productId = productId))
+    }
+
+    private fun navigateToNewProduct() = container.intent {
+        postSideEffect(effect = ProductsSideEffect.NavigateToNewProduct)
     }
 
     private fun navigateBack() = container.intent {
