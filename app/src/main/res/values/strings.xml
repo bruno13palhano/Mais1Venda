@@ -32,4 +32,5 @@
     <string name="more_options_menu">More options menu</string>
     <string name="new_product">New Product</string>
     <string name="edit_product">Edit Product</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>
