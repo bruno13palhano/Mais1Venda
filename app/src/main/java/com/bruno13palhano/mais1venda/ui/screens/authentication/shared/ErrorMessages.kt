@@ -16,5 +16,6 @@ fun getErrorMessages(): Map<CodeError, String> {
         CodeError.INVALID_CREDENTIALS to stringResource(id = R.string.invalid_credentials),
         CodeError.INVALID_FIELDS to stringResource(id = R.string.invalid_fields),
         CodeError.ERROR_CREATING_ACCOUNT to stringResource(id = R.string.error_creating_account),
+        CodeError.UNKNOWN_ERROR to stringResource(R.string.unknown_error),
     )
 }
