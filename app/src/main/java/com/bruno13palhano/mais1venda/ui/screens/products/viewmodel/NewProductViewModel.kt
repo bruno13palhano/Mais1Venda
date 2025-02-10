@@ -7,6 +7,11 @@ import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductState
+import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
+import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
+import com.bruno13palhano.mais1venda.ui.screens.products.shared.isQuantityValid
+import com.bruno13palhano.mais1venda.ui.screens.shared.stringToFloat
+import com.bruno13palhano.mais1venda.ui.screens.shared.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -57,7 +62,7 @@ internal class NewProductViewModel @Inject constructor(
     private fun priceChanged(price: String) = container.intent {
         var priceError = false
 
-        if (price.isBlank()) priceError = true
+        if (!isPriceValid(price = stringToFloat(price))) priceError = true
 
         reduce { copy(price = price, priceError = priceError) }
     }
@@ -81,7 +86,7 @@ internal class NewProductViewModel @Inject constructor(
     private fun codeChanged(code: String) = container.intent {
         var codeError = false
 
-        if (code.isBlank()) codeError = true
+        if (!isCodeValid(code = code)) codeError = true
 
         reduce { copy(code = code, codeError = codeError) }
     }
@@ -89,7 +94,7 @@ internal class NewProductViewModel @Inject constructor(
     private fun quantityChanged(quantity: String) = container.intent {
         var quantityError = false
 
-        if (quantity.isBlank() && quantity.toInt() <= 0) quantityError = true
+        if (!isQuantityValid(quantity = stringToInt(quantity))) quantityError = true
 
         reduce { copy(quantity = quantity, quantityError = quantityError) }
     }
