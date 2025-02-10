@@ -2,14 +2,19 @@ package com.bruno13palhano.mais1venda.ui.screens.products.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.model.company.Product
+import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
+import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isQuantityValid
+import com.bruno13palhano.mais1venda.ui.screens.shared.currentDate
+import com.bruno13palhano.mais1venda.ui.screens.shared.dateFormat
 import com.bruno13palhano.mais1venda.ui.screens.shared.stringToFloat
 import com.bruno13palhano.mais1venda.ui.screens.shared.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,49 +57,37 @@ internal class NewProductViewModel @Inject constructor(
     }
 
     private fun nameChanged(name: String) = container.intent {
-        var nameError = false
-
-        if (name.isBlank()) nameError = true
+        val nameError = name.isBlank()
 
         reduce { copy(name = name, nameError = nameError) }
     }
 
     private fun priceChanged(price: String) = container.intent {
-        var priceError = false
-
-        if (!isPriceValid(price = stringToFloat(price))) priceError = true
+        val priceError = !isPriceValid(price = stringToFloat(price))
 
         reduce { copy(price = price, priceError = priceError) }
     }
 
     private fun categoryChanged(category: String) = container.intent {
-        var categoryError = false
-
-        if (category.isBlank()) categoryError = true
+        val categoryError = category.isBlank()
 
         reduce { copy(category = category, categoryError = categoryError) }
     }
 
     private fun descriptionChanged(description: String) = container.intent {
-        var descriptionError = false
-
-        if (description.isBlank()) descriptionError = true
+        val descriptionError = description.isBlank()
 
         reduce { copy(description = description, descriptionError = descriptionError) }
     }
 
     private fun codeChanged(code: String) = container.intent {
-        var codeError = false
-
-        if (!isCodeValid(code = code)) codeError = true
+        val codeError = !isCodeValid(code = code)
 
         reduce { copy(code = code, codeError = codeError) }
     }
 
     private fun quantityChanged(quantity: String) = container.intent {
-        var quantityError = false
-
-        if (!isQuantityValid(quantity = stringToInt(quantity))) quantityError = true
+        val quantityError = !isQuantityValid(quantity = stringToInt(quantity))
 
         reduce { copy(quantity = quantity, quantityError = quantityError) }
     }
@@ -107,10 +100,72 @@ internal class NewProductViewModel @Inject constructor(
         postSideEffect(effect = NewProductSideEffect.DismissKeyboard)
     }
 
-    private fun saveProduct() = container.intent {
-    }
-
     private fun navigateBack() = container.intent {
         postSideEffect(effect = NewProductSideEffect.NavigateBack)
+    }
+
+    private fun saveProduct() = container.intent {
+        if (isFieldsInvalid()) {
+            reduce { copy(isError = true) }
+            postSideEffect(
+                effect = NewProductSideEffect.ShowError(
+                    codeError = CodeError.UNKNOWN_ERROR
+                )
+            )
+
+            return@intent
+        }
+
+        val response = productRepository.insert(
+            product = Product(
+                id = 0L,
+                name = container.state.value.name,
+                price = stringToFloat(container.state.value.price),
+                category = listOf(),
+                description = container.state.value.description,
+                code = container.state.value.code,
+                quantity = stringToInt(container.state.value.quantity),
+                exhibitToCatalog = container.state.value.exhibitToCatalog,
+                lastModifiedTimestamp = dateFormat.format(currentDate()),
+            ),
+        )
+
+        when (response) {
+            is Resource.Success -> {
+                if (response.data != null) {
+                    postSideEffect(effect = NewProductSideEffect.NavigateBack)
+                }
+            }
+
+            is Resource.ResponseError -> {
+                reduce { copy(isError = true) }
+                postSideEffect(
+                    effect = NewProductSideEffect.ShowError(
+                        codeError = CodeError.UNKNOWN_ERROR
+                    )
+                )
+            }
+
+            is Resource.Error -> {
+                reduce { copy(isError = true) }
+                postSideEffect(
+                    effect = NewProductSideEffect.ShowError(
+                        codeError = CodeError.UNKNOWN_ERROR
+                    )
+                )
+            }
+        }
+    }
+
+    private fun isFieldsInvalid(): Boolean {
+        val nameError = container.state.value.name.isBlank()
+        val priceError = !isPriceValid(price = stringToFloat(container.state.value.price))
+        val categoryError = container.state.value.category.isBlank()
+        val descriptionError = container.state.value.description.isBlank()
+        val codeError = !isCodeValid(code = container.state.value.code)
+        val quantityError = !isQuantityValid(quantity = stringToInt(container.state.value.quantity))
+
+        return nameError || priceError || categoryError || descriptionError || codeError ||
+                quantityError
     }
 }
