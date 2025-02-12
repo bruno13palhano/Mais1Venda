@@ -8,7 +8,7 @@ import java.time.ZoneOffset
 
 fun currentDate() = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
 
-fun currentTimestamp():String = dateFormat.format(currentDate())
+fun currentTimestamp(): String = dateFormat.format(currentDate())
 
 val dateFormat: DateFormat =
     SimpleDateFormat.getDateInstance().apply {
