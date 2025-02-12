@@ -32,7 +32,7 @@ internal sealed interface NewProductEvent {
     data class QuantityChanged(val quantity: String) : NewProductEvent
     data object ToggleExhibitToCatalog : NewProductEvent
     data object DismissKeyboard : NewProductEvent
-    data object SaveProduct : NewProductEvent
+    data class SaveProduct(val timestamp: String) : NewProductEvent
     data object NavigateBack : NewProductEvent
 }
 

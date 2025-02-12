@@ -13,8 +13,6 @@ import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSta
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isQuantityValid
-import com.bruno13palhano.mais1venda.ui.screens.shared.currentDate
-import com.bruno13palhano.mais1venda.ui.screens.shared.dateFormat
 import com.bruno13palhano.mais1venda.ui.screens.shared.stringToFloat
 import com.bruno13palhano.mais1venda.ui.screens.shared.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +48,7 @@ internal class NewProductViewModel @Inject constructor(
 
             NewProductEvent.DismissKeyboard -> dismissKeyboard()
 
-            NewProductEvent.SaveProduct -> saveProduct()
+            is NewProductEvent.SaveProduct -> saveProduct(currentDate = event.timestamp)
 
             NewProductEvent.NavigateBack -> navigateBack()
         }
@@ -104,13 +102,13 @@ internal class NewProductViewModel @Inject constructor(
         postSideEffect(effect = NewProductSideEffect.NavigateBack)
     }
 
-    private fun saveProduct() = container.intent {
+    private fun saveProduct(currentDate: String) = container.intent {
         if (isFieldsInvalid()) {
             reduce { copy(isError = true) }
             postSideEffect(
                 effect = NewProductSideEffect.ShowError(
-                    codeError = CodeError.UNKNOWN_ERROR
-                )
+                    codeError = CodeError.INVALID_FIELDS,
+                ),
             )
 
             return@intent
@@ -126,7 +124,7 @@ internal class NewProductViewModel @Inject constructor(
                 code = container.state.value.code,
                 quantity = stringToInt(container.state.value.quantity),
                 exhibitToCatalog = container.state.value.exhibitToCatalog,
-                lastModifiedTimestamp = dateFormat.format(currentDate()),
+                lastModifiedTimestamp = currentDate,
             ),
         )
 
@@ -141,8 +139,8 @@ internal class NewProductViewModel @Inject constructor(
                 reduce { copy(isError = true) }
                 postSideEffect(
                     effect = NewProductSideEffect.ShowError(
-                        codeError = CodeError.UNKNOWN_ERROR
-                    )
+                        codeError = CodeError.UNKNOWN_ERROR,
+                    ),
                 )
             }
 
@@ -150,8 +148,8 @@ internal class NewProductViewModel @Inject constructor(
                 reduce { copy(isError = true) }
                 postSideEffect(
                     effect = NewProductSideEffect.ShowError(
-                        codeError = CodeError.UNKNOWN_ERROR
-                    )
+                        codeError = CodeError.UNKNOWN_ERROR,
+                    ),
                 )
             }
         }
@@ -166,6 +164,6 @@ internal class NewProductViewModel @Inject constructor(
         val quantityError = !isQuantityValid(quantity = stringToInt(container.state.value.quantity))
 
         return nameError || priceError || categoryError || descriptionError || codeError ||
-                quantityError
+            quantityError
     }
 }
