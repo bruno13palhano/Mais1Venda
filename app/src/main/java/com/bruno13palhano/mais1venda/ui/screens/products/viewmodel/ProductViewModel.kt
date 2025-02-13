@@ -9,7 +9,7 @@ import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductState
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isQuantityValid
@@ -20,10 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class NewProductViewModel @Inject constructor(
-    initialState: NewProductState,
+    initialState: ProductState,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    val container = Container<NewProductState, NewProductSideEffect>(
+    val container = Container<ProductState, NewProductSideEffect>(
         initialState = initialState,
         scope = viewModelScope,
     )

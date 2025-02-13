@@ -98,7 +98,7 @@ internal fun NewProductRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewProductContent(
-    state: NewProductState,
+    state: ProductState,
     snackbarHostState: SnackbarHostState,
     onEvent: (event: NewProductEvent) -> Unit,
 ) {
@@ -134,7 +134,7 @@ private fun NewProductContent(
 }
 
 @Composable
-private fun NewProductForm(state: NewProductState, onEvent: (event: NewProductEvent) -> Unit) {
+private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent) -> Unit) {
     CustomTextField(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -246,7 +246,7 @@ private fun NewProductPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             NewProductContent(
-                state = NewProductState(),
+                state = ProductState(),
                 snackbarHostState = remember { SnackbarHostState() },
                 onEvent = {},
             )

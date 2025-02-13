@@ -10,5 +10,7 @@ interface ProductRepository {
 
     suspend fun delete(id: Long): Resource<Boolean>
 
+    suspend fun get(id: Long): Resource<Product?>
+
     suspend fun getAll(): Resource<List<Product>>
 }

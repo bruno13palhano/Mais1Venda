@@ -4,7 +4,7 @@ import com.bruno13palhano.mais1venda.repository.TestProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductState
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.NewProductViewModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class NewProductViewModelUnitTest {
-    private val state = NewProductState(
+    private val state = ProductState(
         id = 1L,
         name = "Product 1",
         price = "100.05",
@@ -377,7 +377,7 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `SaveProduct Event with invalid param should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(NewProductState(), TestProductRepository())
+        val viewModel = NewProductViewModel(ProductState(), TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {

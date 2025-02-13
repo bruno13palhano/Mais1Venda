@@ -71,6 +71,17 @@ internal class ProductRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun get(id: Long): Resource<Product?> {
+        return try {
+            val result = productDao.getById(id = id)?.asExternal()
+
+            Resource.Success(data = result)
+        } catch (e: Exception) {
+            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
+            Resource.Error(errorType = ErrorType.UNKNOWN)
+        }
+    }
+
     override suspend fun delete(id: Long): Resource<Boolean> {
         return try {
             val rowsAffected = productDao.delete(id = id)
