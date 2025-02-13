@@ -45,7 +45,7 @@ import com.bruno13palhano.mais1venda.R
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomFloatField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomIntegerField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomTextField
-import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.NewProductViewModel
+import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.ProductViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.clickableWithoutRipple
 import com.bruno13palhano.mais1venda.ui.screens.shared.currentTimestamp
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun NewProductRoute(
     navigateBack: () -> Unit,
-    viewModel: NewProductViewModel = hiltViewModel(),
+    viewModel: ProductViewModel = hiltViewModel(),
 ) {
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
@@ -69,14 +69,14 @@ internal fun NewProductRoute(
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->
             when (sideEffect) {
-                NewProductSideEffect.DismissKeyboard -> {
+                ProductSideEffect.DismissKeyboard -> {
                     focusManager.clearFocus()
                     keyboardController?.hide()
                 }
 
-                NewProductSideEffect.NavigateBack -> navigateBack()
+                ProductSideEffect.NavigateBack -> navigateBack()
 
-                is NewProductSideEffect.ShowError -> {
+                is ProductSideEffect.ShowError -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             message = inputFieldsErrorMessage,
@@ -88,7 +88,8 @@ internal fun NewProductRoute(
         }
     }
 
-    NewProductContent(
+    ProductContent(
+        id = 0L,
         state = state,
         snackbarHostState = snackbarHostState,
         onEvent = viewModel::handleEvent,
@@ -97,10 +98,11 @@ internal fun NewProductRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewProductContent(
+private fun ProductContent(
+    id: Long,
     state: ProductState,
     snackbarHostState: SnackbarHostState,
-    onEvent: (event: NewProductEvent) -> Unit,
+    onEvent: (event: ProductEvent) -> Unit,
 ) {
     Scaffold(
         modifier = Modifier
@@ -110,7 +112,7 @@ private fun NewProductContent(
             TopAppBar(
                 title = { Text(text = stringResource(R.string.new_product)) },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(NewProductEvent.NavigateBack) }) {
+                    IconButton(onClick = { onEvent(ProductEvent.NavigateBack) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.navigate_back),
@@ -128,19 +130,23 @@ private fun NewProductContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            NewProductForm(state = state, onEvent = onEvent)
+            ProductForm(id = id, state = state, onEvent = onEvent)
         }
     }
 }
 
 @Composable
-private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent) -> Unit) {
+private fun ProductForm(
+    id: Long,
+    state: ProductState,
+    onEvent: (event: ProductEvent) -> Unit,
+) {
     CustomTextField(
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.name,
-        onValueChange = { onEvent(NewProductEvent.NameChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.NameChanged(it)) },
         label = stringResource(R.string.product_name),
         placeholder = stringResource(R.string.product_name_placeholder),
         isError = state.nameError,
@@ -151,7 +157,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.price,
-        onValueChange = { onEvent(NewProductEvent.PriceChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.PriceChanged(it)) },
         label = stringResource(R.string.price),
         placeholder = stringResource(R.string.price_placeholder),
         isError = state.priceError,
@@ -162,7 +168,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.category,
-        onValueChange = { onEvent(NewProductEvent.CategoryChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.CategoryChanged(it)) },
         label = stringResource(R.string.category),
         placeholder = stringResource(R.string.category_placeholder),
         isError = state.categoryError,
@@ -173,7 +179,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.description,
-        onValueChange = { onEvent(NewProductEvent.DescriptionChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.DescriptionChanged(it)) },
         label = stringResource(R.string.description),
         placeholder = stringResource(R.string.description_placeholder),
         isError = state.descriptionError,
@@ -184,7 +190,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.code,
-        onValueChange = { onEvent(NewProductEvent.CodeChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.CodeChanged(it)) },
         label = stringResource(R.string.code),
         placeholder = stringResource(R.string.code_placeholder),
         isError = state.codeError,
@@ -195,7 +201,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         value = state.quantity,
-        onValueChange = { onEvent(NewProductEvent.QuantityChanged(it)) },
+        onValueChange = { onEvent(ProductEvent.QuantityChanged(it)) },
         label = stringResource(R.string.quantity),
         placeholder = stringResource(R.string.quantity_placeholder),
         isError = state.quantityError,
@@ -209,7 +215,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
     ) {
         IconToggleButton(
             checked = state.exhibitToCatalog,
-            onCheckedChange = { onEvent(NewProductEvent.ToggleExhibitToCatalog) },
+            onCheckedChange = { onEvent(ProductEvent.ToggleExhibitToCatalog) },
         ) {
             if (state.exhibitToCatalog) {
                 Icon(
@@ -231,7 +237,7 @@ private fun NewProductForm(state: ProductState, onEvent: (event: NewProductEvent
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
-        onClick = { onEvent(NewProductEvent.SaveProduct(timestamp = currentTimestamp())) },
+        onClick = { onEvent(ProductEvent.SaveProduct(timestamp = currentTimestamp(), id = id)) },
     ) {
         Text(text = stringResource(R.string.ok))
     }
@@ -245,7 +251,8 @@ private fun NewProductPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
         ) {
-            NewProductContent(
+            ProductContent(
+                id = 0L,
                 state = ProductState(),
                 snackbarHostState = remember { SnackbarHostState() },
                 onEvent = {},

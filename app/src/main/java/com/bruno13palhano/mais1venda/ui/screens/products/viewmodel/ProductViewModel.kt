@@ -7,8 +7,8 @@ import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductEvent
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
@@ -19,38 +19,66 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class NewProductViewModel @Inject constructor(
+internal class ProductViewModel @Inject constructor(
     initialState: ProductState,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    val container = Container<ProductState, NewProductSideEffect>(
+    val container = Container<ProductState, ProductSideEffect>(
         initialState = initialState,
         scope = viewModelScope,
     )
 
-    fun handleEvent(event: NewProductEvent) {
+    fun handleEvent(event: ProductEvent) {
         when (event) {
-            is NewProductEvent.NameChanged -> nameChanged(name = event.name)
+            is ProductEvent.GetProduct -> getProduct(id = event.id)
 
-            is NewProductEvent.PriceChanged -> priceChanged(price = event.price)
+            is ProductEvent.NameChanged -> nameChanged(name = event.name)
 
-            is NewProductEvent.CategoryChanged -> categoryChanged(category = event.category)
+            is ProductEvent.PriceChanged -> priceChanged(price = event.price)
 
-            is NewProductEvent.DescriptionChanged -> descriptionChanged(
+            is ProductEvent.CategoryChanged -> categoryChanged(category = event.category)
+
+            is ProductEvent.DescriptionChanged -> descriptionChanged(
                 description = event.description,
             )
 
-            is NewProductEvent.CodeChanged -> codeChanged(code = event.code)
+            is ProductEvent.CodeChanged -> codeChanged(code = event.code)
 
-            is NewProductEvent.QuantityChanged -> quantityChanged(quantity = event.quantity)
+            is ProductEvent.QuantityChanged -> quantityChanged(quantity = event.quantity)
 
-            NewProductEvent.ToggleExhibitToCatalog -> toggleExhibitToCatalog()
+            ProductEvent.ToggleExhibitToCatalog -> toggleExhibitToCatalog()
 
-            NewProductEvent.DismissKeyboard -> dismissKeyboard()
+            ProductEvent.DismissKeyboard -> dismissKeyboard()
 
-            is NewProductEvent.SaveProduct -> saveProduct(currentDate = event.timestamp)
+            is ProductEvent.SaveProduct -> saveProduct(currentDate = event.timestamp, id = event.id)
 
-            NewProductEvent.NavigateBack -> navigateBack()
+            ProductEvent.NavigateBack -> navigateBack()
+        }
+    }
+
+    private fun getProduct(id: Long) = container.intent {
+        val response = productRepository.get(id = id)
+
+        when (response) {
+            is Resource.Success -> {
+                response.data?.let { product ->
+                    reduce { fillProductFields(product = product) }
+                }
+            }
+
+            is Resource.ResponseError -> {
+                reduce { copy(isError = true) }
+                postSideEffect(
+                    effect = ProductSideEffect.ShowError(codeError = CodeError.UNKNOWN_ERROR),
+                )
+            }
+
+            is Resource.Error -> {
+                reduce { copy(isError = true) }
+                postSideEffect(
+                    effect = ProductSideEffect.ShowError(codeError = CodeError.UNKNOWN_ERROR),
+                )
+            }
         }
     }
 
@@ -95,18 +123,18 @@ internal class NewProductViewModel @Inject constructor(
     }
 
     private fun dismissKeyboard() = container.intent {
-        postSideEffect(effect = NewProductSideEffect.DismissKeyboard)
+        postSideEffect(effect = ProductSideEffect.DismissKeyboard)
     }
 
     private fun navigateBack() = container.intent {
-        postSideEffect(effect = NewProductSideEffect.NavigateBack)
+        postSideEffect(effect = ProductSideEffect.NavigateBack)
     }
 
-    private fun saveProduct(currentDate: String) = container.intent {
+    private fun saveProduct(currentDate: String, id: Long = 0L) = container.intent {
         if (isFieldsInvalid()) {
             reduce { copy(isError = true) }
             postSideEffect(
-                effect = NewProductSideEffect.ShowError(
+                effect = ProductSideEffect.ShowError(
                     codeError = CodeError.INVALID_FIELDS,
                 ),
             )
@@ -114,40 +142,47 @@ internal class NewProductViewModel @Inject constructor(
             return@intent
         }
 
-        val response = productRepository.insert(
-            product = Product(
-                id = 0L,
-                name = container.state.value.name,
-                price = stringToFloat(container.state.value.price),
-                category = listOf(),
-                description = container.state.value.description,
-                code = container.state.value.code,
-                quantity = stringToInt(container.state.value.quantity),
-                exhibitToCatalog = container.state.value.exhibitToCatalog,
-                lastModifiedTimestamp = currentDate,
-            ),
-        )
+        val response = if (id == 0L) {
+            productRepository.insert(
+                product = Product(
+                    id = 0L,
+                    name = container.state.value.name,
+                    price = stringToFloat(container.state.value.price),
+                    category = listOf(),
+                    description = container.state.value.description,
+                    code = container.state.value.code,
+                    quantity = stringToInt(container.state.value.quantity),
+                    exhibitToCatalog = container.state.value.exhibitToCatalog,
+                    lastModifiedTimestamp = currentDate,
+                ),
+            )
+        } else {
+            productRepository.update(
+                product = Product(
+                    id = id,
+                    name = container.state.value.name,
+                    price = stringToFloat(container.state.value.price),
+                    category = listOf(),
+                    description = container.state.value.description,
+                    code = container.state.value.code,
+                    quantity = stringToInt(container.state.value.quantity),
+                    exhibitToCatalog = container.state.value.exhibitToCatalog,
+                    lastModifiedTimestamp = currentDate,
+                ),
+            )
+        }
 
         when (response) {
             is Resource.Success -> {
                 if (response.data != null) {
-                    postSideEffect(effect = NewProductSideEffect.NavigateBack)
+                    postSideEffect(effect = ProductSideEffect.NavigateBack)
                 }
             }
 
-            is Resource.ResponseError -> {
+            else -> {
                 reduce { copy(isError = true) }
                 postSideEffect(
-                    effect = NewProductSideEffect.ShowError(
-                        codeError = CodeError.UNKNOWN_ERROR,
-                    ),
-                )
-            }
-
-            is Resource.Error -> {
-                reduce { copy(isError = true) }
-                postSideEffect(
-                    effect = NewProductSideEffect.ShowError(
+                    effect = ProductSideEffect.ShowError(
                         codeError = CodeError.UNKNOWN_ERROR,
                     ),
                 )
@@ -165,5 +200,18 @@ internal class NewProductViewModel @Inject constructor(
 
         return nameError || priceError || categoryError || descriptionError || codeError ||
             quantityError
+    }
+
+    private fun fillProductFields(product: Product): ProductState {
+        return ProductState(
+            id = product.id,
+            name = product.name,
+            price = product.price.toString(),
+            category = product.category.toString(),
+            description = product.description,
+            code = product.code,
+            quantity = product.quantity.toString(),
+            exhibitToCatalog = product.exhibitToCatalog,
+        )
     }
 }

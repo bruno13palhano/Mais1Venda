@@ -1,11 +1,12 @@
 package com.bruno13palhano.mais1venda
 
+import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.mais1venda.repository.TestProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductEvent
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.NewProductSideEffect
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductEvent
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
-import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.NewProductViewModel
+import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.ProductViewModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +18,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class NewProductViewModelUnitTest {
+internal class ProductViewModelUnitTest {
     private val state = ProductState(
         id = 1L,
         name = "Product 1",
@@ -34,13 +35,44 @@ internal class NewProductViewModelUnitTest {
     }
 
     @Test
+    fun `GetProduct Event should set input fields`() = runTest {
+        val repository = TestProductRepository()
+        val viewModel = ProductViewModel(state, repository)
+        val product = Product(
+            id = 2L,
+            name = "Product 2",
+            price = 100.05f,
+            category = listOf(),
+            description = "Description 2",
+            code = "1234567890123",
+            quantity = 1,
+            exhibitToCatalog = true,
+            lastModifiedTimestamp = "2025-02-13",
+        )
+
+        repository.insert(product = product)
+        repository.insert(product = product.copy(id = 3L, name = "Product 3"))
+
+        collectStateHelper(
+            stateCollector = { viewModel.container.state.collect() },
+            eventsBlock = {
+                viewModel.handleEvent(ProductEvent.GetProduct(2L))
+            },
+            assertationsBlock = {
+                assertThat(viewModel.container.state.value.id).isEqualTo(2L)
+                assertThat(viewModel.container.state.value.name).isEqualTo("Product 2")
+            },
+        )
+    }
+
+    @Test
     fun `NameChanged Event should update name`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "Product 2"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.NameChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.NameChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.name).isEqualTo(expected)
             },
@@ -49,12 +81,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `PriceChanged Event should update price`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "100.05"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.PriceChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.PriceChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.price).isEqualTo(expected)
             },
@@ -63,12 +95,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `CategoryChanged Event should update category`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "Category 2"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.CategoryChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.CategoryChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.category).isEqualTo(expected)
             },
@@ -77,12 +109,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `DescriptionChanged Event should update description`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "Description 2"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.DescriptionChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.DescriptionChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.description).isEqualTo(expected)
             },
@@ -91,12 +123,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `CodeChanged Event should update code`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "1234567890124"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.CodeChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.CodeChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.code).isEqualTo(expected)
             },
@@ -105,12 +137,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `QuantityChanged Event should update quantity`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = "2"
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.QuantityChanged(expected)) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.QuantityChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.quantity).isEqualTo(expected)
             },
@@ -119,12 +151,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `ToggleExhibitToCatalog Event should toggle exhibitToCatalog`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.ToggleExhibitToCatalog) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.ToggleExhibitToCatalog) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.exhibitToCatalog).isEqualTo(expected)
             },
@@ -133,12 +165,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `NameChanged with invalid email should set nameError to true`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.NameChanged("")) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.NameChanged("")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.nameError).isEqualTo(expected)
             },
@@ -147,12 +179,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `PriceChanged with invalid price should set priceError to true`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.PriceChanged("0.0")) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.PriceChanged("0.0")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.priceError).isEqualTo(expected)
             },
@@ -161,12 +193,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `CategoryChanged with invalid category should set categoryError to true`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.CategoryChanged("")) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.CategoryChanged("")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.categoryError).isEqualTo(expected)
             },
@@ -176,12 +208,12 @@ internal class NewProductViewModelUnitTest {
     @Test
     fun `DescriptionChanged with invalid description should set descriptionError to true`() =
         runTest {
-            val viewModel = NewProductViewModel(state, TestProductRepository())
+            val viewModel = ProductViewModel(state, TestProductRepository())
             val expected = true
 
             collectStateHelper(
                 stateCollector = { viewModel.container.state.collect() },
-                eventsBlock = { viewModel.handleEvent(NewProductEvent.DescriptionChanged("")) },
+                eventsBlock = { viewModel.handleEvent(ProductEvent.DescriptionChanged("")) },
                 assertationsBlock = {
                     assertThat(viewModel.container.state.value.descriptionError).isEqualTo(expected)
                 },
@@ -190,12 +222,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `CodeChanged with invalid code should set codeError to true`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.CodeChanged("")) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.CodeChanged("")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.codeError).isEqualTo(expected)
             },
@@ -204,12 +236,12 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `QuantityChanged with invalid quantity should set quantityError to true`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
         val expected = true
 
         collectStateHelper(
             stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.QuantityChanged("")) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.QuantityChanged("")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.quantityError).isEqualTo(expected)
             },
@@ -218,101 +250,117 @@ internal class NewProductViewModelUnitTest {
 
     @Test
     fun `DismissKeyboard Event should emit DismissKeyboard side effect`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
-                    assertThat(it).isEqualTo(NewProductSideEffect.DismissKeyboard)
+                    assertThat(it).isEqualTo(ProductSideEffect.DismissKeyboard)
                 }
             },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.DismissKeyboard) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.DismissKeyboard) },
         )
     }
 
     @Test
     fun `NavigateBack Event should emit NavigateBack side effect`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
-                    assertThat(it).isEqualTo(NewProductSideEffect.NavigateBack)
+                    assertThat(it).isEqualTo(ProductSideEffect.NavigateBack)
                 }
             },
-            eventsBlock = { viewModel.handleEvent(NewProductEvent.NavigateBack) },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.NavigateBack) },
         )
     }
 
     @Test
-    fun `SaveProduct Event should emit NavigateBack side effect`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+    fun `new products with SaveProduct Event should emit NavigateBack side effect`() = runTest {
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
-                    assertThat(it).isEqualTo(NewProductSideEffect.NavigateBack)
+                    assertThat(it).isEqualTo(ProductSideEffect.NavigateBack)
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
+            },
+        )
+    }
+
+    @Test
+    fun `edit product with SaveProduct Event should emit NavigateBack side effect`() = runTest {
+        val viewModel = ProductViewModel(state, TestProductRepository())
+
+        collectEffectHelper(
+            verifyEffects = {
+                viewModel.container.sideEffect.collect {
+                    assertThat(it).isEqualTo(ProductSideEffect.NavigateBack)
+                }
+            },
+            eventsBlock = {
+                viewModel.handleEvent(ProductEvent.SaveProduct(timestamp = "2022-01-01", id = 1L))
             },
         )
     }
 
     @Test
     fun `SaveProduct Event with invalid name should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.NameChanged(""))
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.NameChanged(""))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }
 
     @Test
     fun `SaveProduct Event with invalid price should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.PriceChanged(""))
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.PriceChanged(""))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }
 
     @Test
     fun `SaveProduct Event with invalid category should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.CategoryChanged(""))
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.CategoryChanged(""))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }
@@ -320,75 +368,75 @@ internal class NewProductViewModelUnitTest {
     @Test
     fun `SaveProduct Event with invalid description should emit ShowError INVALID_FIELDS`() =
         runTest {
-            val viewModel = NewProductViewModel(state, TestProductRepository())
+            val viewModel = ProductViewModel(state, TestProductRepository())
 
             collectEffectHelper(
                 verifyEffects = {
                     viewModel.container.sideEffect.collect {
                         assertThat(
                             it,
-                        ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                        ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                     }
                 },
                 eventsBlock = {
-                    viewModel.handleEvent(NewProductEvent.DescriptionChanged(""))
-                    viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                    viewModel.handleEvent(ProductEvent.DescriptionChanged(""))
+                    viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
                 },
             )
         }
 
     @Test
     fun `SaveProduct Event with invalid code should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.CodeChanged(""))
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.CodeChanged(""))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }
 
     @Test
     fun `SaveProduct Event with invalid quantity should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(state, TestProductRepository())
+        val viewModel = ProductViewModel(state, TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.QuantityChanged(""))
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.QuantityChanged(""))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }
 
     @Test
     fun `SaveProduct Event with invalid param should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = NewProductViewModel(ProductState(), TestProductRepository())
+        val viewModel = ProductViewModel(ProductState(), TestProductRepository())
 
         collectEffectHelper(
             verifyEffects = {
                 viewModel.container.sideEffect.collect {
                     assertThat(
                         it,
-                    ).isEqualTo(NewProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
+                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
                 }
             },
             eventsBlock = {
-                viewModel.handleEvent(NewProductEvent.SaveProduct("2022-01-01"))
+                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
     }

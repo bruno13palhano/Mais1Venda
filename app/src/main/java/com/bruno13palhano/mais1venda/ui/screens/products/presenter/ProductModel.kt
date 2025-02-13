@@ -23,44 +23,23 @@ internal data class ProductState(
 )
 
 @Immutable
-internal sealed interface NewProductEvent {
-    data class NameChanged(val name: String) : NewProductEvent
-    data class PriceChanged(val price: String) : NewProductEvent
-    data class CategoryChanged(val category: String) : NewProductEvent
-    data class DescriptionChanged(val description: String) : NewProductEvent
-    data class CodeChanged(val code: String) : NewProductEvent
-    data class QuantityChanged(val quantity: String) : NewProductEvent
-    data object ToggleExhibitToCatalog : NewProductEvent
-    data object DismissKeyboard : NewProductEvent
-    data class SaveProduct(val timestamp: String) : NewProductEvent
-    data object NavigateBack : NewProductEvent
+internal sealed interface ProductEvent {
+    data class GetProduct(val id: Long) : ProductEvent
+    data class NameChanged(val name: String) : ProductEvent
+    data class PriceChanged(val price: String) : ProductEvent
+    data class CategoryChanged(val category: String) : ProductEvent
+    data class DescriptionChanged(val description: String) : ProductEvent
+    data class CodeChanged(val code: String) : ProductEvent
+    data class QuantityChanged(val quantity: String) : ProductEvent
+    data object ToggleExhibitToCatalog : ProductEvent
+    data object DismissKeyboard : ProductEvent
+    data class SaveProduct(val timestamp: String, val id: Long) : ProductEvent
+    data object NavigateBack : ProductEvent
 }
 
 @Immutable
-internal sealed interface NewProductSideEffect {
-    data object DismissKeyboard : NewProductSideEffect
-    data object NavigateBack : NewProductSideEffect
-    data class ShowError(val codeError: CodeError) : NewProductSideEffect
-}
-
-@Immutable
-internal sealed interface EditProductEvent {
-    data class GetProduct(val id: Long) : EditProductEvent
-    data class NameChanged(val name: String) : EditProductEvent
-    data class PriceChanged(val price: String) : EditProductEvent
-    data class CategoryChanged(val category: String) : EditProductEvent
-    data class DescriptionChanged(val description: String) : EditProductEvent
-    data class CodeChanged(val code: String) : EditProductEvent
-    data class QuantityChanged(val quantity: String) : EditProductEvent
-    data object ToggleExhibitToCatalog : EditProductEvent
-    data object DismissKeyboard : EditProductEvent
-    data class SaveProduct(val timestamp: String) : EditProductEvent
-    data object NavigateBack : EditProductEvent
-}
-
-@Immutable
-internal sealed interface EditProductSideEffect {
-    data object DismissKeyboard : EditProductSideEffect
-    data object NavigateBack : EditProductSideEffect
-    data class ShowError(val codeError: CodeError) : EditProductSideEffect
+internal sealed interface ProductSideEffect {
+    data object DismissKeyboard : ProductSideEffect
+    data object NavigateBack : ProductSideEffect
+    data class ShowError(val codeError: CodeError) : ProductSideEffect
 }
