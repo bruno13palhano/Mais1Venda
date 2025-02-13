@@ -43,6 +43,15 @@ internal class TestProductRepository(
         }
     }
 
+    override suspend fun get(id: Long): Resource<Product?> {
+        return if(shouldReturnError) {
+            Resource.Error(errorType = ErrorType.UNKNOWN)
+        } else {
+            val product = products.find { it.id == id }
+            Resource.Success(data = product)
+        }
+    }
+
     override suspend fun getAll(): Resource<List<Product>> {
         return if (shouldReturnError) {
             Resource.Error(errorType = ErrorType.UNKNOWN)
