@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -129,4 +131,27 @@ internal sealed class Screen<T>(
         icon = Icons.Filled.Settings,
         resourceId = R.string.settings,
     )
+}
+
+@Composable
+fun <T> MoreVertMenu(
+    items: Map<String, T>,
+    expanded: Boolean,
+    onDismissRequest: (expanded: Boolean) -> Unit,
+    onItemClick: (T) -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { onDismissRequest(false) }
+    ) {
+        items.forEach { item ->
+            DropdownMenuItem(
+                text = { Text(text = item.key) },
+                onClick = {
+                    onItemClick(item.value)
+                    onDismissRequest(false)
+                }
+            )
+        }
+    }
 }
