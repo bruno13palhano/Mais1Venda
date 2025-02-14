@@ -135,16 +135,18 @@ internal class ProductViewModel @Inject constructor(
                 container.state.value.id?.let {
                     when (val response = productRepository.delete(id = it)) {
                         is Resource.Success -> {
-                            if (response.data != null) {
-                                navigateBack()
-                            } else {
-                                reduce { copy(isError = true) }
-                                postSideEffect(
-                                    effect = ProductSideEffect.ShowError(
-                                        // Product not delete
-                                        codeError = CodeError.UNKNOWN_ERROR,
-                                    ),
-                                )
+                            response.data?.let { success ->
+                                if (success) {
+                                    navigateBack()
+                                } else {
+                                    reduce { copy(isError = true) }
+                                    postSideEffect(
+                                        effect = ProductSideEffect.ShowError(
+                                            // Product not delete
+                                            codeError = CodeError.UNKNOWN_ERROR,
+                                        ),
+                                    )
+                                }
                             }
                         }
 
