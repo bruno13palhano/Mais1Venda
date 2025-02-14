@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.material3.Button
@@ -45,6 +46,7 @@ import com.bruno13palhano.mais1venda.R
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomFloatField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomIntegerField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomTextField
+import com.bruno13palhano.mais1venda.ui.screens.components.MoreVertMenu
 import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.ProductViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.clickableWithoutRipple
 import com.bruno13palhano.mais1venda.ui.screens.shared.currentTimestamp
@@ -89,7 +91,53 @@ internal fun NewProductRoute(
     }
 
     ProductContent(
-        id = 0L,
+        state = state,
+        snackbarHostState = snackbarHostState,
+        onEvent = viewModel::handleEvent,
+    )
+}
+
+@Composable
+internal fun EditProductRoute(
+    id: Long,
+    navigateBack: () -> Unit,
+    viewModel: ProductViewModel = hiltViewModel(),
+) {
+    val state by viewModel.container.state.collectAsStateWithLifecycle()
+    val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val inputFieldsErrorMessage = stringResource(id = R.string.invalid_fields)
+
+    LaunchedEffect(Unit) { viewModel.handleEvent(event = ProductEvent.GetProduct(id = id)) }
+
+    LaunchedEffect(effect) {
+        effect.collect { sideEffect ->
+            when (sideEffect) {
+                ProductSideEffect.DismissKeyboard -> {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
+
+                ProductSideEffect.NavigateBack -> navigateBack()
+
+                is ProductSideEffect.ShowError -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = inputFieldsErrorMessage,
+                            withDismissAction = true,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    ProductContent(
+        id = id,
         state = state,
         snackbarHostState = snackbarHostState,
         onEvent = viewModel::handleEvent,
@@ -99,24 +147,55 @@ internal fun NewProductRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProductContent(
-    id: Long,
+    id: Long = 0L,
     state: ProductState,
     snackbarHostState: SnackbarHostState,
     onEvent: (event: ProductEvent) -> Unit,
 ) {
+    val title = if (id == 0L) {
+        stringResource(id = R.string.new_product)
+    } else {
+        stringResource(id = R.string.edit_product)
+    }
+
     Scaffold(
         modifier = Modifier
-            .clickableWithoutRipple { }
+            .clickableWithoutRipple { onEvent(ProductEvent.DismissKeyboard) }
             .consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.new_product)) },
+                title = {
+                    Text(text = title)
+                },
                 navigationIcon = {
                     IconButton(onClick = { onEvent(ProductEvent.NavigateBack) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.navigate_back),
                         )
+                    }
+                },
+                actions = {
+                    if (id != 0L) {
+                        IconButton(onClick = { onEvent(ProductEvent.ToggleOptionsMenu) }) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(
+                                    id = R.string.more_options_menu,
+                                ),
+                            )
+
+                            val items = getMoreOptionsItems()
+
+                            MoreVertMenu(
+                                items = items,
+                                expanded = state.openOptionsMenu,
+                                onDismissRequest = { onEvent(ProductEvent.ToggleOptionsMenu) },
+                                onItemClick = {
+                                    onEvent(ProductEvent.UpdateSelectedOption(option = it))
+                                },
+                            )
+                        }
                     }
                 },
             )
@@ -136,11 +215,7 @@ private fun ProductContent(
 }
 
 @Composable
-private fun ProductForm(
-    id: Long,
-    state: ProductState,
-    onEvent: (event: ProductEvent) -> Unit,
-) {
+private fun ProductForm(id: Long, state: ProductState, onEvent: (event: ProductEvent) -> Unit) {
     CustomTextField(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -243,6 +318,13 @@ private fun ProductForm(
     }
 }
 
+@Composable
+private fun getMoreOptionsItems(): Map<String, ProductMenuItems> {
+    return mapOf(
+        stringResource(id = R.string.delete) to ProductMenuItems.DELETE,
+    )
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun NewProductPreview() {
@@ -253,6 +335,24 @@ private fun NewProductPreview() {
         ) {
             ProductContent(
                 id = 0L,
+                state = ProductState(),
+                snackbarHostState = remember { SnackbarHostState() },
+                onEvent = {},
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun EditProductPreview() {
+    Mais1VendaTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ProductContent(
+                id = 1L,
                 state = ProductState(),
                 snackbarHostState = remember { SnackbarHostState() },
                 onEvent = {},

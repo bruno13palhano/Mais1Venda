@@ -48,4 +48,5 @@
     <string name="ok">OK</string>
     <string name="exhibit_to_catalog">Exhibit to catalog</string>
     <string name="do_not_exhibit_to_catalog">Do not exhibit to catalog</string>
+    <string name="delete">Delete</string>
 </resources>

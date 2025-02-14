@@ -138,11 +138,11 @@ fun <T> MoreVertMenu(
     items: Map<String, T>,
     expanded: Boolean,
     onDismissRequest: (expanded: Boolean) -> Unit,
-    onItemClick: (T) -> Unit
+    onItemClick: (T) -> Unit,
 ) {
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onDismissRequest(false) }
+        onDismissRequest = { onDismissRequest(false) },
     ) {
         items.forEach { item ->
             DropdownMenuItem(
@@ -150,7 +150,7 @@ fun <T> MoreVertMenu(
                 onClick = {
                     onItemClick(item.value)
                     onDismissRequest(false)
-                }
+                },
             )
         }
     }

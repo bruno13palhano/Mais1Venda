@@ -8,6 +8,7 @@ import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductEvent
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductMenuItems
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
@@ -48,6 +49,10 @@ internal class ProductViewModel @Inject constructor(
 
             ProductEvent.ToggleExhibitToCatalog -> toggleExhibitToCatalog()
 
+            ProductEvent.ToggleOptionsMenu -> toggleOptionsMenu()
+
+            is ProductEvent.UpdateSelectedOption -> updateSelectedOption(option = event.option)
+
             ProductEvent.DismissKeyboard -> dismissKeyboard()
 
             is ProductEvent.SaveProduct -> saveProduct(currentDate = event.timestamp, id = event.id)
@@ -57,9 +62,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun getProduct(id: Long) = container.intent {
-        val response = productRepository.get(id = id)
-
-        when (response) {
+        when (val response = productRepository.get(id = id)) {
             is Resource.Success -> {
                 response.data?.let { product ->
                     reduce { fillProductFields(product = product) }
@@ -120,6 +123,43 @@ internal class ProductViewModel @Inject constructor(
 
     private fun toggleExhibitToCatalog() = container.intent {
         reduce { copy(exhibitToCatalog = !exhibitToCatalog) }
+    }
+
+    private fun toggleOptionsMenu() = container.intent {
+        reduce { copy(openOptionsMenu = !openOptionsMenu) }
+    }
+
+    private fun updateSelectedOption(option: ProductMenuItems) = container.intent {
+        when (option) {
+            ProductMenuItems.DELETE -> {
+                container.state.value.id?.let {
+                    when (val response = productRepository.delete(id = it)) {
+                        is Resource.Success -> {
+                            if (response.data != null) {
+                                navigateBack()
+                            } else {
+                                reduce { copy(isError = true) }
+                                postSideEffect(
+                                    effect = ProductSideEffect.ShowError(
+                                        // Product not delete
+                                        codeError = CodeError.UNKNOWN_ERROR,
+                                    ),
+                                )
+                            }
+                        }
+
+                        else -> {
+                            reduce { copy(isError = true) }
+                            postSideEffect(
+                                effect = ProductSideEffect.ShowError(
+                                    codeError = CodeError.UNKNOWN_ERROR,
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun dismissKeyboard() = container.intent {

@@ -4,6 +4,7 @@ import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.mais1venda.repository.TestProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductEvent
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductMenuItems
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.viewmodel.ProductViewModel
@@ -247,6 +248,58 @@ internal class ProductViewModelUnitTest {
             },
         )
     }
+
+    @Test
+    fun `ToggleOptionsMenu Event should toggle openOptionsMenu`() = runTest {
+        val viewModel = ProductViewModel(state, TestProductRepository())
+        val expected = true
+
+        collectStateHelper(
+            stateCollector = { viewModel.container.state.collect() },
+            eventsBlock = { viewModel.handleEvent(ProductEvent.ToggleOptionsMenu) },
+            assertationsBlock = {
+                assertThat(viewModel.container.state.value.openOptionsMenu).isEqualTo(expected)
+            },
+        )
+    }
+
+    @Test
+    fun `delete product with UpdateSelectedOption Event should emit NavigateBack side effect`() =
+        runTest {
+            val viewModel = ProductViewModel(state, TestProductRepository())
+            val expected = ProductMenuItems.DELETE
+
+            collectEffectHelper(
+                verifyEffects = {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(it).isEqualTo(ProductSideEffect.NavigateBack)
+                    }
+                },
+                eventsBlock = {
+                    viewModel.handleEvent(ProductEvent.UpdateSelectedOption(expected))
+                },
+            )
+        }
+
+    @Test
+    fun `failure delete with UpdateSelectedOption Event should emit ShowError side effect`() =
+        runTest {
+            val viewModel = ProductViewModel(state, TestProductRepository(shouldReturnError = true))
+            val expected = ProductMenuItems.DELETE
+
+            collectEffectHelper(
+                verifyEffects = {
+                    viewModel.container.sideEffect.collect {
+                        assertThat(
+                            it,
+                        ).isEqualTo(ProductSideEffect.ShowError(CodeError.UNKNOWN_ERROR))
+                    }
+                },
+                eventsBlock = {
+                    viewModel.handleEvent(ProductEvent.UpdateSelectedOption(expected))
+                },
+            )
+        }
 
     @Test
     fun `DismissKeyboard Event should emit DismissKeyboard side effect`() = runTest {

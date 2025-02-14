@@ -12,6 +12,7 @@ internal data class ProductState(
     val description: String = "",
     val code: String = "",
     val quantity: String = "",
+    val openOptionsMenu: Boolean = false,
     val exhibitToCatalog: Boolean = false,
     val nameError: Boolean = false,
     val priceError: Boolean = false,
@@ -32,6 +33,8 @@ internal sealed interface ProductEvent {
     data class CodeChanged(val code: String) : ProductEvent
     data class QuantityChanged(val quantity: String) : ProductEvent
     data object ToggleExhibitToCatalog : ProductEvent
+    data object ToggleOptionsMenu : ProductEvent
+    data class UpdateSelectedOption(val option: ProductMenuItems) : ProductEvent
     data object DismissKeyboard : ProductEvent
     data class SaveProduct(val timestamp: String, val id: Long) : ProductEvent
     data object NavigateBack : ProductEvent
@@ -42,4 +45,8 @@ internal sealed interface ProductSideEffect {
     data object DismissKeyboard : ProductSideEffect
     data object NavigateBack : ProductSideEffect
     data class ShowError(val codeError: CodeError) : ProductSideEffect
+}
+
+internal enum class ProductMenuItems {
+    DELETE,
 }
