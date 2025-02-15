@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.bruno13palhano.data.datasource.local.entity.CustomerEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface CustomerDao {
@@ -23,5 +22,5 @@ internal interface CustomerDao {
     suspend fun getById(uid: String): CustomerEntity?
 
     @Query("SELECT * FROM customer")
-    fun getAll(): Flow<List<CustomerEntity>>
+    fun getAll(): List<CustomerEntity>
 }
