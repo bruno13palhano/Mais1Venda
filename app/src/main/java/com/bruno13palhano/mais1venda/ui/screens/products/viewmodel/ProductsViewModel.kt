@@ -6,7 +6,7 @@ import com.bruno13palhano.data.di.ProductRep
 import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
-import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsEvents
+import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsEvent
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,19 +22,19 @@ internal class ProductsViewModel @Inject constructor(
         scope = viewModelScope,
     )
 
-    fun handleEvent(event: ProductsEvents) {
+    fun handleEvent(event: ProductsEvent) {
         when (event) {
-            ProductsEvents.LoadProducts -> loadProducts()
+            ProductsEvent.LoadProducts -> loadProducts()
 
-            ProductsEvents.OpenOptionsMenu -> openOptionsMenu()
+            ProductsEvent.OpenOptionsMenu -> openOptionsMenu()
 
-            is ProductsEvents.OptionsItemSelected -> optionsItemSelected(option = event.option)
+            is ProductsEvent.OptionsItemSelected -> optionsItemSelected(option = event.option)
 
-            is ProductsEvents.NavigateToProduct -> navigateToProduct(productId = event.productId)
+            is ProductsEvent.NavigateToProduct -> navigateToProduct(productId = event.productId)
 
-            ProductsEvents.NavigateToNewProduct -> navigateToNewProduct()
+            ProductsEvent.NavigateToNewProduct -> navigateToNewProduct()
 
-            ProductsEvents.NavigateBack -> navigateBack()
+            ProductsEvent.NavigateBack -> navigateBack()
         }
     }
 

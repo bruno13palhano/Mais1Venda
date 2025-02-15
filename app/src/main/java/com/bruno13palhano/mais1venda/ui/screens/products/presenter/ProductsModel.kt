@@ -10,13 +10,13 @@ internal data class ProductsState(
 )
 
 @Immutable
-internal sealed interface ProductsEvents {
-    data object LoadProducts : ProductsEvents
-    data object OpenOptionsMenu : ProductsEvents
-    data class OptionsItemSelected(val option: String) : ProductsEvents
-    data class NavigateToProduct(val productId: Long) : ProductsEvents
-    data object NavigateToNewProduct : ProductsEvents
-    data object NavigateBack : ProductsEvents
+internal sealed interface ProductsEvent {
+    data object LoadProducts : ProductsEvent
+    data object OpenOptionsMenu : ProductsEvent
+    data class OptionsItemSelected(val option: String) : ProductsEvent
+    data class NavigateToProduct(val productId: Long) : ProductsEvent
+    data object NavigateToNewProduct : ProductsEvent
+    data object NavigateBack : ProductsEvent
 }
 
 @Immutable

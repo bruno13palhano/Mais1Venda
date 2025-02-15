@@ -47,7 +47,7 @@ internal fun ProductsRoute(
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(sideEffect) {
         sideEffect.collect { effect ->
             when (effect) {
                 ProductsSideEffect.OpenOptionsMenu -> {}
@@ -69,14 +69,14 @@ internal fun ProductsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents) -> Unit) {
+private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.products)) },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(ProductsEvents.NavigateBack) }) {
+                    IconButton(onClick = { onEvent(ProductsEvent.NavigateBack) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.navigate_back),
@@ -84,7 +84,7 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
                     }
                 },
                 actions = {
-                    IconButton(onClick = { ProductsEvents.OpenOptionsMenu }) {
+                    IconButton(onClick = { ProductsEvent.OpenOptionsMenu }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
                             contentDescription = stringResource(R.string.more_options_menu),
@@ -95,7 +95,7 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onEvent(ProductsEvents.NavigateToNewProduct) },
+                onClick = { onEvent(ProductsEvent.NavigateToNewProduct) },
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -113,7 +113,7 @@ private fun ProductsContent(state: ProductsState, onEvent: (even: ProductsEvents
             items(items = state.products, key = { product -> product.id }) {
                 ListItem(
                     modifier = Modifier
-                        .clickable { onEvent(ProductsEvents.NavigateToProduct(it.id)) }
+                        .clickable { onEvent(ProductsEvent.NavigateToProduct(it.id)) }
                         .fillMaxSize(),
                     headlineContent = { Text(text = it.name) },
                     supportingContent = { Text(text = it.description) },
