@@ -28,7 +28,7 @@ import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 import com.bruno13palhano.mais1venda.ui.theme.Mais1VendaTheme
 
 @Composable
-internal fun OrdersStatusScreen(
+internal fun OrdersStatusRoute(
     navigateToNewOrders: () -> Unit,
     navigateToOrders: () -> Unit,
     navigateToCustomers: () -> Unit,
