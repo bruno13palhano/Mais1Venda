@@ -3,6 +3,7 @@ package com.bruno13palhano.mais1venda.ui.screens.di
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountState
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginState
 import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeState
+import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.CustomersState
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersState
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersState
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersStatusState
@@ -57,4 +58,8 @@ internal object StateModule {
     @Provides
     @Singleton
     fun provideNewOrderState() = NewOrdersState()
+
+    @Provides
+    @Singleton
+    fun provideCustomersState() = CustomersState()
 }

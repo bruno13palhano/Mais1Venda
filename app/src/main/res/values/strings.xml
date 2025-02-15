@@ -51,4 +51,6 @@
     <string name="delete">Delete</string>
     <string name="orders_status">Orders Status</string>
     <string name="new_orders">New Orders</string>
+    <string name="new_order">New Order</string>
+    <string name="customers">Customers</string>
 </resources>
