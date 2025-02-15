@@ -53,4 +53,8 @@ internal object StateModule {
     @Provides
     @Singleton
     fun provideOrdersState() = OrdersState()
+
+    @Provides
+    @Singleton
+    fun provideNewOrderState() = NewOrdersState()
 }
