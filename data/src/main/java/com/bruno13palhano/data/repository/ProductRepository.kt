@@ -5,12 +5,8 @@ import com.bruno13palhano.data.model.resource.Resource
 
 interface ProductRepository {
     suspend fun insert(product: Product): Resource<Boolean>
-
     suspend fun update(product: Product): Resource<Boolean>
-
     suspend fun delete(id: Long): Resource<Boolean>
-
     suspend fun get(id: Long): Resource<Product?>
-
     suspend fun getAll(): Resource<List<Product>>
 }

@@ -6,7 +6,6 @@ import com.bruno13palhano.data.model.shared.Address
 
 interface CompanyRepository {
     suspend fun login(email: String, password: String): Resource<Boolean>
-
     suspend fun createAccount(
         email: String,
         password: String,
