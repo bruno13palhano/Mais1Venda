@@ -49,4 +49,6 @@
     <string name="exhibit_to_catalog">Exhibit to catalog</string>
     <string name="do_not_exhibit_to_catalog">Do not exhibit to catalog</string>
     <string name="delete">Delete</string>
+    <string name="orders_status">Orders Status</string>
+    <string name="new_orders">New Orders</string>
 </resources>
