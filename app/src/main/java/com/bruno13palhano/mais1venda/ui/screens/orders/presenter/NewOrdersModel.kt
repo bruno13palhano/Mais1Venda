@@ -5,7 +5,7 @@ import com.bruno13palhano.data.model.shared.Order
 
 @Immutable
 internal data class NewOrdersState(
-    val newOrders: List<Order> = emptyList()
+    val newOrders: List<Order> = emptyList(),
 )
 
 @Immutable

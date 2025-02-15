@@ -50,10 +50,7 @@ internal fun NewOrderRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewOrderContent(
-    state: NewOrderState,
-    onEvent: (event: NewOrderEvent) -> Unit,
-) {
+private fun NewOrderContent(state: NewOrderState, onEvent: (event: NewOrderEvent) -> Unit) {
     Scaffold(
         modifier = Modifier
             .clickableWithoutRipple { }
@@ -70,7 +67,7 @@ private fun NewOrderContent(
                     }
                 },
             )
-        }
+        },
     ) {
         Column(
             modifier = Modifier

@@ -11,11 +11,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CustomersViewModel @Inject constructor(
-    initialState: CustomersState
+    initialState: CustomersState,
 ) : ViewModel() {
     val container = Container<CustomersState, CustomersSideEffect>(
         initialState = initialState,
-        scope = viewModelScope
+        scope = viewModelScope,
     )
 
     fun handleEvent(event: CustomersEvent) {

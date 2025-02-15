@@ -27,10 +27,7 @@ import com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel.OrdersViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 
 @Composable
-internal fun OrdersRoute(
-    navigateBack: () -> Unit,
-    viewModel: OrdersViewModel = hiltViewModel(),
-) {
+internal fun OrdersRoute(navigateBack: () -> Unit, viewModel: OrdersViewModel = hiltViewModel()) {
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
@@ -47,10 +44,7 @@ internal fun OrdersRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OrdersContent(
-    state: OrdersState,
-    onEvent: (event: OrdersEvent) -> Unit,
-) {
+private fun OrdersContent(state: OrdersState, onEvent: (event: OrdersEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -73,7 +67,6 @@ private fun OrdersContent(
                 .consumeWindowInsets(it),
             contentPadding = PaddingValues(4.dp),
         ) {
-
         }
     }
 }

@@ -38,7 +38,7 @@ internal fun OrdersStatusRoute(
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(sideEffect) {
         sideEffect.collect { effect ->
             when (effect) {
                 OrdersStatusSideEffect.NavigateToNewOrders -> navigateToNewOrders()
@@ -52,10 +52,7 @@ internal fun OrdersStatusRoute(
         }
     }
 
-    OrdersStatusContent(
-        state = state,
-        onEvent = viewModel::handleEvent,
-    )
+    OrdersStatusContent(state = state, onEvent = viewModel::handleEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

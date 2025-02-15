@@ -50,10 +50,7 @@ internal fun NewOrdersRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewOrdersContent(
-    state: NewOrdersState,
-    onEvent: (event: NewOrdersEvent) -> Unit,
-) {
+private fun NewOrdersContent(state: NewOrdersState, onEvent: (event: NewOrdersEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -76,7 +73,6 @@ private fun NewOrdersContent(
                 .consumeWindowInsets(it),
             contentPadding = PaddingValues(4.dp),
         ) {
-
         }
     }
 }

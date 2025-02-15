@@ -47,10 +47,7 @@ internal fun CustomersRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CustomersContent(
-    state: CustomersState,
-    onEvent: (event: CustomersEvent) -> Unit,
-) {
+private fun CustomersContent(state: CustomersState, onEvent: (event: CustomersEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -73,7 +70,6 @@ private fun CustomersContent(
                 .consumeWindowInsets(it),
             contentPadding = PaddingValues(4.dp),
         ) {
-
         }
     }
 }
