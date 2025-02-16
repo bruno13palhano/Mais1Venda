@@ -2,153 +2,89 @@ package com.bruno13palhano.data.repository
 
 import com.bruno13palhano.data.datasource.local.dao.ProductDao
 import com.bruno13palhano.data.datasource.remote.source.ProductRemoteData
-import com.bruno13palhano.data.log.AppLog
 import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.data.model.company.asExternal
 import com.bruno13palhano.data.model.company.asInternal
-import com.bruno13palhano.data.model.resource.ErrorType
-import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.repository.shared.remoteCallWithRetry
 import javax.inject.Inject
-
-private const val REMOTE_TAG = "ProductRepository-Remote"
-private const val LOCAL_TAG = "ProductRepository-Local"
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
 
 internal class ProductRepositoryImpl @Inject constructor(
     private val productRemoteData: ProductRemoteData,
     private val productDao: ProductDao,
-    private val log: AppLog,
 ) : ProductRepository {
-    override suspend fun insert(product: Product): Resource<Boolean> {
+    override suspend fun insert(product: Product): Boolean {
         return try {
             val id = productDao.insert(product = product.asInternal())
 
-            if (id <= 0) {
-                log.logInfo(tag = LOCAL_TAG, message = "Product not inserted")
-                return Resource.Success(false)
-            }
-            log.logInfo(tag = LOCAL_TAG, message = "Product inserted successfully")
+            if (id <= 0) return false
 
             remoteCallWithRetry(
                 call = { productRemoteData.insert(product = product.copy(id = id)) },
-                success = { it?.let { success -> logRemoteProductInsertion(success = success) } },
                 error = {
-                    log.logError(tag = REMOTE_TAG, message = ErrorType.NOT_SYNCHRONIZED.name)
                     // TODO: notify out of sync?
                 },
             )
 
-            Resource.Success(data = true)
+            true
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            false
         }
     }
 
-    override suspend fun update(product: Product): Resource<Boolean> {
+    override suspend fun update(product: Product): Boolean {
         return try {
             val rowsAffected = productDao.update(product = product.asInternal())
 
-            if (rowsAffected <= 0) {
-                log.logInfo(tag = LOCAL_TAG, message = "Product not updated")
-                return Resource.Success(false)
-            }
-            log.logInfo(tag = LOCAL_TAG, message = "Product updated successfully")
+            if (rowsAffected <= 0) return false
 
             remoteCallWithRetry(
                 call = { productRemoteData.update(product = product) },
-                success = { it?.let { success -> logRemoteProductUpdate(success = success) } },
                 error = {
-                    log.logError(tag = REMOTE_TAG, message = ErrorType.NOT_SYNCHRONIZED.name)
                     // TODO: notify out of sync?
                 },
             )
 
-            Resource.Success(data = true)
+            true
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            false
         }
     }
 
-    override suspend fun get(id: Long): Resource<Product?> {
+    override suspend fun get(id: Long): Product? {
         return try {
-            val result = productDao.getById(id = id)?.asExternal()
-
-            Resource.Success(data = result)
+            productDao.getById(id = id)?.asExternal()
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            null
         }
     }
 
-    override suspend fun delete(id: Long): Resource<Boolean> {
+    override suspend fun delete(id: Long): Boolean {
         return try {
             val rowsAffected = productDao.delete(id = id)
 
-            if (rowsAffected <= 0) {
-                log.logInfo(tag = LOCAL_TAG, message = "Product not deleted")
-                return Resource.Success(false)
-            }
-            log.logInfo(tag = LOCAL_TAG, message = "Product deleted successfully")
+            if (rowsAffected <= 0) return false
 
             remoteCallWithRetry(
                 call = { productRemoteData.deleteById(id = id) },
-                success = { it?.let { success -> logRemoteProductDeletion(success = success) } },
                 error = {
-                    log.logError(tag = REMOTE_TAG, message = it ?: ErrorType.NOT_SYNCHRONIZED.name)
                     // TODO: notify out of sync?
                 },
             )
 
-            return Resource.Success(true)
+            return true
         } catch (e: Exception) {
-            log.logError(tag = LOCAL_TAG, message = e.message ?: ErrorType.UNKNOWN.name)
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            false
         }
     }
 
-    override suspend fun getAll(): Resource<List<Product>> {
-        var logMessage = "Products retrieved successfully"
-
+    override suspend fun getAll(): Flow<List<Product>> {
         return try {
-            val products = productDao.getAll().map { it.asExternal() }
-            Resource.Success(data = products)
+            productDao.getAll().map { it.map { product -> product.asExternal() } }
         } catch (e: Exception) {
-            logMessage = e.message ?: ErrorType.UNKNOWN.name
-            Resource.Error(errorType = ErrorType.UNKNOWN)
-        } finally {
-            log.logInfo(tag = LOCAL_TAG, message = logMessage)
+            emptyFlow()
         }
-    }
-
-    private fun logRemoteProductInsertion(success: Boolean) {
-        var message = "Product inserted successfully"
-
-        if (!success) {
-            message = "Product not inserted"
-        }
-
-        log.logInfo(tag = REMOTE_TAG, message = message)
-    }
-
-    private fun logRemoteProductUpdate(success: Boolean) {
-        var message = "Product updated successfully"
-
-        if (!success) {
-            message = "Product not updated"
-        }
-
-        log.logInfo(tag = REMOTE_TAG, message = message)
-    }
-
-    private fun logRemoteProductDeletion(success: Boolean) {
-        var message = "Product deleted successfully"
-
-        if (!success) {
-            message = "Product not deleted"
-        }
-
-        log.logInfo(tag = REMOTE_TAG, message = message)
     }
 }

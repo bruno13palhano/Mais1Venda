@@ -3,6 +3,7 @@ package com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.data.mvi.Container
+import com.bruno13palhano.data.repository.OrderRepository
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersEvent
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersState
@@ -12,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class NewOrdersViewModel @Inject constructor(
     initialState: NewOrdersState,
+    private val orderRepository: OrderRepository,
 ) : ViewModel() {
     val container = Container<NewOrdersState, NewOrdersSideEffect>(
         initialState = initialState,
@@ -25,6 +27,12 @@ internal class NewOrdersViewModel @Inject constructor(
             is NewOrdersEvent.NavigateToNewOrder -> {}
 
             NewOrdersEvent.NavigateBack -> {}
+        }
+    }
+
+    private fun loadNewOrders() = container.intent {
+        orderRepository.getAll().collect { orders ->
+            reduce { copy(newOrders = orders) }
         }
     }
 }

@@ -3,7 +3,6 @@ package com.bruno13palhano.mais1venda.ui.screens.products.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.data.model.company.Product
-import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
@@ -62,26 +61,15 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun getProduct(id: Long) = container.intent {
-        when (val response = productRepository.get(id = id)) {
-            is Resource.Success -> {
-                response.data?.let { product ->
-                    reduce { fillProductFields(product = product) }
-                }
-            }
+        val product = productRepository.get(id = id)
 
-            is Resource.ResponseError -> {
-                reduce { copy(isError = true) }
-                postSideEffect(
-                    effect = ProductSideEffect.ShowError(codeError = CodeError.UNKNOWN_ERROR),
-                )
-            }
-
-            is Resource.Error -> {
-                reduce { copy(isError = true) }
-                postSideEffect(
-                    effect = ProductSideEffect.ShowError(codeError = CodeError.UNKNOWN_ERROR),
-                )
-            }
+        if (product != null) {
+            reduce { fillProductFields(product = product) }
+        } else {
+            reduce { copy(isError = true) }
+            postSideEffect(
+                effect = ProductSideEffect.ShowError(codeError = CodeError.UNKNOWN_ERROR),
+            )
         }
     }
 
@@ -133,31 +121,16 @@ internal class ProductViewModel @Inject constructor(
         when (option) {
             ProductMenuItems.DELETE -> {
                 container.state.value.id?.let {
-                    when (val response = productRepository.delete(id = it)) {
-                        is Resource.Success -> {
-                            response.data?.let { success ->
-                                if (success) {
-                                    navigateBack()
-                                } else {
-                                    reduce { copy(isError = true) }
-                                    postSideEffect(
-                                        effect = ProductSideEffect.ShowError(
-                                            // Product not delete
-                                            codeError = CodeError.UNKNOWN_ERROR,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
-
-                        else -> {
-                            reduce { copy(isError = true) }
-                            postSideEffect(
-                                effect = ProductSideEffect.ShowError(
-                                    codeError = CodeError.UNKNOWN_ERROR,
-                                ),
-                            )
-                        }
+                    val response = productRepository.delete(id = it)
+                    if (response) {
+                        navigateBack()
+                    } else {
+                        reduce { copy(isError = true) }
+                        postSideEffect(
+                            effect = ProductSideEffect.ShowError(
+                                codeError = CodeError.UNKNOWN_ERROR,
+                            ),
+                        )
                     }
                 }
             }
@@ -184,7 +157,7 @@ internal class ProductViewModel @Inject constructor(
             return@intent
         }
 
-        val response = if (id == 0L) {
+        val result = if (id == 0L) {
             productRepository.insert(
                 product = Product(
                     id = 0L,
@@ -214,21 +187,15 @@ internal class ProductViewModel @Inject constructor(
             )
         }
 
-        when (response) {
-            is Resource.Success -> {
-                if (response.data != null) {
-                    postSideEffect(effect = ProductSideEffect.NavigateBack)
-                }
-            }
-
-            else -> {
-                reduce { copy(isError = true) }
-                postSideEffect(
-                    effect = ProductSideEffect.ShowError(
-                        codeError = CodeError.UNKNOWN_ERROR,
-                    ),
-                )
-            }
+        if (result) {
+            postSideEffect(effect = ProductSideEffect.NavigateBack)
+        } else {
+            reduce { copy(isError = true) }
+            postSideEffect(
+                effect = ProductSideEffect.ShowError(
+                    codeError = CodeError.UNKNOWN_ERROR,
+                ),
+            )
         }
     }
 

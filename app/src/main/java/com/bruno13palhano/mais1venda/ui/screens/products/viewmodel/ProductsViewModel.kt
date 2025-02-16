@@ -3,7 +3,6 @@ package com.bruno13palhano.mais1venda.ui.screens.products.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bruno13palhano.data.di.ProductRep
-import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsEvent
@@ -39,18 +38,8 @@ internal class ProductsViewModel @Inject constructor(
     }
 
     private fun loadProducts() = container.intent {
-        val response = productRepository.getAll()
-
-        when (response) {
-            is Resource.Success -> {
-                reduce { copy(products = response.data ?: emptyList()) }
-            }
-
-            is Resource.ResponseError -> {
-            }
-
-            is Resource.Error -> {
-            }
+        productRepository.getAll().collect { products ->
+            reduce { copy(products = products) }
         }
     }
 
