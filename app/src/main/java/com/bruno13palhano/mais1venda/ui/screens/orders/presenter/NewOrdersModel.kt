@@ -10,7 +10,7 @@ internal data class NewOrdersState(
 
 @Immutable
 internal sealed interface NewOrdersEvent {
-    data class LoadNewOrders(val newOrders: List<Order>) : NewOrdersEvent
+    data object LoadNewOrders : NewOrdersEvent
     data object NavigateBack : NewOrdersEvent
     data class NavigateToNewOrder(val id: Long) : NewOrdersEvent
 }

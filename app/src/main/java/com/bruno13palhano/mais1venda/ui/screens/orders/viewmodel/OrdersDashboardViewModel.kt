@@ -20,7 +20,9 @@ internal class OrdersDashboardViewModel @Inject constructor(
 
     fun handleEvent(event: OrdersDashboardEvent) {
         when (event) {
-            OrdersDashboardEvent.NavigateBack -> {}
+            OrdersDashboardEvent.NavigateBack -> container.intent {
+                postSideEffect(effect = OrdersDashboardSideEffect.NavigateBack)
+            }
         }
     }
 }

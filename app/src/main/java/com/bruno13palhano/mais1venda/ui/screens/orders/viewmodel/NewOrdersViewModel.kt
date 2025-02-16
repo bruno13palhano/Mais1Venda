@@ -22,11 +22,11 @@ internal class NewOrdersViewModel @Inject constructor(
 
     fun handleEvent(event: NewOrdersEvent) {
         when (event) {
-            is NewOrdersEvent.LoadNewOrders -> {}
+            is NewOrdersEvent.LoadNewOrders -> loadNewOrders()
 
-            is NewOrdersEvent.NavigateToNewOrder -> {}
+            is NewOrdersEvent.NavigateToNewOrder -> navigateToNewOrder(id = event.id)
 
-            NewOrdersEvent.NavigateBack -> {}
+            NewOrdersEvent.NavigateBack -> navigateBack()
         }
     }
 
@@ -34,5 +34,13 @@ internal class NewOrdersViewModel @Inject constructor(
         orderRepository.getAll().collect { orders ->
             reduce { copy(newOrders = orders) }
         }
+    }
+
+    private fun navigateToNewOrder(id: Long) = container.intent {
+        postSideEffect(effect = NewOrdersSideEffect.NavigateToNewOrder(id = id))
+    }
+
+    private fun navigateBack() = container.intent {
+        postSideEffect(effect = NewOrdersSideEffect.NavigateBack)
     }
 }

@@ -35,6 +35,8 @@ internal fun NewOrdersRoute(
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
+    LaunchedEffect(Unit) { viewModel.handleEvent(event = NewOrdersEvent.LoadNewOrders) }
+
     LaunchedEffect(sideEffect) {
         sideEffect.collect { effect ->
             when (effect) {
