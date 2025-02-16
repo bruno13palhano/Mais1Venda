@@ -47,6 +47,8 @@ internal fun ProductsRoute(
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
+    LaunchedEffect(Unit) { viewModel.handleEvent(event = ProductsEvent.LoadProducts) }
+
     LaunchedEffect(sideEffect) {
         sideEffect.collect { effect ->
             when (effect) {
