@@ -2,6 +2,7 @@ package com.bruno13palhano.data.datasource.remote.service
 
 import com.bruno13palhano.data.model.company.Company
 import com.bruno13palhano.data.model.company.Product
+import com.bruno13palhano.data.model.customer.Customer
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -19,6 +20,15 @@ internal interface ApiService {
 
     @POST("product/insert")
     suspend fun insertProduct(@Body product: Product): Response<Boolean>
+
+    @POST("customers/insert")
+    suspend fun insertCustomer(@Body customer: Customer): Response<Boolean>
+
+    @POST("customers/customer/{id}")
+    suspend fun getCustomerByUid(@Path("uid") uid: String): Response<Customer?>
+
+    @POST("customers/all")
+    suspend fun getAllCustomers(): Response<List<Customer>>
 
     @POST("product/update")
     suspend fun updateProduct(@Body product: Product): Response<Boolean>
