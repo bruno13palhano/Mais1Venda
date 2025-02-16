@@ -31,6 +31,8 @@ internal fun OrdersRoute(navigateBack: () -> Unit, viewModel: OrdersViewModel = 
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
+    LaunchedEffect(Unit) { viewModel.handleEvent(event = OrdersEvent.LoadOrders) }
+
     LaunchedEffect(sideEffect) {
         sideEffect.collect { effect ->
             when (effect) {
