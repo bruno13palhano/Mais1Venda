@@ -23,5 +23,5 @@ internal interface ProductDao {
     suspend fun getById(id: Long): ProductEntity?
 
     @Query("SELECT * FROM product")
-    suspend fun getAll(): Flow<List<ProductEntity>>
+    fun getAll(): Flow<List<ProductEntity>>
 }
