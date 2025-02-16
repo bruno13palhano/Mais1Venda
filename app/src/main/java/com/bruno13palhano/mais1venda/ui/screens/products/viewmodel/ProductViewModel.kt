@@ -121,8 +121,7 @@ internal class ProductViewModel @Inject constructor(
         when (option) {
             ProductMenuItems.DELETE -> {
                 container.state.value.id?.let {
-                    val response = productRepository.delete(id = it)
-                    if (response) {
+                    if (productRepository.delete(id = it)) {
                         navigateBack()
                     } else {
                         reduce { copy(isError = true) }
