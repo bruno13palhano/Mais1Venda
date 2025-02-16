@@ -20,17 +20,27 @@ internal class OrdersStatusViewModel @Inject constructor(
 
     fun handleEvent(event: OrdersStatusEvent) {
         when (event) {
-            OrdersStatusEvent.LoadNewOrdersCount -> {}
+            OrdersStatusEvent.LoadNewOrdersCount -> container.intent {  }
 
-            OrdersStatusEvent.NavigateToNewOrders -> {}
+            OrdersStatusEvent.NavigateToNewOrders -> container.intent {
+                postSideEffect(effect = OrdersStatusSideEffect.NavigateToNewOrders)
+            }
 
-            OrdersStatusEvent.NavigateToOrders -> {}
+            OrdersStatusEvent.NavigateToOrders -> container.intent {
+                postSideEffect(effect = OrdersStatusSideEffect.NavigateToOrders)
+            }
 
-            OrdersStatusEvent.NavigateToCustomers -> {}
+            OrdersStatusEvent.NavigateToCustomers -> container.intent {
+                postSideEffect(effect = OrdersStatusSideEffect.NavigateToCustomers)
+            }
 
-            OrdersStatusEvent.NavigateToDashboard -> {}
+            OrdersStatusEvent.NavigateToDashboard -> container.intent {
+                postSideEffect(effect = OrdersStatusSideEffect.NavigateToDashboard)
+            }
 
-            OrdersStatusEvent.NavigateBack -> {}
+            OrdersStatusEvent.NavigateBack -> container.intent {
+                postSideEffect(effect = OrdersStatusSideEffect.NavigateBack)
+            }
         }
     }
 }
