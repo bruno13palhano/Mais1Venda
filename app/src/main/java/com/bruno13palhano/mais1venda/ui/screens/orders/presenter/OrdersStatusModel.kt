@@ -13,6 +13,7 @@ internal sealed interface OrdersStatusEvent {
     data object NavigateToNewOrders : OrdersStatusEvent
     data object NavigateToOrders : OrdersStatusEvent
     data object NavigateToCustomers : OrdersStatusEvent
+    data object NavigateToDashboard : OrdersStatusEvent
     data object NavigateBack : OrdersStatusEvent
 }
 
@@ -21,5 +22,6 @@ internal sealed interface OrdersStatusSideEffect {
     data object NavigateToNewOrders : OrdersStatusSideEffect
     data object NavigateToOrders : OrdersStatusSideEffect
     data object NavigateToCustomers : OrdersStatusSideEffect
+    data object NavigateToDashboard : OrdersStatusSideEffect
     data object NavigateBack : OrdersStatusSideEffect
 }

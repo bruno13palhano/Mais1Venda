@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.CustomersRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrderRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersRoute
+import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersDashboardRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersStatusRoute
 import kotlinx.serialization.Serializable
@@ -24,6 +25,11 @@ internal fun NavGraphBuilder.ordersStatusNavGraph(
                 navigateToNewOrders = { navController.navigate(OrdersStatusRoutes.NewOrders) },
                 navigateToOrders = { navController.navigate(OrdersStatusRoutes.Orders) },
                 navigateToCustomers = { navController.navigate(OrdersStatusRoutes.Customers) },
+                navigateToDashboard = {
+                    navController.navigate(
+                        OrdersStatusRoutes.OrdersDashboard,
+                    )
+                },
                 navigateBack = { navController.navigateUp() },
             )
         }
@@ -53,6 +59,10 @@ internal fun NavGraphBuilder.ordersStatusNavGraph(
                 navigateBack = { navController.navigateUp() },
             )
         }
+
+        composable<OrdersStatusRoutes.OrdersDashboard> {
+            OrdersDashboardRoute(navigateBack = { navController.navigateUp() })
+        }
     }
 }
 
@@ -71,4 +81,7 @@ internal sealed interface OrdersStatusRoutes {
 
     @Serializable
     data class NewOrder(val id: Long) : OrdersStatusRoutes
+
+    @Serializable
+    data object OrdersDashboard : OrdersStatusRoutes
 }

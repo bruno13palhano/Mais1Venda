@@ -28,6 +28,8 @@ internal class OrdersStatusViewModel @Inject constructor(
 
             OrdersStatusEvent.NavigateToCustomers -> {}
 
+            OrdersStatusEvent.NavigateToDashboard -> {}
+
             OrdersStatusEvent.NavigateBack -> {}
         }
     }
