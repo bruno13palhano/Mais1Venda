@@ -49,7 +49,7 @@ private fun OrdersContent(state: OrdersState, onEvent: (event: OrdersEvent) -> U
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.new_orders)) },
+                title = { Text(text = stringResource(id = R.string.orders)) },
                 navigationIcon = {
                     IconButton(onClick = { onEvent(OrdersEvent.NavigateBack) }) {
                         Icon(
