@@ -1,62 +1,50 @@
 package com.bruno13palhano.mais1venda.repository
 
 import com.bruno13palhano.data.model.company.Product
-import com.bruno13palhano.data.model.resource.ErrorType
-import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.repository.ProductRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 
 internal class TestProductRepository(
     private val shouldReturnError: Boolean = false,
 ) : ProductRepository {
     private val products = mutableListOf<Product>()
 
-    override suspend fun insert(product: Product): Resource<Boolean> {
+    override suspend fun insert(product: Product): Boolean {
         products.add(product)
 
-        return if (shouldReturnError) {
-            Resource.Error(errorType = ErrorType.UNKNOWN)
-        } else {
-            Resource.Success(true)
-        }
+        return !shouldReturnError
     }
 
-    override suspend fun update(product: Product): Resource<Boolean> {
+    override suspend fun update(product: Product): Boolean {
         products.find { it.id == product.id }?.let {
             products.remove(it)
             products.add(product)
         }
 
-        return if (shouldReturnError) {
-            Resource.Error(errorType = ErrorType.UNKNOWN)
-        } else {
-            Resource.Success(true)
-        }
+        return !shouldReturnError
     }
 
-    override suspend fun delete(id: Long): Resource<Boolean> {
+    override suspend fun delete(id: Long): Boolean {
         products.removeIf { it.id == id }
 
+        return !shouldReturnError
+    }
+
+    override suspend fun get(id: Long): Product? {
         return if (shouldReturnError) {
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            null
         } else {
-            Resource.Success(true)
+            products.find { it.id == id }
         }
     }
 
-    override suspend fun get(id: Long): Resource<Product?> {
+    override fun getAll(): Flow<List<Product>> {
         return if (shouldReturnError) {
-            Resource.Error(errorType = ErrorType.UNKNOWN)
+            emptyFlow()
         } else {
-            val product = products.find { it.id == id }
-            Resource.Success(data = product)
-        }
-    }
-
-    override suspend fun getAll(): Resource<List<Product>> {
-        return if (shouldReturnError) {
-            Resource.Error(errorType = ErrorType.UNKNOWN)
-        } else {
-            Resource.Success(products)
+            flowOf(products)
         }
     }
 }

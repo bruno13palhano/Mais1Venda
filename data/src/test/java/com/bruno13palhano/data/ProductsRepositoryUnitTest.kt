@@ -3,11 +3,8 @@ package com.bruno13palhano.data
 import com.bruno13palhano.data.datasource.local.dao.ProductDao
 import com.bruno13palhano.data.datasource.remote.service.ApiService
 import com.bruno13palhano.data.datasource.remote.source.ProductRemoteData
-import com.bruno13palhano.data.log.AppLog
 import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.data.model.company.asInternal
-import com.bruno13palhano.data.model.resource.ErrorType
-import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.repository.ProductRepositoryImpl
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
@@ -15,6 +12,12 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -39,15 +42,6 @@ internal class ProductsRepositoryUnitTest {
         testSut = ProductRepositoryImpl(
             productRemoteData = mockRemoteData,
             productDao = mockDao,
-            log = object : AppLog {
-                override fun logInfo(tag: String, message: String) {
-                    println("$tag: $message")
-                }
-
-                override fun logError(tag: String, message: String) {
-                    println("$tag: $message")
-                }
-            },
         )
     }
 
@@ -69,12 +63,12 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
             .returns(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.insert(product = expectedProduct)
+        val result: Boolean = testSut.insert(product = expectedProduct)
 
         coVerify(exactly = 1) { mockDao.insert(expectedProduct.asInternal()) }
         coVerify(exactly = 1) { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -83,25 +77,26 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
             .returns(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.insert(product = expectedProduct)
+        val result: Boolean = testSut.insert(product = expectedProduct)
 
         coVerify(exactly = 1) { mockDao.insert(expectedProduct.asInternal()) }
         coVerify(exactly = 0) { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
 
-        assertThat(result.data!!).isEqualTo(false)
+        assertThat(result).isEqualTo(false)
     }
 
     @Test
-    fun `database insert failure with exception should return ErrorType UNKNOWN`() = runTest {
+    fun `database insert failure should return false`() = runTest {
         coEvery { mockDao.insert(expectedProduct.asInternal()) }.throws(Exception())
         coEvery { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
 
-        val result: Resource<Boolean> = testSut.insert(product = expectedProduct)
+        val expected = false
+        val result: Boolean = testSut.insert(product = expectedProduct)
 
         coVerify(exactly = 1) { mockDao.insert(expectedProduct.asInternal()) }
         coVerify(exactly = 0) { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
 
-        assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
@@ -111,13 +106,13 @@ internal class ProductsRepositoryUnitTest {
             .throwsMany(listOf(Exception()))
             .andThen(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.insert(product = expectedProduct)
+        val result: Boolean = testSut.insert(product = expectedProduct)
 
         coVerify(exactly = 1) { mockDao.insert(expectedProduct.asInternal()) }
         // 2 = 1 original + 1 retry
         coVerify(exactly = 2) { mockApi.insertProduct(expectedProduct.copy(id = 1)) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -127,12 +122,12 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockDao.update(expected.asInternal()) } returns 1
         coEvery { mockApi.updateProduct(expected) }.returns(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.update(product = expected)
+        val result: Boolean = testSut.update(product = expected)
 
         coVerify(exactly = 1) { mockDao.update(expected.asInternal()) }
         coVerify(exactly = 1) { mockApi.updateProduct(expected) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -142,27 +137,28 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockDao.update(expected.asInternal()) } returns 0
         coEvery { mockApi.updateProduct(expected) }.returns(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.update(product = expected)
+        val result: Boolean = testSut.update(product = expected)
 
         coVerify(exactly = 1) { mockDao.update(expected.asInternal()) }
         coVerify(exactly = 0) { mockApi.updateProduct(expected) }
 
-        assertThat(result.data!!).isEqualTo(false)
+        assertThat(result).isEqualTo(false)
     }
 
     @Test
-    fun `database update failure with exception should return ErrorType UNKNOWN`() = runTest {
-        val expected = expectedProduct.copy(id = 1, name = "updated")
+    fun `database update failure with exception should return false`() = runTest {
+        val product = expectedProduct.copy(id = 1, name = "updated")
+        val expected = false
 
-        coEvery { mockDao.update(expected.asInternal()) }.throws(Exception())
-        coEvery { mockApi.updateProduct(expected) }
+        coEvery { mockDao.update(product.asInternal()) }.throws(Exception())
+        coEvery { mockApi.updateProduct(product) }
 
-        val result: Resource<Boolean> = testSut.update(product = expected)
+        val result: Boolean = testSut.update(product = product)
 
-        coVerify(exactly = 1) { mockDao.update(expected.asInternal()) }
-        coVerify(exactly = 0) { mockApi.updateProduct(expected) }
+        coVerify(exactly = 1) { mockDao.update(product.asInternal()) }
+        coVerify(exactly = 0) { mockApi.updateProduct(product) }
 
-        assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
@@ -174,13 +170,13 @@ internal class ProductsRepositoryUnitTest {
             .throwsMany(listOf(Exception(), Exception()))
             .andThen(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.update(product = expected)
+        val result: Boolean = testSut.update(product = expected)
 
         coVerify(exactly = 1) { mockDao.update(expected.asInternal()) }
         // 3 = 1 original + 2 retries
         coVerify(exactly = 3) { mockApi.updateProduct(expected) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -190,12 +186,12 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockDao.delete(id) } returns 1
         coEvery { mockApi.deleteProductById(id) } returns Response.success(true)
 
-        val result: Resource<Boolean> = testSut.delete(id = id)
+        val result: Boolean = testSut.delete(id = id)
 
         coVerify(exactly = 1) { mockDao.delete(id) }
         coVerify(exactly = 1) { mockApi.deleteProductById(id) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -205,27 +201,28 @@ internal class ProductsRepositoryUnitTest {
         coEvery { mockDao.delete(id) } returns 0
         coEvery { mockApi.deleteProductById(id) } returns Response.success(true)
 
-        val result: Resource<Boolean> = testSut.delete(id = id)
+        val result: Boolean = testSut.delete(id = id)
 
         coVerify(exactly = 1) { mockDao.delete(id) }
         coVerify(exactly = 0) { mockApi.deleteProductById(id) }
 
-        assertThat(result.data!!).isEqualTo(false)
+        assertThat(result).isEqualTo(false)
     }
 
     @Test
-    fun `database delete failure with exception should return ErrorType UNKNOWN`() = runTest {
+    fun `database delete failure with exception should return false`() = runTest {
         val id = 1L
+        val expected = false
 
         coEvery { mockDao.delete(id) }.throws(Exception())
         coEvery { mockApi.deleteProductById(id) }
 
-        val result: Resource<Boolean> = testSut.delete(id = id)
+        val result: Boolean = testSut.delete(id = id)
 
         coVerify(exactly = 1) { mockDao.delete(id) }
         coVerify(exactly = 0) { mockApi.deleteProductById(id) }
 
-        assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
@@ -237,36 +234,42 @@ internal class ProductsRepositoryUnitTest {
             .throwsMany(listOf(Exception(), Exception(), Exception()))
             .andThen(Response.success(true))
 
-        val result: Resource<Boolean> = testSut.delete(id = id)
+        val result: Boolean = testSut.delete(id = id)
 
         coVerify(exactly = 1) { mockDao.delete(id) }
         // 4 = 1 original + 3 retries
         coVerify(exactly = 4) { mockApi.deleteProductById(id) }
 
-        assertThat(result.data!!).isEqualTo(true)
+        assertThat(result).isEqualTo(true)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `getAll should return a list of products`() = runTest {
         val expected = listOf(expectedProduct.copy(id = 1), expectedProduct.copy(id = 2))
+        val products = flowOf(expected)
 
-        coEvery { mockDao.getAll() } returns expected.map { it.asInternal() }
+        coEvery { mockDao.getAll() } returns products.map { it.map { product -> product.asInternal() } }
 
-        val result: Resource<List<Product>> = testSut.getAll()
+        val result = testSut.getAll().first()
+        advanceUntilIdle()
 
         coVerify(exactly = 1) { mockDao.getAll() }
 
-        assertThat(result.data).isEqualTo(expected)
+        assertThat(result).isEqualTo(expected)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `database getAll failure with exception should return ErrorType UNKNOWN`() = runTest {
+    fun `database getAll failure with exception should return empty list`() = runTest {
         coEvery { mockDao.getAll() }.throws(Exception())
 
-        val result: Resource<List<Product>> = testSut.getAll()
+        val result = testSut.getAll()
+
+        advanceUntilIdle()
 
         coVerify(exactly = 1) { mockDao.getAll() }
 
-        assertThat(result.errorType).isEqualTo(ErrorType.UNKNOWN)
+        assertThat(emptyFlow<List<Product>>()).isEqualTo(result)
     }
 }
