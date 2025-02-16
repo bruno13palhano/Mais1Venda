@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface CustomerRepository {
     suspend fun get(uid: String): Customer?
-    suspend fun getAll(): Flow<List<Customer>>
+    fun getAll(): Flow<List<Customer>>
 }

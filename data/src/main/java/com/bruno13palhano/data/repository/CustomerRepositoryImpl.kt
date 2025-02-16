@@ -19,7 +19,7 @@ internal class CustomerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAll(): Flow<List<Customer>> {
+    override fun getAll(): Flow<List<Customer>> {
         return try {
             customerDao.getAll().map { it.map { customer -> customer.asExternal() } }
         } catch (e: Exception) {

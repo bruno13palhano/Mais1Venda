@@ -80,7 +80,7 @@ internal class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAll(): Flow<List<Product>> {
+    override fun getAll(): Flow<List<Product>> {
         return try {
             productDao.getAll().map { it.map { product -> product.asExternal() } }
         } catch (e: Exception) {

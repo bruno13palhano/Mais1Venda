@@ -17,7 +17,11 @@ internal class OrderRepositoryImpl @Inject constructor() : OrderRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAll(): Flow<List<Order>> {
+    override suspend fun get(id: Long): Order? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAll(): Flow<List<Order>> {
         TODO("Not yet implemented")
     }
 }

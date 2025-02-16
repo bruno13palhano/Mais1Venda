@@ -7,5 +7,5 @@ interface SellerRepository {
     suspend fun insert(seller: Seller)
     suspend fun update(seller: Seller)
     suspend fun delete(id: Long)
-    suspend fun getAll(): Flow<List<Seller>>
+    fun getAll(): Flow<List<Seller>>
 }

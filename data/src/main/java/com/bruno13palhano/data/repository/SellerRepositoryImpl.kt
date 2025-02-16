@@ -17,7 +17,7 @@ internal class SellerRepositoryImpl @Inject constructor() : SellerRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAll(): Flow<List<Seller>> {
+    override fun getAll(): Flow<List<Seller>> {
         TODO("Not yet implemented")
     }
 }
