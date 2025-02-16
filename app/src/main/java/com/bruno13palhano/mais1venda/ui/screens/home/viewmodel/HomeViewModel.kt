@@ -8,7 +8,6 @@ import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
@@ -21,22 +20,26 @@ internal class HomeViewModel @Inject constructor(
 
     fun handleEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.LoadOrders -> loadOrders()
-
             HomeEvent.ToggleMenu -> toggleMenu()
+
+            HomeEvent.NavigateToLogin -> navigateToLogin()
+
+            HomeEvent.NavigateToOrdersStatus -> navigateToOrdersStatus()
 
             HomeEvent.NavigateToProducts -> navigateToProducts()
         }
     }
 
-    private fun loadOrders() = container.intent {
-        reduce { copy(isLoading = true) }
-        delay(3000)
-        reduce { copy(isLoading = false) }
+    private fun navigateToLogin() = container.intent {
+        postSideEffect(effect = HomeSideEffect.NavigateToLogin)
+    }
+
+    private fun navigateToOrdersStatus() = container.intent {
+        postSideEffect(effect = HomeSideEffect.NavigateToOrdersStatus)
     }
 
     private fun toggleMenu() = container.intent {
-        postSideEffect(HomeSideEffect.ToggleMenu)
+        postSideEffect(effect = HomeSideEffect.ToggleMenu)
     }
 
     private fun navigateToProducts() = container.intent {

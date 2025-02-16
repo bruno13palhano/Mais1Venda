@@ -18,6 +18,7 @@ internal fun NavGraphBuilder.homeNavGraph(
             HomeRoute(
                 openDrawer = openDrawer,
                 navigateToLogin = { navController.navigate(MainRoutes.Login) },
+                navigateToOrdersStatus = { navController.navigate(HomeRoutes.OrdersStatus) },
                 navigateToProducts = { navController.navigate(HomeRoutes.Products) },
             )
         }

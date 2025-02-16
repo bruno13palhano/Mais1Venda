@@ -30,23 +30,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.R
 import com.bruno13palhano.mais1venda.ui.screens.home.viewmodel.HomeViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
-import kotlin.random.Random
 
 @Composable
 internal fun HomeRoute(
     openDrawer: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToOrdersStatus: () -> Unit,
     navigateToProducts: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
-
-    LaunchedEffect(Unit) {
-        if (Random.nextBoolean()) {
-            navigateToLogin()
-        }
-    }
 
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->
@@ -54,6 +48,10 @@ internal fun HomeRoute(
                 HomeSideEffect.ToggleMenu -> openDrawer()
 
                 is HomeSideEffect.ShowError -> {}
+
+                HomeSideEffect.NavigateToLogin -> navigateToLogin()
+
+                HomeSideEffect.NavigateToOrdersStatus -> navigateToOrdersStatus()
 
                 HomeSideEffect.NavigateToProducts -> navigateToProducts()
             }
@@ -85,13 +83,7 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
             )
         },
     ) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-            )
-        } else {
+        if (state.authenticated) {
             Column(
                 modifier = Modifier
                     .padding(it)
@@ -101,7 +93,17 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
                 Button(onClick = { onEvent(HomeEvent.NavigateToProducts) }) {
                     Text(text = stringResource(R.string.products))
                 }
+
+                Button(onClick = { onEvent(HomeEvent.NavigateToOrdersStatus) }) {
+                    Text(text = stringResource(R.string.orders_status))
+                }
             }
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
+            )
         }
     }
 }
@@ -115,7 +117,7 @@ private fun HomeContentPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             HomeContent(
-                state = HomeState(isLoading = true),
+                state = HomeState(authenticated = true),
                 onEvent = {},
             )
         }
