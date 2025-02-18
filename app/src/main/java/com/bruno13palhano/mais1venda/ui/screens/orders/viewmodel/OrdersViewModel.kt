@@ -2,6 +2,7 @@ package com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.model.shared.Order
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.OrderRepository
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersEvent
@@ -22,7 +23,9 @@ internal class OrdersViewModel @Inject constructor(
 
     fun handleEvent(event: OrdersEvent) {
         when (event) {
-            is OrdersEvent.LoadOrders -> loadOrders()
+            OrdersEvent.LoadOrders -> loadOrders()
+
+            is OrdersEvent.OrderInfo -> orderInfo(order = event.order)
 
             OrdersEvent.NavigateBack -> navigateBack()
         }
@@ -32,6 +35,10 @@ internal class OrdersViewModel @Inject constructor(
         orderRepository.getAll().collect {
             reduce { copy(orders = it) }
         }
+    }
+
+    private fun orderInfo(order: Order) = container.intent {
+        reduce { copy(selectedOrder = order) }
     }
 
     private fun navigateBack() = container.intent {

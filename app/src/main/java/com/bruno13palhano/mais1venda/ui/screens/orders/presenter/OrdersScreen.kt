@@ -113,9 +113,9 @@ private fun OrdersPreview() {
                         order.copy(id = 6, customer = customer.copy(name = "Customer 6")),
                         order.copy(id = 7, customer = customer.copy(name = "Customer 7")),
                         order.copy(id = 8, customer = customer.copy(name = "Customer 8")),
-                    )
+                    ),
                 ),
-                onEvent = {}
+                onEvent = {},
             )
         }
     }
@@ -130,7 +130,7 @@ private val product = Product(
     code = "1",
     quantity = 1,
     exhibitToCatalog = false,
-    lastModifiedTimestamp = ""
+    lastModifiedTimestamp = "",
 )
 
 private val customer = Customer(
@@ -141,7 +141,7 @@ private val customer = Customer(
     address = Address("", "", "", ""),
     socialMedia = emptyList(),
     orders = emptyList(),
-    lastModifiedTimestamp = ""
+    lastModifiedTimestamp = "",
 )
 
 private val order = Order(
@@ -151,5 +151,5 @@ private val order = Order(
     orderDate = 111111111111212,
     deliveryDate = 12234523453245,
     status = OrderStatus.PROCESSING_ORDER,
-    lastModifiedTimestamp = ""
+    lastModifiedTimestamp = "",
 )
