@@ -2,7 +2,6 @@ package com.bruno13palhano.mais1venda.ui.screens.products.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bruno13palhano.data.di.ProductRep
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.ProductRepository
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsEvent
@@ -14,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ProductsViewModel @Inject constructor(
     initialState: ProductsState,
-    @ProductRep private val productRepository: ProductRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     val container = Container<ProductsState, ProductsSideEffect>(
         initialState = initialState,
