@@ -25,21 +25,22 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'adopt'
+          cache: gradle
+
+      - name: Cache Gradle and Wrapper
+        uses: actions/cache@v4
+        with:
+          path: | 
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
@@ -51,7 +52,10 @@ jobs:
             sed "s|SERVERURL|$SERVERURL|g;" local.defaults.properties > local.properties
 
       - name: Build project
-        run: ./gradlew assembleDebug
+        run: ./gradlew build -Dlint.baselines.continue=true
+
+      - name: Run tests
+        run: ./gradlew test
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
