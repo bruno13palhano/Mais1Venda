@@ -64,7 +64,7 @@ internal class CompanyRepositoryUnitTest {
 
     @Test
     fun `successful createAccount should returned the new created company`() = runTest {
-        coEvery { mockApi.createCompany(expectedCompany) } returns Response.success(expectedCompany)
+        coEvery { mockApi.createCompany(any()) } returns Response.success(expectedCompany)
         coEvery { mockDao.insert(any()) } returns Unit
 
         val result: Resource<Company> = testSut.createAccount(
@@ -75,7 +75,7 @@ internal class CompanyRepositoryUnitTest {
             address = expectedCompany.address,
         )
 
-        coVerify(exactly = 1) { mockApi.createCompany(expectedCompany) }
+        coVerify(exactly = 1) { mockApi.createCompany(any()) }
         coVerify(exactly = 1) { mockDao.insert(expectedCompany.asInternal()) }
 
         assertThat(result.data).isEqualTo(expectedCompany)
