@@ -126,18 +126,16 @@ private fun OrdersStatusContent(
 @Composable
 private fun CardItem(title: String, onClick: () -> Unit) {
     Card(onClick = onClick) {
-        Card {
-            Box(
+        Box(
+            modifier = Modifier
+                .sizeIn(minHeight = 300.dp)
+                .fillMaxSize(),
+        ) {
+            Text(
                 modifier = Modifier
-                    .sizeIn(minHeight = 300.dp)
-                    .fillMaxSize(),
-            ) {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    text = title,
-                )
-            }
+                    .align(Alignment.Center),
+                text = title,
+            )
         }
     }
 }
