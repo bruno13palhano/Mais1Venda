@@ -1,17 +1,18 @@
 package com.bruno13palhano.mais1venda.ui.screens.home.presenter
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,9 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.R
@@ -42,6 +45,8 @@ internal fun HomeRoute(
     val state = viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
+    if (!state.value.authenticated) viewModel.handleEvent(event = HomeEvent.NavigateToLogin)
+
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->
             when (sideEffect) {
@@ -58,10 +63,7 @@ internal fun HomeRoute(
         }
     }
 
-    HomeContent(
-        state = state.value,
-        onEvent = viewModel::handleEvent,
-    )
+    HomeContent(state = state.value, onEvent = viewModel::handleEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,26 +85,50 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
             )
         },
     ) {
-        if (state.authenticated) {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .consumeWindowInsets(it)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                Button(onClick = { onEvent(HomeEvent.NavigateToProducts) }) {
-                    Text(text = stringResource(R.string.products))
-                }
+        val items = mapOf(
+            stringResource(
+                id = R.string.products,
+            ) to { onEvent(HomeEvent.NavigateToProducts) },
+            stringResource(
+                id = R.string.orders_status,
+            ) to { onEvent(HomeEvent.NavigateToOrdersStatus) },
+        )
 
-                Button(onClick = { onEvent(HomeEvent.NavigateToOrdersStatus) }) {
-                    Text(text = stringResource(R.string.orders_status))
-                }
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .consumeWindowInsets(it)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            items.forEach { (title, function) ->
+                CardItem(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    title = title,
+                    onClick = function
+                )
             }
-        } else {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
+        }
+    }
+}
+
+@Composable
+private fun CardItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Box(
+            modifier = Modifier
+                .sizeIn(minHeight = 300.dp)
+                .fillMaxSize(),
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = title,
             )
         }
     }
