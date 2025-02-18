@@ -20,7 +20,7 @@ internal class OrdersStatusViewModel @Inject constructor(
 
     fun handleEvent(event: OrdersStatusEvent) {
         when (event) {
-            OrdersStatusEvent.LoadNewOrdersCount -> container.intent {  }
+            OrdersStatusEvent.LoadNewOrdersCount -> container.intent { }
 
             OrdersStatusEvent.NavigateToNewOrders -> container.intent {
                 postSideEffect(effect = OrdersStatusSideEffect.NavigateToNewOrders)

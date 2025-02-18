@@ -250,7 +250,7 @@ internal class ProductsRepositoryUnitTest {
         val products = flowOf(expected)
 
         coEvery { mockDao.getAll() }.returns(
-            returnValue = products.map { it.map { product -> product.asInternal() } }
+            returnValue = products.map { it.map { product -> product.asInternal() } },
         )
 
         val result = testSut.getAll().first()
