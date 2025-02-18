@@ -1,5 +1,6 @@
 package com.bruno13palhano.mais1venda.ui.screens.orders.presenter
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -15,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -81,9 +83,21 @@ private fun CustomersContent(state: CustomersState, onEvent: (event: CustomersEv
         ) {
             items(items = state.customers, key = { customer -> customer.uid }) {
                 ListItem(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier
+                        .clickable { onEvent(CustomersEvent.CustomerInfo(customer = it)) }
+                        .padding(4.dp),
                     headlineContent = { Text(text = it.name) },
                     supportingContent = { Text(text = it.email) },
+                )
+            }
+        }
+
+        if (state.showCustomerInfo) {
+            state.selectedCustomer?.let { customer ->
+                ModalBottomSheet(
+                    onDismissRequest = {},
+                    content = {
+                    },
                 )
             }
         }
@@ -109,7 +123,7 @@ private fun CustomersPreview() {
                         customer.copy(uid = "6", name = "Customer 6"),
                         customer.copy(uid = "7", name = "Customer 7"),
                         customer.copy(uid = "8", name = "Customer 8"),
-                    )
+                    ),
                 ),
                 onEvent = {},
             )
@@ -125,5 +139,5 @@ private val customer = Customer(
     address = Address("", "", "", ""),
     socialMedia = emptyList(),
     orders = emptyList(),
-    lastModifiedTimestamp = ""
+    lastModifiedTimestamp = "",
 )
