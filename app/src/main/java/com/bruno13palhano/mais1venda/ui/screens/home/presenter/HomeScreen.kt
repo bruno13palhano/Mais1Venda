@@ -100,11 +100,11 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
                 .consumeWindowInsets(it)
                 .verticalScroll(rememberScrollState()),
         ) {
-            items.forEach { (title, function) ->
+            items.forEach { (title, onClick) ->
                 CardItem(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     title = title,
-                    onClick = function
+                    onClick = onClick,
                 )
             }
         }
@@ -112,14 +112,10 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
 }
 
 @Composable
-private fun CardItem(
-    modifier: Modifier = Modifier,
-    title: String,
-    onClick: () -> Unit,
-) {
+private fun CardItem(modifier: Modifier = Modifier, title: String, onClick: () -> Unit) {
     Card(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = Modifier
