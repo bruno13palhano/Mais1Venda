@@ -249,7 +249,9 @@ internal class ProductsRepositoryUnitTest {
         val expected = listOf(expectedProduct.copy(id = 1), expectedProduct.copy(id = 2))
         val products = flowOf(expected)
 
-        coEvery { mockDao.getAll() } returns products.map { it.map { product -> product.asInternal() } }
+        coEvery { mockDao.getAll() }.returns(
+            returnValue = products.map { it.map { product -> product.asInternal() } }
+        )
 
         val result = testSut.getAll().first()
         advanceUntilIdle()
