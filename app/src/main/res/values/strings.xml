@@ -56,4 +56,17 @@
     <string name="orders">Orders</string>
     <string name="dashboard">Dashboard</string>
     <string name="orders_dashboard">Orders Dashboard</string>
+    <string name="customer_name">Customer name</string>
+    <string name="street">Street</string>
+    <string name="number">Number</string>
+    <string name="complement">Complement</string>
+    <string name="order_date">Order Date</string>
+    <string name="delivery_date">Delivery date</string>
+    <string name="product_info">Product Info</string>
+    <string name="customer_info">Customer Info</string>
+    <string name="delivery_info">Delivery Info</string>
+    <string name="status_info">Status Info</string>
+    <string name="status">Status</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="cancel_order">Cancel Order</string>
 </resources>
