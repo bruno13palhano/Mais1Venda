@@ -3,8 +3,10 @@ package com.bruno13palhano.data.datasource.remote.service
 import com.bruno13palhano.data.model.company.Company
 import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.data.model.customer.Customer
+import com.bruno13palhano.data.model.shared.Order
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -24,10 +26,10 @@ internal interface ApiService {
     @POST("customers/insert")
     suspend fun insertCustomer(@Body customer: Customer): Response<Boolean>
 
-    @POST("customers/customer/{id}")
+    @GET("customers/customer/{id}")
     suspend fun getCustomerByUid(@Path("uid") uid: String): Response<Customer?>
 
-    @POST("customers/all")
+    @GET("customers/all")
     suspend fun getAllCustomers(): Response<List<Customer>>
 
     @POST("product/update")
@@ -38,4 +40,16 @@ internal interface ApiService {
 
     @POST("product/all")
     suspend fun getAllProducts(): Response<List<Product>>
+
+    @GET("orders/new/all")
+    suspend fun getAllNewOrders(): Response<List<Order>>
+
+    @POST("orders/confirm/{id}")
+    suspend fun confirmOrder(@Path("id") id: Long): Response<Boolean>
+
+    @POST("orders/cancel/{id}")
+    suspend fun cancelOrder(@Path("id") id: Long): Response<Boolean>
+
+    @GET("orders/all")
+    suspend fun getAllOrders(): Response<List<Order>>
 }
