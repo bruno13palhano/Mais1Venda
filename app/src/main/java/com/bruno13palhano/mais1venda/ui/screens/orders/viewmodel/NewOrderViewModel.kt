@@ -28,10 +28,17 @@ internal class NewOrderViewModel @Inject constructor(
 
             NewOrderEvent.CancelOrder -> cancelOrder()
 
+            NewOrderEvent.ConfirmCancelOrder -> confirmCancelOrder()
+
             NewOrderEvent.DismissKeyboard -> dismissKeyboard()
 
             NewOrderEvent.NavigateBack -> navigateBack()
         }
+    }
+
+    private fun loadOrder(id: Long) = container.intent {
+        val order = orderRepository.get(id = id)
+        reduce { copy(order = order) }
     }
 
     private fun confirmOrder() = container.intent {
@@ -39,16 +46,15 @@ internal class NewOrderViewModel @Inject constructor(
     }
 
     private fun cancelOrder() = container.intent {
+        postSideEffect(effect = NewOrderSideEffect.ShowCancelDialog)
+    }
 
+    private fun confirmCancelOrder() = container.intent {
+        postSideEffect(effect = NewOrderSideEffect.NavigateBack)
     }
 
     private fun dismissKeyboard() = container.intent {
         postSideEffect(effect = NewOrderSideEffect.DismissKeyboard)
-    }
-
-    private fun loadOrder(id: Long) = container.intent {
-        val order = orderRepository.get(id = id)
-        reduce { copy(order = order) }
     }
 
     private fun navigateBack() = container.intent {

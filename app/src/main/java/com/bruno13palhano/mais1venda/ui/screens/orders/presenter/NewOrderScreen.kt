@@ -21,6 +21,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,7 +32,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +53,7 @@ import com.bruno13palhano.mais1venda.ui.screens.shared.clickableWithoutRipple
 import com.bruno13palhano.mais1venda.ui.screens.shared.dateFormat
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
 import com.bruno13palhano.mais1venda.ui.theme.Mais1VendaTheme
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun NewOrderRoute(
@@ -55,6 +64,13 @@ internal fun NewOrderRoute(
     val state by viewModel.container.state.collectAsStateWithLifecycle()
     val sideEffect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val cancelOrderWarningMessage = stringResource(id = R.string.cancel_this_order)
+    val yesMessage = stringResource(id = R.string.yes)
+
     LaunchedEffect(Unit) { viewModel.handleEvent(event = NewOrderEvent.LoadOrder(id = id)) }
 
     LaunchedEffect(sideEffect) {
@@ -62,19 +78,45 @@ internal fun NewOrderRoute(
             when (effect) {
                 is NewOrderSideEffect.ShowError -> {}
 
-                NewOrderSideEffect.DismissKeyboard -> {}
+                NewOrderSideEffect.ShowCancelDialog -> {
+                    scope.launch {
+                        val action = snackbarHostState.showSnackbar(
+                            message = cancelOrderWarningMessage,
+                            actionLabel = yesMessage,
+                            duration = SnackbarDuration.Indefinite,
+                            withDismissAction = true,
+                        )
+
+                        if (action == SnackbarResult.ActionPerformed ) {
+                            viewModel.handleEvent(event = NewOrderEvent.ConfirmCancelOrder)
+                        }
+                    }
+                }
+
+                NewOrderSideEffect.DismissKeyboard -> {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                }
 
                 NewOrderSideEffect.NavigateBack -> navigateBack()
             }
         }
     }
 
-    NewOrderContent(state = state, onEvent = viewModel::handleEvent)
+    NewOrderContent(
+        snackbarHostState = snackbarHostState,
+        state = state,
+        onEvent = viewModel::handleEvent,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewOrderContent(state: NewOrderState, onEvent: (event: NewOrderEvent) -> Unit) {
+private fun NewOrderContent(
+    snackbarHostState: SnackbarHostState,
+    state: NewOrderState,
+    onEvent: (event: NewOrderEvent) -> Unit,
+) {
     Scaffold(
         modifier = Modifier
             .clickableWithoutRipple { onEvent(NewOrderEvent.DismissKeyboard) }
@@ -92,6 +134,7 @@ private fun NewOrderContent(state: NewOrderState, onEvent: (event: NewOrderEvent
                 },
             )
         },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) {
         NewOrderForm(
             modifier = Modifier
@@ -185,11 +228,11 @@ private fun NewOrderForm(
         )
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
         ListItem(
-            headlineContent = { Text(text = dateFormat.format(state.order?.orderDate)) },
+            headlineContent = { Text(text = dateFormat.format(state.order?.orderDate ?: 0L)) },
             overlineContent = { Text(text = stringResource(R.string.order_date)) },
         )
         ListItem(
-            headlineContent = { Text(text = dateFormat.format(state.order?.deliveryDate)) },
+            headlineContent = { Text(text = dateFormat.format(state.order?.deliveryDate ?: 0L)) },
             overlineContent = { Text(text = stringResource(R.string.delivery_date)) },
         )
 
@@ -236,6 +279,7 @@ private fun NewOrderPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             NewOrderContent(
+                snackbarHostState = SnackbarHostState(),
                 state = NewOrderState(order = order),
                 onEvent = {},
             )

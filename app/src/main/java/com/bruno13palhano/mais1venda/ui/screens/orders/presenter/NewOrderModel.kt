@@ -14,6 +14,7 @@ internal sealed interface NewOrderEvent {
     data class LoadOrder(val id: Long) : NewOrderEvent
     data object ConfirmOrder : NewOrderEvent
     data object CancelOrder : NewOrderEvent
+    data object ConfirmCancelOrder : NewOrderEvent
     data object DismissKeyboard : NewOrderEvent
     data object NavigateBack : NewOrderEvent
 }
@@ -22,5 +23,6 @@ internal sealed interface NewOrderEvent {
 internal sealed interface NewOrderSideEffect {
     data class ShowError(val codeError: CodeError) : NewOrderSideEffect
     data object DismissKeyboard : NewOrderSideEffect
+    data object ShowCancelDialog : NewOrderSideEffect
     data object NavigateBack : NewOrderSideEffect
 }
