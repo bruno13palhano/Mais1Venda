@@ -24,13 +24,31 @@ internal class NewOrderViewModel @Inject constructor(
         when (event) {
             is NewOrderEvent.LoadOrder -> loadOrder(id = event.id)
 
+            NewOrderEvent.ConfirmOrder -> confirmOrder()
+
+            NewOrderEvent.CancelOrder -> cancelOrder()
+
+            NewOrderEvent.DismissKeyboard -> dismissKeyboard()
+
             NewOrderEvent.NavigateBack -> navigateBack()
         }
     }
 
+    private fun confirmOrder() = container.intent {
+
+    }
+
+    private fun cancelOrder() = container.intent {
+
+    }
+
+    private fun dismissKeyboard() = container.intent {
+        postSideEffect(effect = NewOrderSideEffect.DismissKeyboard)
+    }
+
     private fun loadOrder(id: Long) = container.intent {
         val order = orderRepository.get(id = id)
-        reduce { copy() }
+        reduce { copy(order = order) }
     }
 
     private fun navigateBack() = container.intent {
