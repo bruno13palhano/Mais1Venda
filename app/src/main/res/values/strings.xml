@@ -69,4 +69,6 @@
     <string name="status">Status</string>
     <string name="confirm_order">Confirm Order</string>
     <string name="cancel_order">Cancel Order</string>
+    <string name="cancel_this_order">Are you sure you want to cancel this order?</string>
+    <string name="yes">Yes</string>
 </resources>
