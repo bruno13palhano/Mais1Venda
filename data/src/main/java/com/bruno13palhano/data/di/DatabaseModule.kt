@@ -27,6 +27,10 @@ internal object DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideOrderDao(appDatabase: AppDatabase) = appDatabase.orderDao()
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
