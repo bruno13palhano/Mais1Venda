@@ -28,3 +28,18 @@ internal suspend fun <T> remoteCallWithRetry(
         else -> {}
     }
 }
+
+internal suspend fun <T> remoteCallWithRetry(
+    retries: Int = 3,
+    call: suspend () -> Resource<T>,
+): Resource<T> {
+    var resource = call()
+    var remainingTries = retries
+
+    while (resource.data == null && remainingTries > 0) {
+        remainingTries--
+        resource = call()
+    }
+
+    return resource
+}
