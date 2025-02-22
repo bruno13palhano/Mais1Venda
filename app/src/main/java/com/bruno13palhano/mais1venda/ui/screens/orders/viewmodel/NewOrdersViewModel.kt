@@ -2,6 +2,7 @@ package com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.OrderRepository
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrdersEvent
@@ -31,8 +32,26 @@ internal class NewOrdersViewModel @Inject constructor(
     }
 
     private fun loadNewOrders() = container.intent {
-        orderRepository.getAll().collect { orders ->
-            reduce { copy(newOrders = orders) }
+        when (val result = orderRepository.getNewOrders()) {
+            is Resource.Success -> {
+                result.data?.let {
+                    reduce { copy(newOrders = it) }
+                }
+            }
+
+            is Resource.ResponseError -> {
+                postSideEffect(
+                    effect = NewOrdersSideEffect.ShowResponseError(
+                        remoteError = result.remoteResponseError
+                    )
+                )
+            }
+
+            is Resource.Error -> {
+                postSideEffect(
+                    effect = NewOrdersSideEffect.ShowError(errorType = result.errorType)
+                )
+            }
         }
     }
 
