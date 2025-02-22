@@ -6,6 +6,7 @@ import com.bruno13palhano.data.model.shared.Order
 import com.bruno13palhano.data.mvi.Container
 import com.bruno13palhano.data.repository.OrderRepository
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersEvent
+import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersMenuItems
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,12 @@ internal class OrdersViewModel @Inject constructor(
 
             is OrdersEvent.OrderInfo -> orderInfo(order = event.order)
 
+            OrdersEvent.ToggleShowOrderInfo -> toggleShowOrderInfo()
+
+            OrdersEvent.ToggleOptionMenu -> toggleOptionMenu()
+
+            is OrdersEvent.UpdateSelectedOption -> updateSelectedOption(option = event.option)
+
             OrdersEvent.NavigateBack -> navigateBack()
         }
     }
@@ -38,7 +45,73 @@ internal class OrdersViewModel @Inject constructor(
     }
 
     private fun orderInfo(order: Order) = container.intent {
-        reduce { copy(selectedOrder = order) }
+        reduce { copy(selectedOrder = order, showOrderInfo = !showOrderInfo) }
+    }
+
+    private fun toggleShowOrderInfo() = container.intent {
+        reduce { copy(showOrderInfo = !showOrderInfo) }
+    }
+
+    private fun toggleOptionMenu() = container.intent {
+        reduce { copy(openOptionMenu = !openOptionMenu) }
+    }
+
+    private fun updateSelectedOption(option: OrdersMenuItems) = container.intent {
+        when (option) {
+            OrdersMenuItems.SORT_BY_CUSTOMER_NAME -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.customer.name },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+
+            OrdersMenuItems.SORT_BY_PRODUCT_NAME -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.product.name },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+
+            OrdersMenuItems.SORT_BY_PRICE -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.product.price },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+
+            OrdersMenuItems.SORT_BY_QUANTITY -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.product.quantity },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+
+            OrdersMenuItems.SORT_BY_ORDER_DATE -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.orderDate },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+
+            OrdersMenuItems.SORT_BY_DELIVERY_DATE -> {
+                reduce {
+                    copy(
+                        orders = orders.sortedBy { it.deliveryDate },
+                        openOptionMenu = false,
+                    )
+                }
+            }
+        }
     }
 
     private fun navigateBack() = container.intent {
