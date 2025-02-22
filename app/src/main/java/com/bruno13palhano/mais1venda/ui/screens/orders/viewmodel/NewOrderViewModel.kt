@@ -42,7 +42,6 @@ internal class NewOrderViewModel @Inject constructor(
     }
 
     private fun confirmOrder() = container.intent {
-
     }
 
     private fun cancelOrder() = container.intent {

@@ -56,7 +56,7 @@ internal fun OrderListItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-        }
+        },
     )
 }
 

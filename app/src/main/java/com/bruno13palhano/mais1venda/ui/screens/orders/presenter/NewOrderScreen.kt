@@ -87,7 +87,7 @@ internal fun NewOrderRoute(
                             withDismissAction = true,
                         )
 
-                        if (action == SnackbarResult.ActionPerformed ) {
+                        if (action == SnackbarResult.ActionPerformed) {
                             viewModel.handleEvent(event = NewOrderEvent.ConfirmCancelOrder)
                         }
                     }
@@ -152,7 +152,7 @@ private fun NewOrderContent(
 private fun NewOrderForm(
     modifier: Modifier = Modifier,
     state: NewOrderState,
-    onEvent: (event: NewOrderEvent) -> Unit
+    onEvent: (event: NewOrderEvent) -> Unit,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -252,7 +252,7 @@ private fun NewOrderForm(
             modifier = Modifier
                 .padding(start = 8.dp, top = 32.dp, end = 8.dp)
                 .fillMaxWidth(),
-            onClick = { onEvent(NewOrderEvent.ConfirmOrder) }
+            onClick = { onEvent(NewOrderEvent.ConfirmOrder) },
         ) {
             Text(text = stringResource(R.string.confirm_order))
         }

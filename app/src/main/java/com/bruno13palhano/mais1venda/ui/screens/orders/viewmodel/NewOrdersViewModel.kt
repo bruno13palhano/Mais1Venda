@@ -42,14 +42,14 @@ internal class NewOrdersViewModel @Inject constructor(
             is Resource.ResponseError -> {
                 postSideEffect(
                     effect = NewOrdersSideEffect.ShowResponseError(
-                        remoteError = result.remoteResponseError
-                    )
+                        remoteError = result.remoteResponseError,
+                    ),
                 )
             }
 
             is Resource.Error -> {
                 postSideEffect(
-                    effect = NewOrdersSideEffect.ShowError(errorType = result.errorType)
+                    effect = NewOrdersSideEffect.ShowError(errorType = result.errorType),
                 )
             }
         }

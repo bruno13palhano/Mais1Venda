@@ -46,7 +46,7 @@ internal class OrderRepositoryImpl @Inject constructor(
         return remoteCallWithRetry { orderRemoteData.cancelOrder(id = id) }
     }
 
-    private suspend fun ordersEntityToOrders(orders: List<OrderEntity>):List<Order> {
+    private suspend fun ordersEntityToOrders(orders: List<OrderEntity>): List<Order> {
         return orders.map { order -> orderEntityToOrder(order = order) }
     }
 

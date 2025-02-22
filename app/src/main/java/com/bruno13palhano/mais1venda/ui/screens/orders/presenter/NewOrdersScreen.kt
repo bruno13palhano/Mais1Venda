@@ -63,7 +63,7 @@ internal fun NewOrdersRoute(
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = error.description ?: "",
-                                withDismissAction = true
+                                withDismissAction = true,
                             )
                         }
                     }
@@ -74,7 +74,7 @@ internal fun NewOrdersRoute(
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 message = error.name,
-                                withDismissAction = true
+                                withDismissAction = true,
                             )
                         }
                     }
@@ -119,7 +119,7 @@ private fun NewOrdersContent(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) {
         if (state.loading) {
-           CircularProgress(modifier = Modifier.fillMaxSize())
+            CircularProgress(modifier = Modifier.fillMaxSize())
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -133,7 +133,7 @@ private fun NewOrdersContent(
                         productName = order.product.name,
                         orderDate = order.orderDate,
                         price = order.product.price,
-                        onClick = { onEvent(NewOrdersEvent.NavigateToNewOrder(id = order.id)) }
+                        onClick = { onEvent(NewOrdersEvent.NavigateToNewOrder(id = order.id)) },
                     )
                 }
             }
