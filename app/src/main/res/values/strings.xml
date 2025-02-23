@@ -72,4 +72,11 @@
     <string name="cancel_this_order">Are you sure you want to cancel this order?</string>
     <string name="yes">Yes</string>
     <string name="price_tag">R$ %.2f</string>
+    <string name="ads">Ads</string>
+    <string name="add_new_ad">Add new ad</string>
+    <string name="search">Search</string>
+    <string name="title">Title</string>
+    <string name="off">Off</string>
+    <string name="units_sold">Units sold</string>
+    <string name="review">Review</string>
 </resources>
