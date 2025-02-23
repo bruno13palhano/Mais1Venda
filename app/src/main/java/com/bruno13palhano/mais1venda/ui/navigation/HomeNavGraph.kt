@@ -32,6 +32,11 @@ internal fun NavGraphBuilder.homeNavGraph(
             navController = navController,
             gesturesEnabled = gesturesEnabled,
         )
+
+        adsNavGraph(
+            navController = navController,
+            gesturesEnabled = gesturesEnabled,
+        )
     }
 }
 
@@ -44,4 +49,7 @@ internal sealed interface HomeRoutes {
 
     @Serializable
     data object OrdersStatus : HomeRoutes
+
+    @Serializable
+    data object Ads : HomeRoutes
 }
