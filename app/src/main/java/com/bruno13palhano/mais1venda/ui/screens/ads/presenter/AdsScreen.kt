@@ -1,4 +1,4 @@
-package com.bruno13palhano.mais1venda.ui.screens.store.presenter
+package com.bruno13palhano.mais1venda.ui.screens.ads.presenter
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -39,7 +39,7 @@ import com.bruno13palhano.mais1venda.R
 import com.bruno13palhano.mais1venda.ui.screens.components.MoreVertMenu
 import com.bruno13palhano.mais1venda.ui.screens.components.testProduct
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
-import com.bruno13palhano.mais1venda.ui.screens.store.viewmodel.AdsViewModel
+import com.bruno13palhano.mais1venda.ui.screens.ads.viewmodel.AdsViewModel
 import com.bruno13palhano.mais1venda.ui.theme.Mais1VendaTheme
 
 @Composable

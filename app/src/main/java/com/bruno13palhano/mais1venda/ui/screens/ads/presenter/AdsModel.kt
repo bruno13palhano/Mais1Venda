@@ -1,4 +1,4 @@
-package com.bruno13palhano.mais1venda.ui.screens.store.presenter
+package com.bruno13palhano.mais1venda.ui.screens.ads.presenter
 
 import androidx.compose.runtime.Immutable
 import com.bruno13palhano.data.model.shared.Ad
