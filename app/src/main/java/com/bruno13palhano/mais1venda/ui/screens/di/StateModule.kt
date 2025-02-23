@@ -12,6 +12,7 @@ import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersStatusSta
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsState
 import com.bruno13palhano.mais1venda.ui.screens.settings.presenter.SettingsState
+import com.bruno13palhano.mais1venda.ui.screens.store.presenter.AdsState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,4 +69,8 @@ internal object StateModule {
     @Provides
     @Singleton
     fun provideOrdersDashboardState() = OrdersDashboardState()
+
+    @Provides
+    @Singleton
+    fun provideStoreState() = AdsState()
 }
