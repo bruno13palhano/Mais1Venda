@@ -32,14 +32,16 @@ internal class NewOrdersViewModel @Inject constructor(
     }
 
     private fun loadNewOrders() = container.intent {
+        reduce { copy(loading = true) }
+
         when (val result = orderRepository.getNewOrders()) {
             is Resource.Success -> {
-                result.data?.let {
-                    reduce { copy(newOrders = it) }
-                }
+                val newOrders = result.data ?: emptyList()
+                reduce { copy(loading = false, newOrders = newOrders) }
             }
 
             is Resource.ResponseError -> {
+                reduce { copy(loading = false) }
                 postSideEffect(
                     effect = NewOrdersSideEffect.ShowResponseError(
                         remoteError = result.remoteResponseError,
@@ -48,6 +50,7 @@ internal class NewOrdersViewModel @Inject constructor(
             }
 
             is Resource.Error -> {
+                reduce { copy(loading = false) }
                 postSideEffect(
                     effect = NewOrdersSideEffect.ShowError(errorType = result.errorType),
                 )
