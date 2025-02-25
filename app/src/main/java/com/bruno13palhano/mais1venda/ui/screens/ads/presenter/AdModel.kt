@@ -24,13 +24,14 @@ internal data class AdState(
 internal sealed interface AdEvent {
     data class GetAd(val id: Long) : AdEvent
     data class TitleChanged(val title: String) : AdEvent
-    data class ProductChanged(val product: Product) : AdEvent
+    data class UpdateProduct(val product: Product) : AdEvent
     data class DescriptionChanged(val description: String) : AdEvent
     data class ObservationsChanged(val observations: String) : AdEvent
     data class OffChanged(val off: Float) : AdEvent
     data class UnitsSoldChanged(val unitsSold: Int) : AdEvent
     data class QuestionsChanged(val questions: List<String>) : AdEvent
     data class ReviewsChanged(val reviews: List<String>) : AdEvent
+    data object NavigateBack : AdEvent
 }
 
 @Immutable
