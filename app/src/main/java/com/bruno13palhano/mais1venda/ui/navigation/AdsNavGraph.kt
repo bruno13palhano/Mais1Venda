@@ -4,7 +4,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.AdsRoute
+import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.EditAdRoute
+import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.NewAdRoute
 import kotlinx.serialization.Serializable
 
 internal fun NavGraphBuilder.adsNavGraph(
@@ -22,9 +25,15 @@ internal fun NavGraphBuilder.adsNavGraph(
             )
         }
 
-        composable<AdsRoutes.NewAd> {}
+        composable<AdsRoutes.NewAd> {
+            NewAdRoute(navigateBack = { navController.navigateUp() })
+        }
 
-        composable<AdsRoutes.EditAd> {}
+        composable<AdsRoutes.EditAd> {
+            val id = it.toRoute<AdsRoutes.EditAd>().id
+
+            EditAdRoute(id = id, navigateBack = { navController.navigateUp() })
+        }
     }
 }
 
