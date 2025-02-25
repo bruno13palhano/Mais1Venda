@@ -79,4 +79,6 @@
     <string name="off">Off</string>
     <string name="units_sold">Units sold</string>
     <string name="review">Review</string>
+    <string name="new_ad">New Ad</string>
+    <string name="edit_ad">Edit Ad</string>
 </resources>
