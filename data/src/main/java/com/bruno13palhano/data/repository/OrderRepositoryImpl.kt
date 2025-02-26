@@ -5,7 +5,6 @@ import com.bruno13palhano.data.datasource.local.dao.OrderDao
 import com.bruno13palhano.data.datasource.local.dao.ProductDao
 import com.bruno13palhano.data.datasource.local.entity.OrderEntity
 import com.bruno13palhano.data.datasource.remote.source.OrderRemoteData
-import com.bruno13palhano.data.model.company.asExternal
 import com.bruno13palhano.data.model.customer.asExternal
 import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.model.shared.Order
@@ -51,9 +50,16 @@ internal class OrderRepositoryImpl @Inject constructor(
     }
 
     private suspend fun orderEntityToOrder(order: OrderEntity): Order {
+        val product = productDao.getById(id = order.productId) // handle null case
+
         return Order(
             id = order.id,
-            product = productDao.getById(id = order.productId)!!.asExternal(),
+            productName = product?.name ?: "",
+            productCode = product?.code ?: "",
+            quantity = order.quantity,
+            unitPrice = order.unitPrice,
+            off = order.off,
+            totalPrice = order.totalPrice,
             customer = customerDao.getById(uid = order.customerUid)!!.asExternal(),
             orderDate = order.orderDate,
             deliveryDate = order.deliveryDate,
