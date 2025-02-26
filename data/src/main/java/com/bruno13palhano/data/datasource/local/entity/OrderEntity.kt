@@ -9,6 +9,10 @@ internal data class OrderEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val productId: Long,
+    val quantity: Int,
+    val unitPrice: Double,
+    val off: Float,
+    val totalPrice: Double,
     val customerUid: String,
     val orderDate: Long,
     val deliveryDate: Long,
