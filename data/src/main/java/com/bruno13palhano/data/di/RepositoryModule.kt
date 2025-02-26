@@ -43,7 +43,5 @@ internal abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindAdRepository(
-        adRepositoryImpl: AdRepositoryImpl,
-    ): AdRepository
+    abstract fun bindAdRepository(adRepositoryImpl: AdRepositoryImpl): AdRepository
 }

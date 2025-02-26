@@ -5,7 +5,7 @@ import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.model.shared.Ad
 import javax.inject.Inject
 
-internal class AdRemoteData @Inject constructor(private  val api: ApiService) {
+internal class AdRemoteData @Inject constructor(private val api: ApiService) {
     suspend fun insert(ad: Ad): Resource<Boolean> {
         return safeApiCall { api.insertAd(ad = ad) }
     }

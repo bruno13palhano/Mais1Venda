@@ -26,11 +26,9 @@ internal object RemoteModule {
 
     @Provides
     @Singleton
-    fun provideOrderRemoteDataSource(api: ApiService): OrderRemoteData =
-        OrderRemoteData(api = api)
+    fun provideOrderRemoteDataSource(api: ApiService): OrderRemoteData = OrderRemoteData(api = api)
 
     @Provides
     @Singleton
-    fun provideAdRemoteDataSource(api: ApiService): AdRemoteData =
-        AdRemoteData(api = api)
+    fun provideAdRemoteDataSource(api: ApiService): AdRemoteData = AdRemoteData(api = api)
 }
