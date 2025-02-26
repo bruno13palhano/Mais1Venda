@@ -1,5 +1,6 @@
 package com.bruno13palhano.data.model.shared
 
+import com.bruno13palhano.data.datasource.local.entity.AdEntity
 import com.bruno13palhano.data.model.company.Product
 
 data class Ad(
@@ -15,4 +16,19 @@ data class Ad(
     val questions: List<String>,
     val reviews: List<String>,
     val lastModifiedTimestamp: String,
+)
+
+internal fun Ad.asInternal() = AdEntity(
+    id = id,
+    title = title,
+    productId = product.id,
+    price = price,
+    description = description,
+    observations = observations,
+    off = off,
+    stockQuantity = stockQuantity,
+    unitsSold = unitsSold,
+    questions = questions,
+    reviews = reviews,
+    lastModifiedTimestamp = lastModifiedTimestamp,
 )
