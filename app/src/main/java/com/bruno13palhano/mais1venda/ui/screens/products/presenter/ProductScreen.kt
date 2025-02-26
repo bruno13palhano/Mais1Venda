@@ -227,17 +227,6 @@ private fun ProductForm(id: Long, state: ProductState, onEvent: (event: ProductE
         isError = state.nameError,
     )
 
-    CustomFloatField(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .fillMaxWidth(),
-        value = state.price,
-        onValueChange = { onEvent(ProductEvent.PriceChanged(it)) },
-        label = stringResource(R.string.price),
-        placeholder = stringResource(R.string.price_placeholder),
-        isError = state.priceError,
-    )
-
     CustomTextField(
         modifier = Modifier
             .padding(horizontal = 8.dp)

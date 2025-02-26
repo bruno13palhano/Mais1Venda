@@ -148,7 +148,6 @@ private val productListPreview = listOf(
         id = 1,
         name = "Product 1",
         description = "Description 1",
-        price = 124.5F,
         category = listOf(
             "Category 1",
         ),
@@ -161,7 +160,6 @@ private val productListPreview = listOf(
         id = 2,
         name = "Product 2",
         description = "Description 2",
-        price = 124.5F,
         category = listOf(
             "Category 2",
         ),
@@ -174,7 +172,6 @@ private val productListPreview = listOf(
         id = 3,
         name = "Product 3",
         description = "Description 3",
-        price = 124.5F,
         category = listOf(
             "Category 3",
         ),
@@ -187,7 +184,6 @@ private val productListPreview = listOf(
         id = 4,
         name = "Product 4",
         description = "Description 4",
-        price = 124.5F,
         category = listOf(
             "Category 4",
         ),
@@ -200,7 +196,6 @@ private val productListPreview = listOf(
         id = 5,
         name = "Product 5",
         description = "Description 5",
-        price = 124.5F,
         category = listOf(
             "Category 5",
         ),
@@ -213,7 +208,6 @@ private val productListPreview = listOf(
         id = 6,
         name = "Product 6",
         description = "Description 6",
-        price = 124.5F,
         category = listOf(
             "Category 6",
         ),
@@ -226,7 +220,6 @@ private val productListPreview = listOf(
         id = 7,
         name = "Product 7",
         description = "Description 7",
-        price = 124.5F,
         category = listOf(
             "Category 7",
         ),
@@ -239,7 +232,6 @@ private val productListPreview = listOf(
         id = 8,
         name = "Product 8",
         description = "Description 8",
-        price = 124.5F,
         category = listOf(
             "Category 8",
         ),
@@ -252,7 +244,6 @@ private val productListPreview = listOf(
         id = 9,
         name = "Product 9",
         description = "Description 9",
-        price = 124.5F,
         category = listOf(
             "Category 9",
         ),
@@ -265,7 +256,6 @@ private val productListPreview = listOf(
         id = 10,
         name = "Product 10",
         description = "Description 10",
-        price = 124.5F,
         category = listOf(
             "Category 10",
         ),

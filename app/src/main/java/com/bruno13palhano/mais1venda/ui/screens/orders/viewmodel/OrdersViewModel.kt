@@ -77,12 +77,6 @@ internal class OrdersViewModel @Inject constructor(
             }
 
             OrdersMenuItems.SORT_BY_PRICE -> {
-                reduce {
-                    copy(
-                        orders = orders.sortedBy { it.product.price },
-                        openOptionMenu = false,
-                    )
-                }
             }
 
             OrdersMenuItems.SORT_BY_QUANTITY -> {

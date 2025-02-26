@@ -11,9 +11,7 @@ import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductMenuIt
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isCodeValid
-import com.bruno13palhano.mais1venda.ui.screens.products.shared.isPriceValid
 import com.bruno13palhano.mais1venda.ui.screens.products.shared.isQuantityValid
-import com.bruno13palhano.mais1venda.ui.screens.shared.stringToFloat
 import com.bruno13palhano.mais1venda.ui.screens.shared.stringToInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,8 +31,6 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.GetProduct -> getProduct(id = event.id)
 
             is ProductEvent.NameChanged -> nameChanged(name = event.name)
-
-            is ProductEvent.PriceChanged -> priceChanged(price = event.price)
 
             is ProductEvent.CategoryChanged -> categoryChanged(category = event.category)
 
@@ -77,12 +73,6 @@ internal class ProductViewModel @Inject constructor(
         val nameError = name.isBlank()
 
         reduce { copy(name = name, nameError = nameError) }
-    }
-
-    private fun priceChanged(price: String) = container.intent {
-        val priceError = !isPriceValid(price = stringToFloat(price))
-
-        reduce { copy(price = price, priceError = priceError) }
     }
 
     private fun categoryChanged(category: String) = container.intent {
@@ -161,7 +151,6 @@ internal class ProductViewModel @Inject constructor(
                 product = Product(
                     id = 0L,
                     name = container.state.value.name,
-                    price = stringToFloat(container.state.value.price),
                     category = listOf(),
                     description = container.state.value.description,
                     code = container.state.value.code,
@@ -175,7 +164,6 @@ internal class ProductViewModel @Inject constructor(
                 product = Product(
                     id = id,
                     name = container.state.value.name,
-                    price = stringToFloat(container.state.value.price),
                     category = listOf(),
                     description = container.state.value.description,
                     code = container.state.value.code,
@@ -200,21 +188,18 @@ internal class ProductViewModel @Inject constructor(
 
     private fun isFieldsInvalid(): Boolean {
         val nameError = container.state.value.name.isBlank()
-        val priceError = !isPriceValid(price = stringToFloat(container.state.value.price))
         val categoryError = container.state.value.category.isBlank()
         val descriptionError = container.state.value.description.isBlank()
         val codeError = !isCodeValid(code = container.state.value.code)
         val quantityError = !isQuantityValid(quantity = stringToInt(container.state.value.quantity))
 
-        return nameError || priceError || categoryError || descriptionError || codeError ||
-            quantityError
+        return nameError || categoryError || descriptionError || codeError || quantityError
     }
 
     private fun fillProductFields(product: Product): ProductState {
         return ProductState(
             id = product.id,
             name = product.name,
-            price = product.price.toString(),
             category = product.category.toString(),
             description = product.description,
             code = product.code,

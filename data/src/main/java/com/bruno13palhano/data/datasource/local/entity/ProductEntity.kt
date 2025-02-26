@@ -8,7 +8,6 @@ internal data class ProductEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val name: String,
-    val price: Float,
     val category: List<String>,
     val description: String,
     val code: String,

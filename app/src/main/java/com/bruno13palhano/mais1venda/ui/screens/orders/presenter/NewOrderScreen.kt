@@ -290,7 +290,6 @@ private fun NewOrderPreview() {
 private val product = Product(
     id = 1,
     name = "Product 1",
-    price = 1.0f,
     category = listOf("Category 1"),
     description = "Description 1",
     code = "1",

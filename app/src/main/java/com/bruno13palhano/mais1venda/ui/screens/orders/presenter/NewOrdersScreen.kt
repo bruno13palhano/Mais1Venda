@@ -132,7 +132,7 @@ private fun NewOrdersContent(
                         customerName = order.customer.name,
                         productName = order.product.name,
                         orderDate = order.orderDate,
-                        price = order.product.price,
+                        price = 0.0f,
                         onClick = { onEvent(NewOrdersEvent.NavigateToNewOrder(id = order.id)) },
                     )
                 }

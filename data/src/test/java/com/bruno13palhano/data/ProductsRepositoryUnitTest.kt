@@ -48,7 +48,6 @@ internal class ProductsRepositoryUnitTest {
     private val expectedProduct = Product(
         id = 0L,
         name = "product",
-        price = 100f,
         category = emptyList(),
         description = "description",
         code = "1",

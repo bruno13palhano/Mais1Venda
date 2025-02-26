@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 data class Product(
     val id: Long,
     val name: String,
-    val price: Float,
     val category: List<String>,
     val description: String,
     val code: String,
@@ -19,7 +18,6 @@ data class Product(
 internal fun Product.asInternal() = ProductEntity(
     id = id,
     name = name,
-    price = price,
     category = category,
     description = description,
     code = code,
@@ -31,7 +29,6 @@ internal fun Product.asInternal() = ProductEntity(
 internal fun ProductEntity.asExternal() = Product(
     id = id,
     name = name,
-    price = price,
     category = category,
     description = description,
     code = code,

@@ -121,7 +121,7 @@ private fun OrdersContent(state: OrdersState, onEvent: (event: OrdersEvent) -> U
                     customerName = order.customer.name,
                     productName = order.product.name,
                     orderDate = order.orderDate,
-                    price = order.product.price,
+                    price = 0.0f,
                     onClick = { onEvent(OrdersEvent.OrderInfo(order = order)) },
                 )
             }

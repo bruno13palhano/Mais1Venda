@@ -23,7 +23,6 @@ internal class ProductViewModelUnitTest {
     private val state = ProductState(
         id = 1L,
         name = "Product 1",
-        price = "100.05",
         category = "Category 1",
         description = "Description 1",
         code = "1234567890123",
@@ -42,7 +41,6 @@ internal class ProductViewModelUnitTest {
         val product = Product(
             id = 2L,
             name = "Product 2",
-            price = 100.05f,
             category = listOf(),
             description = "Description 2",
             code = "1234567890123",
@@ -76,20 +74,6 @@ internal class ProductViewModelUnitTest {
             eventsBlock = { viewModel.handleEvent(ProductEvent.NameChanged(expected)) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.name).isEqualTo(expected)
-            },
-        )
-    }
-
-    @Test
-    fun `PriceChanged Event should update price`() = runTest {
-        val viewModel = ProductViewModel(state, TestProductRepository())
-        val expected = "100.05"
-
-        collectStateHelper(
-            stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(ProductEvent.PriceChanged(expected)) },
-            assertationsBlock = {
-                assertThat(viewModel.container.state.value.price).isEqualTo(expected)
             },
         )
     }
@@ -174,20 +158,6 @@ internal class ProductViewModelUnitTest {
             eventsBlock = { viewModel.handleEvent(ProductEvent.NameChanged("")) },
             assertationsBlock = {
                 assertThat(viewModel.container.state.value.nameError).isEqualTo(expected)
-            },
-        )
-    }
-
-    @Test
-    fun `PriceChanged with invalid price should set priceError to true`() = runTest {
-        val viewModel = ProductViewModel(state, TestProductRepository())
-        val expected = true
-
-        collectStateHelper(
-            stateCollector = { viewModel.container.state.collect() },
-            eventsBlock = { viewModel.handleEvent(ProductEvent.PriceChanged("0.0")) },
-            assertationsBlock = {
-                assertThat(viewModel.container.state.value.priceError).isEqualTo(expected)
             },
         )
     }
@@ -375,25 +345,6 @@ internal class ProductViewModelUnitTest {
             },
             eventsBlock = {
                 viewModel.handleEvent(ProductEvent.NameChanged(""))
-                viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
-            },
-        )
-    }
-
-    @Test
-    fun `SaveProduct Event with invalid price should emit ShowError INVALID_FIELDS`() = runTest {
-        val viewModel = ProductViewModel(state, TestProductRepository())
-
-        collectEffectHelper(
-            verifyEffects = {
-                viewModel.container.sideEffect.collect {
-                    assertThat(
-                        it,
-                    ).isEqualTo(ProductSideEffect.ShowError(CodeError.INVALID_FIELDS))
-                }
-            },
-            eventsBlock = {
-                viewModel.handleEvent(ProductEvent.PriceChanged(""))
                 viewModel.handleEvent(ProductEvent.SaveProduct("2022-01-01", 0L))
             },
         )
