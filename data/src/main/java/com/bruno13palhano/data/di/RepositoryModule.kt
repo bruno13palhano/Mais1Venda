@@ -1,5 +1,7 @@
 package com.bruno13palhano.data.di
 
+import com.bruno13palhano.data.repository.AdRepository
+import com.bruno13palhano.data.repository.AdRepositoryImpl
 import com.bruno13palhano.data.repository.CompanyRepository
 import com.bruno13palhano.data.repository.CompanyRepositoryImpl
 import com.bruno13palhano.data.repository.CustomerRepository
@@ -38,4 +40,10 @@ internal abstract class RepositoryModule {
     abstract fun bindCustomerRepository(
         customerRepositoryImpl: CustomerRepositoryImpl,
     ): CustomerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAdRepository(
+        adRepositoryImpl: AdRepositoryImpl,
+    ): AdRepository
 }
