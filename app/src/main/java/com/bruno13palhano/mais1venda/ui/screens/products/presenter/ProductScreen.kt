@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.mais1venda.R
-import com.bruno13palhano.mais1venda.ui.screens.components.CustomFloatField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomIntegerField
 import com.bruno13palhano.mais1venda.ui.screens.components.CustomTextField
 import com.bruno13palhano.mais1venda.ui.screens.components.MoreVertMenu
