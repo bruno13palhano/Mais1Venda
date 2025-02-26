@@ -11,7 +11,7 @@ internal data class AdState(
     val product: Product? = null,
     val description: String = "",
     val observations: String = "",
-    val off: Float = 0f,
+    val off: String = "",
     val unitsSold: Int = 0,
     val questions: List<String> = emptyList(),
     val reviews: List<String> = emptyList(),
@@ -27,7 +27,7 @@ internal sealed interface AdEvent {
     data class UpdateProduct(val product: Product) : AdEvent
     data class DescriptionChanged(val description: String) : AdEvent
     data class ObservationsChanged(val observations: String) : AdEvent
-    data class OffChanged(val off: Float) : AdEvent
+    data class OffChanged(val off: String) : AdEvent
     data class UnitsSoldChanged(val unitsSold: Int) : AdEvent
     data class QuestionsChanged(val questions: List<String>) : AdEvent
     data class ReviewsChanged(val reviews: List<String>) : AdEvent
