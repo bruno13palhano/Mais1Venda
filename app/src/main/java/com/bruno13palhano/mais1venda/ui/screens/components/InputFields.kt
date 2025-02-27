@@ -219,6 +219,54 @@ fun CustomFloatField(
 }
 
 @Composable
+fun CustomDoubleField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (value: String) -> Unit,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    label: String,
+    placeholder: String,
+    isError: Boolean = false,
+    singleLine: Boolean = true,
+    readOnly: Boolean = false,
+) {
+    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+    val decimalSeparator = decimalFormat.decimalFormatSymbols.decimalSeparator
+    val pattern = remember { Regex("^\\d*\\$decimalSeparator?\\d*\$") }
+
+    OutlinedTextField(
+        modifier = modifier.clearFocusOnKeyboardDismiss(),
+        value = value,
+        onValueChange = { newValue ->
+            if (newValue.isEmpty() || newValue.matches(pattern)) {
+                onValueChange(newValue)
+            }
+        },
+        isError = isError,
+        leadingIcon = leadingIcon,
+        label = {
+            Text(
+                text = label,
+                fontStyle = FontStyle.Italic,
+            )
+        },
+        placeholder = {
+            Text(
+                text = placeholder,
+                fontStyle = FontStyle.Italic,
+            )
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Decimal,
+        ),
+        keyboardActions = KeyboardActions(onDone = { defaultKeyboardAction(ImeAction.Done) }),
+        singleLine = singleLine,
+        readOnly = readOnly,
+    )
+}
+
+@Composable
 fun CustomClickField(
     modifier: Modifier = Modifier,
     value: String,
