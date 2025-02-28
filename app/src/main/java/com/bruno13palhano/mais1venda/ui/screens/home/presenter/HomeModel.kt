@@ -13,6 +13,7 @@ internal sealed interface HomeEvent {
     data object NavigateToLogin : HomeEvent
     data object NavigateToOrdersStatus : HomeEvent
     data object NavigateToProducts : HomeEvent
+    data object NavigateToAds : HomeEvent
 }
 
 @Immutable
@@ -22,4 +23,5 @@ internal sealed interface HomeSideEffect {
     data object NavigateToLogin : HomeSideEffect
     data object NavigateToOrdersStatus : HomeSideEffect
     data object NavigateToProducts : HomeSideEffect
+    data object NavigateToAds : HomeSideEffect
 }

@@ -2,14 +2,14 @@ package com.bruno13palhano.mais1venda.ui.screens.home.presenter
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -40,6 +40,7 @@ internal fun HomeRoute(
     navigateToLogin: () -> Unit,
     navigateToOrdersStatus: () -> Unit,
     navigateToProducts: () -> Unit,
+    navigateToAds: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state = viewModel.container.state.collectAsStateWithLifecycle()
@@ -59,6 +60,8 @@ internal fun HomeRoute(
                 HomeSideEffect.NavigateToOrdersStatus -> navigateToOrdersStatus()
 
                 HomeSideEffect.NavigateToProducts -> navigateToProducts()
+
+                HomeSideEffect.NavigateToAds -> navigateToAds()
             }
         }
     }
@@ -92,17 +95,25 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
             stringResource(
                 id = R.string.orders_status,
             ) to { onEvent(HomeEvent.NavigateToOrdersStatus) },
+            stringResource(
+                id = R.string.ads
+            ) to { onEvent(HomeEvent.NavigateToAds) },
         )
 
         Column(
             modifier = Modifier
                 .padding(it)
                 .consumeWindowInsets(it)
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize()
+                .padding(top = 4.dp, bottom = 8.dp),
         ) {
             items.forEach { (title, onClick) ->
                 CardItem(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Max)
+                        .weight(1f)
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
                     title = title,
                     onClick = onClick,
                 )
@@ -117,11 +128,7 @@ private fun CardItem(modifier: Modifier = Modifier, title: String, onClick: () -
         modifier = modifier,
         onClick = onClick,
     ) {
-        Box(
-            modifier = Modifier
-                .sizeIn(minHeight = 300.dp)
-                .fillMaxSize(),
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,

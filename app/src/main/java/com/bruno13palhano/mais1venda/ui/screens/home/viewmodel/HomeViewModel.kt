@@ -27,6 +27,8 @@ internal class HomeViewModel @Inject constructor(
             HomeEvent.NavigateToOrdersStatus -> navigateToOrdersStatus()
 
             HomeEvent.NavigateToProducts -> navigateToProducts()
+
+            HomeEvent.NavigateToAds -> navigateToAds()
         }
     }
 
@@ -44,5 +46,9 @@ internal class HomeViewModel @Inject constructor(
 
     private fun navigateToProducts() = container.intent {
         postSideEffect(effect = HomeSideEffect.NavigateToProducts)
+    }
+
+    private fun navigateToAds() = container.intent {
+        postSideEffect(effect = HomeSideEffect.NavigateToAds)
     }
 }
