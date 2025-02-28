@@ -31,6 +31,10 @@ internal object DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideAdDao(appDatabase: AppDatabase) = appDatabase.adDao()
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
