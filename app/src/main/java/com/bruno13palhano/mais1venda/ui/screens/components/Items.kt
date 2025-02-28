@@ -84,7 +84,12 @@ val testCustomer = Customer(
 
 val testOrder = Order(
     id = 1,
-    product = testProduct,
+    productName = "Product 1",
+    productCode = "1234567",
+    quantity = 1,
+    unitPrice = 100.0,
+    off = 1.2f,
+    totalPrice = 100.0,
     customer = testCustomer,
     orderDate = 111111111111212,
     deliveryDate = 12234523453245,
