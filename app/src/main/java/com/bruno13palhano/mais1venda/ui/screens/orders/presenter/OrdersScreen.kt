@@ -44,7 +44,6 @@ import com.bruno13palhano.mais1venda.ui.screens.components.MoreVertMenu
 import com.bruno13palhano.mais1venda.ui.screens.components.OrderListItem
 import com.bruno13palhano.mais1venda.ui.screens.components.testCustomer
 import com.bruno13palhano.mais1venda.ui.screens.components.testOrder
-import com.bruno13palhano.mais1venda.ui.screens.components.testProduct
 import com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel.OrdersViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.dateFormat
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
@@ -119,7 +118,7 @@ private fun OrdersContent(state: OrdersState, onEvent: (event: OrdersEvent) -> U
             items(items = state.orders, key = { order -> order.id }) { order ->
                 OrderListItem(
                     customerName = order.customer.name,
-                    productName = order.product.name,
+                    productName = order.productName,
                     orderDate = order.orderDate,
                     price = 0.0f,
                     onClick = { onEvent(OrdersEvent.OrderInfo(order = order)) },
@@ -147,7 +146,7 @@ private fun OrdersContent(state: OrdersState, onEvent: (event: OrdersEvent) -> U
 @Composable
 private fun SelectedOrder(modifier: Modifier = Modifier, order: Order, onClick: () -> Unit) {
     Surface(
-        color = MaterialTheme.colorScheme.background.copy(alpha = .7f)
+        color = MaterialTheme.colorScheme.background.copy(alpha = .7f),
     ) {
         OutlinedCard(modifier = modifier) {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -159,37 +158,33 @@ private fun SelectedOrder(modifier: Modifier = Modifier, order: Order, onClick: 
 
                 IconButton(
                     modifier = Modifier.align(Alignment.TopEnd),
-                    onClick = onClick
+                    onClick = onClick,
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ListItem(
-                headlineContent = { Text(text = order.product.name) },
+                headlineContent = { Text(text = order.productName) },
                 overlineContent = { Text(text = stringResource(id = R.string.product_name)) },
             )
             ListItem(
-                headlineContent = { Text(text = order.product.description) },
-                overlineContent = { Text(text = stringResource(id = R.string.description)) },
-            )
-            ListItem(
-                headlineContent = { Text(text = order.product.quantity.toString()) },
+                headlineContent = { Text(text = order.quantity.toString()) },
                 overlineContent = { Text(text = stringResource(id = R.string.quantity)) },
             )
             ListItem(
-                headlineContent = { Text(text = order.product.name) },
+                headlineContent = { Text(text = order.unitPrice.toString()) },
                 overlineContent = { Text(text = stringResource(id = R.string.price)) },
             )
             ListItem(
-                headlineContent = { Text(text = order.product.category.first()) },
-                overlineContent = { Text(text = stringResource(id = R.string.category)) },
+                headlineContent = { Text(text = order.totalPrice.toString()) },
+                overlineContent = { Text(text = stringResource(id = R.string.price)) },
             )
             ListItem(
-                headlineContent = { Text(text = order.product.code) },
+                headlineContent = { Text(text = order.productCode) },
                 overlineContent = { Text(text = stringResource(id = R.string.code)) },
             )
 
@@ -325,7 +320,6 @@ private fun OrdersPreview() {
                     ),
                     selectedOrder = testOrder.copy(
                         id = 2,
-                        product = testProduct.copy(category = listOf("test")),
                         customer = testCustomer.copy(name = "Customer 2"),
                     ),
                     showOrderInfo = true,

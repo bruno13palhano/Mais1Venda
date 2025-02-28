@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.bruno13palhano.data.model.company.Product
 import com.bruno13palhano.data.model.customer.Customer
 import com.bruno13palhano.data.model.shared.Address
 import com.bruno13palhano.data.model.shared.Order
@@ -162,27 +161,23 @@ private fun NewOrderForm(
         )
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
         ListItem(
-            headlineContent = { Text(text = state.order?.product?.name ?: "") },
+            headlineContent = { Text(text = state.order?.productName ?: "") },
             overlineContent = { Text(text = stringResource(id = R.string.product_name)) },
         )
         ListItem(
-            headlineContent = { Text(text = state.order?.product?.description ?: "") },
-            overlineContent = { Text(text = stringResource(id = R.string.description)) },
-        )
-        ListItem(
-            headlineContent = { Text(text = state.order?.product?.quantity.toString()) },
+            headlineContent = { Text(text = state.order?.quantity.toString()) },
             overlineContent = { Text(text = stringResource(id = R.string.quantity)) },
         )
         ListItem(
-            headlineContent = { Text(text = state.order?.product?.name ?: "") },
-            overlineContent = { Text(text = stringResource(id = R.string.price)) },
+            headlineContent = { Text(text = state.order?.unitPrice.toString()) },
+            overlineContent = { Text(text = stringResource(id = R.string.unit_price)) },
         )
         ListItem(
-            headlineContent = { Text(text = state.order?.product?.category?.first() ?: "") },
-            overlineContent = { Text(text = stringResource(id = R.string.category)) },
+            headlineContent = { Text(text = state.order?.totalPrice.toString()) },
+            overlineContent = { Text(text = stringResource(id = R.string.total_price)) },
         )
         ListItem(
-            headlineContent = { Text(text = state.order?.product?.code ?: "") },
+            headlineContent = { Text(text = state.order?.productCode ?: "") },
             overlineContent = { Text(text = stringResource(id = R.string.code)) },
         )
 
@@ -287,17 +282,6 @@ private fun NewOrderPreview() {
     }
 }
 
-private val product = Product(
-    id = 1,
-    name = "Product 1",
-    category = listOf("Category 1"),
-    description = "Description 1",
-    code = "1",
-    quantity = 1,
-    exhibitToCatalog = false,
-    lastModifiedTimestamp = "",
-)
-
 private val customer = Customer(
     uid = "1",
     name = "Customer 1",
@@ -311,7 +295,12 @@ private val customer = Customer(
 
 private val order = Order(
     id = 1,
-    product = product,
+    productName = "Prodcut 1",
+    productCode = "12345",
+    quantity = 1,
+    unitPrice = 100.0,
+    off = 1.2f,
+    totalPrice = 100.0,
     customer = customer,
     orderDate = 111111111111212,
     deliveryDate = 12234523453245,

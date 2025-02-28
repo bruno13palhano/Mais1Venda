@@ -130,7 +130,7 @@ private fun NewOrdersContent(
                 items(items = state.newOrders, key = { order -> order.id }) { order ->
                     OrderListItem(
                         customerName = order.customer.name,
-                        productName = order.product.name,
+                        productName = order.productName,
                         orderDate = order.orderDate,
                         price = 0.0f,
                         onClick = { onEvent(NewOrdersEvent.NavigateToNewOrder(id = order.id)) },

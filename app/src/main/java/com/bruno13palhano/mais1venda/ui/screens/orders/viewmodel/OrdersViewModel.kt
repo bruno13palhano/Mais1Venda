@@ -70,7 +70,7 @@ internal class OrdersViewModel @Inject constructor(
             OrdersMenuItems.SORT_BY_PRODUCT_NAME -> {
                 reduce {
                     copy(
-                        orders = orders.sortedBy { it.product.name },
+                        orders = orders.sortedBy { it.productName },
                         openOptionMenu = false,
                     )
                 }
@@ -82,7 +82,7 @@ internal class OrdersViewModel @Inject constructor(
             OrdersMenuItems.SORT_BY_QUANTITY -> {
                 reduce {
                     copy(
-                        orders = orders.sortedBy { it.product.quantity },
+                        orders = orders.sortedBy { it.quantity },
                         openOptionMenu = false,
                     )
                 }
