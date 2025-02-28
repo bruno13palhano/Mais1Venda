@@ -14,8 +14,5 @@ internal data class AdEntity(
     val observations: String,
     val off: Float,
     val stockQuantity: Int,
-    val unitsSold: Int,
-    val questions: List<String>,
-    val reviews: List<String>,
     val lastModifiedTimestamp: String,
 )

@@ -12,9 +12,6 @@ data class Ad(
     val observations: String,
     val off: Float,
     val stockQuantity: Int,
-    val unitsSold: Int,
-    val questions: List<String>,
-    val reviews: List<String>,
     val lastModifiedTimestamp: String,
 )
 
@@ -27,8 +24,5 @@ internal fun Ad.asInternal() = AdEntity(
     observations = observations,
     off = off,
     stockQuantity = stockQuantity,
-    unitsSold = unitsSold,
-    questions = questions,
-    reviews = reviews,
     lastModifiedTimestamp = lastModifiedTimestamp,
 )

@@ -64,9 +64,6 @@ internal class AdRepositoryImpl @Inject constructor(
             observations = ad.observations,
             off = ad.off,
             stockQuantity = ad.stockQuantity,
-            unitsSold = ad.unitsSold,
-            questions = ad.questions,
-            reviews = ad.reviews,
             lastModifiedTimestamp = ad.lastModifiedTimestamp,
         )
     }
