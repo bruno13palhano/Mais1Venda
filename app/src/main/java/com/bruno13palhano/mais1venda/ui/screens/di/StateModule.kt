@@ -1,6 +1,7 @@
 package com.bruno13palhano.mais1venda.ui.screens.di
 
 import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.AdState
+import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.AdsState
 import com.bruno13palhano.mais1venda.ui.screens.authentication.create.presenter.CreateAccountState
 import com.bruno13palhano.mais1venda.ui.screens.authentication.login.presenter.LoginState
 import com.bruno13palhano.mais1venda.ui.screens.home.presenter.HomeState
@@ -13,7 +14,6 @@ import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.OrdersStatusSta
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductState
 import com.bruno13palhano.mais1venda.ui.screens.products.presenter.ProductsState
 import com.bruno13palhano.mais1venda.ui.screens.settings.presenter.SettingsState
-import com.bruno13palhano.mais1venda.ui.screens.ads.presenter.AdsState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
