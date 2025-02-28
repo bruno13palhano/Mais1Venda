@@ -96,7 +96,7 @@ private fun HomeContent(state: HomeState, onEvent: (HomeEvent) -> Unit) {
                 id = R.string.orders_status,
             ) to { onEvent(HomeEvent.NavigateToOrdersStatus) },
             stringResource(
-                id = R.string.ads
+                id = R.string.ads,
             ) to { onEvent(HomeEvent.NavigateToAds) },
         )
 

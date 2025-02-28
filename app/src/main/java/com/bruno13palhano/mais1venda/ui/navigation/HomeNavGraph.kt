@@ -20,7 +20,7 @@ internal fun NavGraphBuilder.homeNavGraph(
                 navigateToLogin = { navController.navigate(MainRoutes.Login) },
                 navigateToOrdersStatus = { navController.navigate(HomeRoutes.OrdersStatus) },
                 navigateToProducts = { navController.navigate(HomeRoutes.Products) },
-                navigateToAds = { navController.navigate(HomeRoutes.Ads) }
+                navigateToAds = { navController.navigate(HomeRoutes.Ads) },
             )
         }
 
