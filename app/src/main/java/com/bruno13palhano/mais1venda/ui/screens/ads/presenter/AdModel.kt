@@ -6,15 +6,17 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 
 @Immutable
 internal data class AdState(
+    val loading: Boolean = false,
     val id: Long? = null,
     val title: String = "",
+    val products: List<Product> = emptyList(),
     val product: Product? = null,
+    val price: String = "",
+    val off: String = "",
+    val stockQuantity: String = "",
     val description: String = "",
     val observations: String = "",
-    val off: String = "",
-    val unitsSold: Int = 0,
-    val questions: List<String> = emptyList(),
-    val reviews: List<String> = emptyList(),
+    val showProductsOptions: Boolean = false,
     val lastModifiedTimestamp: String = "",
     val titleError: Boolean = false,
     val descriptionError: Boolean = false,
@@ -24,13 +26,15 @@ internal data class AdState(
 internal sealed interface AdEvent {
     data class GetAd(val id: Long) : AdEvent
     data class TitleChanged(val title: String) : AdEvent
+    data object GetProducts : AdEvent
+    data object ToggleShowProductsOptions : AdEvent
     data class UpdateProduct(val product: Product) : AdEvent
+    data class PriceChanged(val price: String) : AdEvent
+    data class OffChanged(val off: String) : AdEvent
+    data class StockQuantityChanged(val stockQuantity: String) : AdEvent
     data class DescriptionChanged(val description: String) : AdEvent
     data class ObservationsChanged(val observations: String) : AdEvent
-    data class OffChanged(val off: String) : AdEvent
-    data class UnitsSoldChanged(val unitsSold: Int) : AdEvent
-    data class QuestionsChanged(val questions: List<String>) : AdEvent
-    data class ReviewsChanged(val reviews: List<String>) : AdEvent
+    data class Publish(val id: Long) : AdEvent
     data object NavigateBack : AdEvent
 }
 

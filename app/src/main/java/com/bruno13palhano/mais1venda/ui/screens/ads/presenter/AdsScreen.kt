@@ -36,10 +36,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bruno13palhano.data.model.shared.Ad
 import com.bruno13palhano.mais1venda.R
+import com.bruno13palhano.mais1venda.ui.screens.ads.viewmodel.AdsViewModel
 import com.bruno13palhano.mais1venda.ui.screens.components.MoreVertMenu
 import com.bruno13palhano.mais1venda.ui.screens.components.testProduct
 import com.bruno13palhano.mais1venda.ui.screens.shared.rememberFlowWithLifecycle
-import com.bruno13palhano.mais1venda.ui.screens.ads.viewmodel.AdsViewModel
 import com.bruno13palhano.mais1venda.ui.theme.Mais1VendaTheme
 
 @Composable
@@ -66,16 +66,13 @@ internal fun AdsRoute(
 
     AdsContent(
         state = state,
-        onEvent = viewModel::handleEvents
+        onEvent = viewModel::handleEvents,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AdsContent(
-    state: AdsState,
-    onEvent: (event: AdsEvent) -> Unit,
-) {
+private fun AdsContent(state: AdsState, onEvent: (event: AdsEvent) -> Unit) {
     Scaffold(
         modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
         topBar = {
@@ -111,7 +108,7 @@ private fun AdsContent(
                             items = items,
                             expanded = state.openOptionMenu,
                             onDismissRequest = { onEvent(AdsEvent.ToggleOptionMenu) },
-                            onItemClick = { onEvent(AdsEvent.UpdateSelectedOption(option = it)) }
+                            onItemClick = { onEvent(AdsEvent.UpdateSelectedOption(option = it)) },
                         )
                     }
                 },
@@ -138,7 +135,6 @@ private fun AdsContent(
                     overlineContent = { Text(text = ad.product.name) },
                     headlineContent = { Text(text = ad.title) },
                     supportingContent = { Text(text = ad.description) },
-                    trailingContent = { Text(text = stringResource(R.string.price_tag, ad.product.price)) },
                 )
             }
         }
@@ -151,8 +147,6 @@ private fun getMoreOptionsItem(): Map<String, AdsMenuItems> {
         stringResource(id = R.string.title) to AdsMenuItems.SORT_BY_TITLE,
         stringResource(id = R.string.product_name) to AdsMenuItems.SORT_BY_PRODUCT_NAME,
         stringResource(id = R.string.off) to AdsMenuItems.SORT_BY_OFF,
-        stringResource(id = R.string.units_sold) to AdsMenuItems.SORT_BY_UNITS_SOLD,
-        stringResource(id = R.string.review) to AdsMenuItems.SORT_BY_REVIEW,
         stringResource(id = R.string.price) to AdsMenuItems.SORT_BY_PRICE,
     )
 }
@@ -172,123 +166,113 @@ private fun AdsPreview() {
                             id = 1,
                             title = "Ad 1",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 2,
                             title = "Ad 2",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 3,
                             title = "Ad 3",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 4,
                             title = "Ad 4",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 5,
                             title = "Ad 5",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 6,
                             title = "Ad 6",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 7,
                             title = "Ad 7",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 8,
                             title = "Ad 8",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 9,
                             title = "Ad 9",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
                         Ad(
                             id = 10,
                             title = "Ad 10",
                             product = testProduct,
+                            price = 100.0,
                             description = "Ad decription",
                             observations = "",
                             off = 1.5f,
-                            unitsSold = 1,
-                            questions = emptyList(),
-                            reviews = emptyList(),
-                            lastModifiedTimestamp = ""
+                            stockQuantity = 12,
+                            lastModifiedTimestamp = "",
                         ),
-                    )
+                    ),
                 ),
                 onEvent = {},
             )

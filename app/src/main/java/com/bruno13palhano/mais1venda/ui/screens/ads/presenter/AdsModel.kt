@@ -33,6 +33,4 @@ internal enum class AdsMenuItems {
     SORT_BY_PRODUCT_NAME,
     SORT_BY_OFF,
     SORT_BY_PRICE,
-    SORT_BY_UNITS_SOLD,
-    SORT_BY_REVIEW,
 }

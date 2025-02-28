@@ -81,4 +81,15 @@
     <string name="review">Review</string>
     <string name="new_ad">New Ad</string>
     <string name="edit_ad">Edit Ad</string>
+    <string name="title_placeholder">Enter title</string>
+    <string name="off_placeholder">Enter off</string>
+    <string name="total_price">Total price</string>
+    <string name="unit_price">Unit price</string>
+    <string name="ad_image">Ad image</string>
+    <string name="stock_quantity">Quantity in stock</string>
+    <string name="stock_quantity_placeholder">Enter quanity in stock</string>
+    <string name="publish">Publish</string>
+    <string name="observations">Observations</string>
+    <string name="observations_placeholder">Enter observations</string>
+    <string name="chose_a_product">Chose a product</string>
 </resources>
