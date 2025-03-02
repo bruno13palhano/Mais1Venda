@@ -32,6 +32,8 @@ internal class ProductViewModel @Inject constructor(
 
             is ProductEvent.NameChanged -> nameChanged(name = event.name)
 
+            is ProductEvent.ImageChanged -> imageChanged(image = event.image)
+
             is ProductEvent.CategoryChanged -> categoryChanged(category = event.category)
 
             is ProductEvent.DescriptionChanged -> descriptionChanged(
@@ -73,6 +75,10 @@ internal class ProductViewModel @Inject constructor(
         val nameError = name.isBlank()
 
         reduce { copy(name = name, nameError = nameError) }
+    }
+
+    private fun imageChanged(image: ByteArray?) = container.intent {
+        reduce { copy(image = image) }
     }
 
     private fun categoryChanged(category: String) = container.intent {

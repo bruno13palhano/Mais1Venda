@@ -7,6 +7,7 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 internal data class ProductState(
     val id: Long? = null,
     val name: String = "",
+    val image: ByteArray? = null,
     val category: String = "",
     val description: String = "",
     val code: String = "",
@@ -25,6 +26,7 @@ internal data class ProductState(
 internal sealed interface ProductEvent {
     data class GetProduct(val id: Long) : ProductEvent
     data class NameChanged(val name: String) : ProductEvent
+    data class ImageChanged(val image: ByteArray?) : ProductEvent
     data class CategoryChanged(val category: String) : ProductEvent
     data class DescriptionChanged(val description: String) : ProductEvent
     data class CodeChanged(val code: String) : ProductEvent
