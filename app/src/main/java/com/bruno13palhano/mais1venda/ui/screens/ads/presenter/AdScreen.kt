@@ -213,7 +213,7 @@ private fun AdContent(
                             .clip(shape = RoundedCornerShape(8.dp))
                             .align(alignment = Alignment.CenterHorizontally),
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data("")
+                            .data(data = state.product?.image)
                             .memoryCacheKey(key = "ad-${state.id}")
                             .build(),
                         contentDescription = stringResource(id = R.string.ad_image),
