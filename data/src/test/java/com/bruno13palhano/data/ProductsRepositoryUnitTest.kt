@@ -48,6 +48,7 @@ internal class ProductsRepositoryUnitTest {
     private val expectedProduct = Product(
         id = 0L,
         name = "product",
+        image = byteArrayOf(),
         category = emptyList(),
         description = "description",
         code = "1",

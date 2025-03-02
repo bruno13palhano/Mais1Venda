@@ -147,6 +147,7 @@ private val productListPreview = listOf(
     Product(
         id = 1,
         name = "Product 1",
+        image = byteArrayOf(),
         description = "Description 1",
         category = listOf(
             "Category 1",
@@ -159,6 +160,7 @@ private val productListPreview = listOf(
     Product(
         id = 2,
         name = "Product 2",
+        image = byteArrayOf(),
         description = "Description 2",
         category = listOf(
             "Category 2",
@@ -171,6 +173,7 @@ private val productListPreview = listOf(
     Product(
         id = 3,
         name = "Product 3",
+        image = byteArrayOf(),
         description = "Description 3",
         category = listOf(
             "Category 3",
@@ -183,6 +186,7 @@ private val productListPreview = listOf(
     Product(
         id = 4,
         name = "Product 4",
+        image = byteArrayOf(),
         description = "Description 4",
         category = listOf(
             "Category 4",
@@ -195,6 +199,7 @@ private val productListPreview = listOf(
     Product(
         id = 5,
         name = "Product 5",
+        image = byteArrayOf(),
         description = "Description 5",
         category = listOf(
             "Category 5",
@@ -207,6 +212,7 @@ private val productListPreview = listOf(
     Product(
         id = 6,
         name = "Product 6",
+        image = byteArrayOf(),
         description = "Description 6",
         category = listOf(
             "Category 6",
@@ -219,6 +225,7 @@ private val productListPreview = listOf(
     Product(
         id = 7,
         name = "Product 7",
+        image = byteArrayOf(),
         description = "Description 7",
         category = listOf(
             "Category 7",
@@ -231,6 +238,7 @@ private val productListPreview = listOf(
     Product(
         id = 8,
         name = "Product 8",
+        image = byteArrayOf(),
         description = "Description 8",
         category = listOf(
             "Category 8",
@@ -243,6 +251,7 @@ private val productListPreview = listOf(
     Product(
         id = 9,
         name = "Product 9",
+        image = byteArrayOf(),
         description = "Description 9",
         category = listOf(
             "Category 9",
@@ -255,6 +264,7 @@ private val productListPreview = listOf(
     Product(
         id = 10,
         name = "Product 10",
+        image = byteArrayOf(),
         description = "Description 10",
         category = listOf(
             "Category 10",

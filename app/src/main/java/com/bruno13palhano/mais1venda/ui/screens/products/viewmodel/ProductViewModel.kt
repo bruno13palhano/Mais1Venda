@@ -151,6 +151,7 @@ internal class ProductViewModel @Inject constructor(
                 product = Product(
                     id = 0L,
                     name = container.state.value.name,
+                    image = byteArrayOf(),
                     category = listOf(),
                     description = container.state.value.description,
                     code = container.state.value.code,
@@ -164,6 +165,7 @@ internal class ProductViewModel @Inject constructor(
                 product = Product(
                     id = id,
                     name = container.state.value.name,
+                    image = byteArrayOf(),
                     category = listOf(),
                     description = container.state.value.description,
                     code = container.state.value.code,

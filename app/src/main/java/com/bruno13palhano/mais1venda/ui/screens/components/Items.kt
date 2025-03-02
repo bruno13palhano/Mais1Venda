@@ -63,6 +63,7 @@ internal fun OrderListItem(
 val testProduct = Product(
     id = 1,
     name = "Product 1",
+    image = byteArrayOf(),
     category = emptyList(),
     description = "Description 1",
     code = "1",

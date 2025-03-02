@@ -41,6 +41,7 @@ internal class ProductViewModelUnitTest {
         val product = Product(
             id = 2L,
             name = "Product 2",
+            image = byteArrayOf(),
             category = listOf(),
             description = "Description 2",
             code = "1234567890123",
