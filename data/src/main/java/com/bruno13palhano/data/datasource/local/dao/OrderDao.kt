@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(order: OrderEntity)
+    suspend fun insert(order: OrderEntity): Long
 
     @Update
-    suspend fun update(order: OrderEntity)
+    suspend fun update(order: OrderEntity): Int
 
     @Query("DELETE FROM `order` WHERE id = :id")
-    suspend fun delete(id: Long)
+    suspend fun delete(id: Long): Int
 
     @Query("SELECT * FROM `order` WHERE id = :id")
     suspend fun getById(id: Long): OrderEntity?
