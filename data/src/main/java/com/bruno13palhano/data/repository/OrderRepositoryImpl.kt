@@ -19,10 +19,6 @@ internal class OrderRepositoryImpl @Inject constructor(
     private val productDao: ProductDao,
     private val customerDao: CustomerDao,
 ) : OrderRepository {
-    override suspend fun update(order: Order) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun get(id: Long): Order? {
         val order = orderDao.getById(id = id)
 

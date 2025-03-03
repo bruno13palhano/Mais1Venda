@@ -5,7 +5,6 @@ import com.bruno13palhano.data.model.shared.Order
 import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
-    suspend fun update(order: Order)
     suspend fun get(id: Long): Order?
     fun getAll(): Flow<List<Order>>
     suspend fun getNewOrders(): Resource<List<Order>>
