@@ -9,6 +9,7 @@ import com.bruno13palhano.data.model.customer.asExternal
 import com.bruno13palhano.data.model.resource.Resource
 import com.bruno13palhano.data.model.shared.Order
 import com.bruno13palhano.data.repository.shared.remoteCallWithRetry
+import com.bruno13palhano.data.sync.Synchronizer
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -39,6 +40,10 @@ internal class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun cancelOrder(id: Long): Resource<Boolean> {
         return remoteCallWithRetry { orderRemoteData.cancelOrder(id = id) }
+    }
+
+    override suspend fun syncWith(synchronizer: Synchronizer): Boolean {
+        TODO()
     }
 
     private suspend fun ordersEntityToOrders(orders: List<OrderEntity>): List<Order> {
