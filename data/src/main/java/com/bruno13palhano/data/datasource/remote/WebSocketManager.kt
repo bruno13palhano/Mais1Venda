@@ -1,6 +1,7 @@
 package com.bruno13palhano.data.datasource.remote
 
 import android.util.Log
+import com.bruno13palhano.data.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -10,13 +11,13 @@ import okio.ByteString
 class WebSocketManager(
     private val webSocketListener: WebSocketListener,
 ) {
-    // extract to constructor
     private val client: OkHttpClient = OkHttpClient()
     private var webSocket: WebSocket? = null
 
     fun connect() {
+        val serverSocket = BuildConfig.ServerSocket
         val request = Request.Builder()
-            .url("ws://SERVER:PORT")
+            .url(serverSocket)
             .build()
 
         webSocket = client.newWebSocket(
