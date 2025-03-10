@@ -20,10 +20,10 @@ internal class SyncDataWork @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val syncStatus = orderRepository.sync()
 
-        if (syncStatus) {
-            return Result.success()
+        return if (syncStatus) {
+            Result.success()
         } else {
-            return Result.retry()
+            Result.retry()
         }
     }
 
@@ -32,7 +32,7 @@ internal class SyncDataWork @AssistedInject constructor(
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
+                    .build(),
             )
             .build()
     }

@@ -10,7 +10,7 @@ object Sync {
             enqueueUniqueWork(
                 SYNC_WORK_NAME,
                 ExistingWorkPolicy.KEEP,
-                SyncDataWork.startUpSyncWork()
+                SyncDataWork.startUpSyncWork(),
             )
         }
     }
