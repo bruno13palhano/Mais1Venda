@@ -13,6 +13,6 @@ data class Order(
     val customer: Customer,
     val orderDate: Long,
     val deliveryDate: Long,
-    val status: OrderStatus,
+    val orderStatus: OrderStatus,
     val lastModifiedTimestamp: String,
 )

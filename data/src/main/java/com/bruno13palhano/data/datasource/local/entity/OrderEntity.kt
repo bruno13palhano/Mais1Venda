@@ -16,6 +16,6 @@ internal data class OrderEntity(
     val customerUid: String,
     val orderDate: Long,
     val deliveryDate: Long,
-    val status: OrderStatus,
+    val orderStatus: OrderStatus,
     val lastModifiedTimestamp: String,
 )
