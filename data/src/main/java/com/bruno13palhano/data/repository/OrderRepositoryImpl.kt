@@ -64,7 +64,7 @@ internal class OrderRepositoryImpl @Inject constructor(
             customer = customerDao.getById(uid = order.customerUid)!!.asExternal(),
             orderDate = order.orderDate,
             deliveryDate = order.deliveryDate,
-            status = order.status,
+            orderStatus = order.orderStatus,
             lastModifiedTimestamp = order.lastModifiedTimestamp,
         )
     }
