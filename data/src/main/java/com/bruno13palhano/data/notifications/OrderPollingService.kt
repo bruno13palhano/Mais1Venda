@@ -1,5 +1,6 @@
-package com.bruno13palhano.data.sync
+package com.bruno13palhano.data.notifications
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
@@ -7,16 +8,15 @@ import android.app.job.JobParameters
 import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
+import com.bruno13palhano.data.BuildConfig
 import com.bruno13palhano.data.model.shared.Order
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,7 +25,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import javax.inject.Inject
 
+@SuppressLint("SpecifyJobSchedulerIdRange")
 @AndroidEntryPoint
 class OrderPollingService : JobService() {
     @Inject
@@ -67,7 +69,7 @@ class OrderPollingService : JobService() {
 
     private suspend fun checkForNewOrders(params: JobParameters?) {
         val endTime = System.currentTimeMillis() + 14 * 60 * 1000
-        val url = "http://192.168.1.104:8080/api/orders/pending?lastId=$lastProcessedId"
+        val url = "${BuildConfig.ServerUrl}/api/orders/pending?lastId=$lastProcessedId"
         var retryDelay = 1000L
 
         while (System.currentTimeMillis() < endTime && !isRunning) {
@@ -76,9 +78,11 @@ class OrderPollingService : JobService() {
                 val response = withContext(Dispatchers.IO) {
                     okHttpClient.newCall(request = request).execute()
                 }
+
+                println("Concluded request in ${System.currentTimeMillis() - endTime}ms")
                 if (response.isSuccessful) {
-                    val orders = response.body?.string()?.let {
-                        ordersListAdapter.fromJson(it)
+                    val orders = response.body?.use { body ->
+                        ordersListAdapter.fromJson(body.string()) ?: emptyList()
                     } ?: emptyList()
 
                     if (orders.isNotEmpty()) {
@@ -102,9 +106,7 @@ class OrderPollingService : JobService() {
     private fun showGroupedNotification() {
         if (ordersList.isEmpty()) return
 
-        val notificationManager = getSystemService(
-            Context.NOTIFICATION_SERVICE,
-        ) as NotificationManager
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val intent = Intent("com.bruno13palhano.app.OPEN_MAIN_ACTIVITY").apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -143,8 +145,9 @@ class OrderPollingService : JobService() {
         ordersList.clear()
     }
 
+    @SuppressLint("MissingPermission")
     private fun scheduleNextJob() {
-        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val jobScheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
         val jobInfo = JobInfo.Builder(JOB_ID, ComponentName(this, OrderPollingService::class.java))
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             .setPersisted(true)
@@ -154,7 +157,7 @@ class OrderPollingService : JobService() {
     }
 
     private fun acquireWakeLock() {
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOK_TAG).apply {
             acquire(15 * 60 * 1000L) // fifteen minutes
         }

@@ -1,4 +1,4 @@
-package com.bruno13palhano.data.sync
+package com.bruno13palhano.data.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -17,9 +17,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.cancellation.CancellationException
-import kotlinx.coroutines.delay
 
 private const val CHANNEL_ID = "mais_1_venda_notification_channel"
 

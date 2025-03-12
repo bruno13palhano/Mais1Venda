@@ -1,4 +1,4 @@
-package com.bruno13palhano.data.sync
+package com.bruno13palhano.data.notifications
 
 import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
