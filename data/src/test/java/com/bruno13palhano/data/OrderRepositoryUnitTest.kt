@@ -74,7 +74,7 @@ internal class OrderRepositoryUnitTest {
         customer = customer,
         orderDate = 111111111111212,
         deliveryDate = 12234523453245,
-        status = OrderStatus.PROCESSING_ORDER,
+        orderStatus = OrderStatus.PROCESSING_ORDER,
         lastModifiedTimestamp = "",
     )
 
@@ -100,7 +100,7 @@ internal class OrderRepositoryUnitTest {
         customerUid = order.customer.uid,
         orderDate = order.orderDate,
         deliveryDate = order.deliveryDate,
-        status = order.status,
+        orderStatus = order.orderStatus,
         lastModifiedTimestamp = order.lastModifiedTimestamp,
     )
 }
