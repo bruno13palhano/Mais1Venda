@@ -17,7 +17,9 @@ object WebSocketModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .pingInterval(30, TimeUnit.SECONDS)
+            .connectTimeout(65, TimeUnit.SECONDS)
+            .readTimeout(65, TimeUnit.SECONDS)
+            .writeTimeout(65, TimeUnit.SECONDS)
             .build()
     }
 
