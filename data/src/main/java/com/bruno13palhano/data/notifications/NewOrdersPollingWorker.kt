@@ -17,7 +17,6 @@ import com.bruno13palhano.data.BuildConfig
 import com.bruno13palhano.data.model.shared.Order
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.util.concurrent.TimeUnit
@@ -32,10 +31,8 @@ class NewOrdersPollingWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
     private val okHttpClient: OkHttpClient,
+    moshi: Moshi,
 ) : CoroutineWorker(appContext = context, params = params) {
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
     private val ordersListAdapter = moshi.adapter<List<Order>>(
         Types.newParameterizedType(List::class.java, Order::class.java),
     )

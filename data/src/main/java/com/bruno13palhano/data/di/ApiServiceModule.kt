@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,12 +20,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 internal object ApiServiceModule {
     @Provides
     @Singleton
-    fun provideService(): ApiService {
+    fun provideService(moshi: Moshi): ApiService {
         val serverUrl = BuildConfig.ServerUrl
-
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -42,5 +39,23 @@ internal object ApiServiceModule {
         val apiService: ApiService by lazy { retrofit.create(ApiService::class.java) }
 
         return apiService
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(65, TimeUnit.SECONDS)
+            .readTimeout(65, TimeUnit.SECONDS)
+            .writeTimeout(65, TimeUnit.SECONDS)
+            .build()
     }
 }
