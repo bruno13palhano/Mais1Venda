@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -31,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.bruno13palhano.app.OPEN_MAIN_ACTIVITY"/>
+                <action android:name="com.bruno13palhano.mais1venda.OPEN_MAIN_ACTIVITY"/>
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -44,11 +45,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <receiver
-            android:name=".notifications.NewOrderReceiver"
-            android:enabled="true"
-            android:exported="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

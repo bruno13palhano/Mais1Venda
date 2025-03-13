@@ -94,6 +94,6 @@ val testOrder = Order(
     customer = testCustomer,
     orderDate = 111111111111212,
     deliveryDate = 12234523453245,
-    status = OrderStatus.PROCESSING_ORDER,
+    orderStatus = OrderStatus.PROCESSING_ORDER,
     lastModifiedTimestamp = "",
 )

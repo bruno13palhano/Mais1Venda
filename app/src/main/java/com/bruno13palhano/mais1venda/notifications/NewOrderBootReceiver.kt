@@ -4,12 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.bruno13palhano.data.sync.OrderNotificationWorker
+import com.bruno13palhano.data.notifications.NewOrdersPollingWorker
 import java.util.concurrent.TimeUnit
 
 class NewOrderBootReceiver : BroadcastReceiver() {
@@ -19,26 +18,17 @@ class NewOrderBootReceiver : BroadcastReceiver() {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            val oneTimeRequest = OneTimeWorkRequestBuilder<OrderNotificationWorker>()
+            val workRequest = OneTimeWorkRequestBuilder<NewOrdersPollingWorker>()
                 .setConstraints(constraints)
-                .build()
-            WorkManager.getInstance(p0).enqueue(oneTimeRequest)
-
-            val periodicRequest = PeriodicWorkRequestBuilder<OrderNotificationWorker>(
-                15,
-                TimeUnit.MINUTES,
-            )
-                .setConstraints(constraints)
+                .setInitialDelay(1, TimeUnit.MINUTES)
                 .build()
 
             WorkManager.getInstance(p0)
-                .enqueueUniquePeriodicWork(
-                    NEW_ORDERS_NOTIFICATION_WORK_NAME,
-                    ExistingPeriodicWorkPolicy.KEEP,
-                    periodicRequest,
+                .enqueueUniqueWork(
+                    NewOrdersPollingWorker.WORK_NAME,
+                    ExistingWorkPolicy.KEEP,
+                    workRequest,
                 )
         }
     }
 }
-
-internal const val NEW_ORDERS_NOTIFICATION_WORK_NAME = "NewOrdersNotificationWorker"

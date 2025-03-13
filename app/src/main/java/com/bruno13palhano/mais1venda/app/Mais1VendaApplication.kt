@@ -5,12 +5,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.bruno13palhano.data.sync.NewOrdersNotifications
+import com.bruno13palhano.data.notifications.NewOrdersPollingSync
+import com.bruno13palhano.data.notifications.NewOrdersPollingWorker
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
-
-private const val CHANNEL_ID = "mais_1_venda_notification_channel"
-private const val CHANNEL_NAME = "mais_1_venda_system"
 
 @HiltAndroidApp
 class Mais1VendaApplication : Application(), Configuration.Provider {
@@ -26,15 +24,18 @@ class Mais1VendaApplication : Application(), Configuration.Provider {
         super.onCreate()
 
         createNotificationChannel()
-        NewOrdersNotifications.initializer(context = this)
+        NewOrdersPollingSync.initializer(context = this)
     }
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
+            NewOrdersPollingWorker.CHANNEL_ID,
+            "New Orders Notifications",
             NotificationManager.IMPORTANCE_HIGH,
-        )
+        ).apply {
+            description = "Notifications for new orders"
+        }
+
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
     }

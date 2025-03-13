@@ -46,7 +46,7 @@ internal fun HomeRoute(
     val state = viewModel.container.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.container.sideEffect)
 
-    if (!state.value.authenticated) viewModel.handleEvent(event = HomeEvent.NavigateToLogin)
+//    if (!state.value.authenticated) viewModel.handleEvent(event = HomeEvent.NavigateToLogin)
 
     LaunchedEffect(effect) {
         effect.collect { sideEffect ->

@@ -1,7 +1,5 @@
 package com.bruno13palhano.data.di
 
-import com.bruno13palhano.data.datasource.remote.WebSocketClientInterface
-import com.bruno13palhano.data.datasource.remote.WebSocketManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +10,7 @@ import okhttp3.OkHttpClient
 
 @Module
 @InstallIn(SingletonComponent::class)
-object WebSocketModule {
+object OkHttpModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -21,11 +19,5 @@ object WebSocketModule {
             .readTimeout(65, TimeUnit.SECONDS)
             .writeTimeout(65, TimeUnit.SECONDS)
             .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideWebSocketManager(okHttpClient: OkHttpClient): WebSocketClientInterface {
-        return WebSocketManager(okHttpClient)
     }
 }
