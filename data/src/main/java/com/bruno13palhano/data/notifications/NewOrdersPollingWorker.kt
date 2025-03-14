@@ -14,6 +14,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.bruno13palhano.data.BuildConfig
+import com.bruno13palhano.data.R
 import com.bruno13palhano.data.model.shared.Order
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -26,6 +27,9 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+/**
+ * Worker to poll for new orders.
+ */
 @HiltWorker
 class NewOrdersPollingWorker @AssistedInject constructor(
     @Assisted private val context: Context,
@@ -51,13 +55,13 @@ class NewOrdersPollingWorker @AssistedInject constructor(
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build(),
             )
-            .setInitialDelay(1, TimeUnit.MINUTES)
+            .setInitialDelay(1, TimeUnit.MINUTES) // First execution in 1 minute
             .build()
     }
 
     override suspend fun doWork(): Result {
         val url = "${BuildConfig.ServerUrl}/api/orders/pending?lastId=$lastProcessedId"
-        val endTime = System.currentTimeMillis() + 14 * 60 * 1000 // Execute for fifteen minutes
+        val endTime = System.currentTimeMillis() + 14 * 60 * 1000 // Execute for 14 minutes
         var retryDelay = 1000L
 
         while (System.currentTimeMillis() < endTime && !isStopped) {
@@ -87,7 +91,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
             }
         }
 
-        scheduleNextWork()
+        scheduleNextWork() // Reschedule for 1 minute
         return Result.success()
     }
 
@@ -108,10 +112,17 @@ class NewOrdersPollingWorker @AssistedInject constructor(
         )
 
         ordersList.forEachIndexed { index, order ->
+            val orderTitle = context.getString(R.string.new_order_notification_title)
+            val orderText = context.getString(
+                R.string.new_order_notification_text,
+                order.productName,
+                order.unitPrice,
+            )
+
             val notification = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("New Order!")
-                .setContentText("${order.productName} - R$${order.unitPrice}")
+                .setContentTitle(orderTitle)
+                .setContentText(orderText)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
@@ -120,10 +131,16 @@ class NewOrdersPollingWorker @AssistedInject constructor(
             notificationManager.notify(order.id.toInt(), notification)
         }
 
+        val ordersTitle = context.getString(R.string.new_orders_notification_title)
+        val ordersText = context.getString(
+            R.string.new_orders_notification_text,
+            ordersList.size,
+        )
+
         val summaryNotification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle("New Orders!")
-            .setContentText("${ordersList.size} new orders")
+            .setContentTitle(ordersTitle)
+            .setContentText(ordersText)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

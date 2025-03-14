@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_order_notification_title">New order!</string>
+    <string name="new_order_notification_text">%s - R$%.2f</string>
+    <string name="new_orders_notification_title">New orders!</string>
+    <string name="new_orders_notification_text">%d new orders</string>
+</resources>
