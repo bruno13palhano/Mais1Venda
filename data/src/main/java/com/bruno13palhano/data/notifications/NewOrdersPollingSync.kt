@@ -4,7 +4,15 @@ import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 
+/**
+ * Polling for new orders in the background.
+ */
 object NewOrdersPollingSync {
+    /**
+     * Starts the polling service.
+     *
+     * @param context The application context.
+     */
     fun initializer(context: Context) {
         val workRequest = NewOrdersPollingWorker.startUpNewOrderNotificationWork()
 
