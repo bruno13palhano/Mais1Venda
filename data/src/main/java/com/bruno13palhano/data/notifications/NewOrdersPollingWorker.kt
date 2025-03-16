@@ -40,6 +40,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val okHttpClient: OkHttpClient,
     moshi: Moshi,
+    private val eventBus: EventBus,
 ) : CoroutineWorker(appContext = context, params = params) {
     private val ordersListAdapter = moshi.adapter<List<Order>>(
         Types.newParameterizedType(List::class.java, Order::class.java),
@@ -84,7 +85,10 @@ class NewOrdersPollingWorker @AssistedInject constructor(
                     if (orders.isNotEmpty()) {
                         ordersList.addAll(orders)
                         lastProcessedId = orders.maxOf { it.id }
-                        showGroupedNotifications()
+                        orders.forEach { order ->
+                            eventBus.publish(event = OrderEvent.OrderCreated(order = order))
+                            showGroupedNotifications()
+                        }
                         retryDelay = 1000L
                     }
                 }
@@ -109,7 +113,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
 
         ordersList.forEachIndexed { index, order ->
             val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
-                data = "${baseUri}/${order.id}".toUri()
+                data = "$baseUri/${order.id}".toUri()
                 setPackage(context.packageName)
             }
 
@@ -147,7 +151,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
         }
 
         val summaryIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = "${baseUri}/${ordersList[0].id}".toUri()
+            data = "$baseUri/${ordersList[0].id}".toUri()
             setPackage(context.packageName)
         }
         val summaryPendingIntent = PendingIntent.getActivity(
