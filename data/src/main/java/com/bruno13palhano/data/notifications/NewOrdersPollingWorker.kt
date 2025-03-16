@@ -31,6 +31,9 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+/**
+ * Worker to poll for new orders in the background.
+ */
 @HiltWorker
 class NewOrdersPollingWorker @AssistedInject constructor(
     @Assisted private val context: Context,
@@ -99,13 +102,14 @@ class NewOrdersPollingWorker @AssistedInject constructor(
     private fun showGroupedNotifications() {
         if (ordersList.isEmpty()) return
 
+        val baseUri = "mais1venda://orders/newOrder"
         val notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE,
         ) as NotificationManager
 
         ordersList.forEachIndexed { index, order ->
             val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
-                data = "mais1venda://orders/newOrder/${order.id}".toUri()
+                data = "${baseUri}/${order.id}".toUri()
                 setPackage(context.packageName)
             }
 
@@ -143,7 +147,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
         }
 
         val summaryIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = "mais1venda://orders/newOrder/${ordersList[0].id}".toUri()
+            data = "${baseUri}/${ordersList[0].id}".toUri()
             setPackage(context.packageName)
         }
         val summaryPendingIntent = PendingIntent.getActivity(
