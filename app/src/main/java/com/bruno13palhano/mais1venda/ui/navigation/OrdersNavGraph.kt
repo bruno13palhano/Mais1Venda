@@ -1,8 +1,10 @@
 package com.bruno13palhano.mais1venda.ui.navigation
 
+import android.content.Intent
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.CustomersRoute
@@ -51,7 +53,14 @@ internal fun NavGraphBuilder.ordersStatusNavGraph(
             CustomersRoute(navigateBack = { navController.navigateUp() })
         }
 
-        composable<OrdersStatusRoutes.NewOrder> {
+        composable<OrdersStatusRoutes.NewOrder>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "mais1venda://orders/newOrder/{id}"
+                    action = Intent.ACTION_VIEW
+                },
+            ),
+        ) {
             val id = it.toRoute<OrdersStatusRoutes.NewOrder>().id
 
             NewOrderRoute(
