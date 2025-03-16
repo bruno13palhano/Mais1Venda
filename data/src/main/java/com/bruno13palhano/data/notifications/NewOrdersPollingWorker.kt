@@ -1,10 +1,14 @@
 package com.bruno13palhano.data.notifications
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -27,9 +31,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-/**
- * Worker to poll for new orders.
- */
 @HiltWorker
 class NewOrdersPollingWorker @AssistedInject constructor(
     @Assisted private val context: Context,
@@ -55,13 +56,13 @@ class NewOrdersPollingWorker @AssistedInject constructor(
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build(),
             )
-            .setInitialDelay(1, TimeUnit.MINUTES) // First execution in 1 minute
+            .setInitialDelay(1, TimeUnit.MINUTES)
             .build()
     }
 
     override suspend fun doWork(): Result {
         val url = "${BuildConfig.ServerUrl}/api/orders/pending?lastId=$lastProcessedId"
-        val endTime = System.currentTimeMillis() + 14 * 60 * 1000 // Execute for 14 minutes
+        val endTime = System.currentTimeMillis() + 14 * 60 * 1000
         var retryDelay = 1000L
 
         while (System.currentTimeMillis() < endTime && !isStopped) {
@@ -91,7 +92,7 @@ class NewOrdersPollingWorker @AssistedInject constructor(
             }
         }
 
-        scheduleNextWork() // Reschedule for 1 minute
+        scheduleNextWork()
         return Result.success()
     }
 
@@ -101,17 +102,20 @@ class NewOrdersPollingWorker @AssistedInject constructor(
         val notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE,
         ) as NotificationManager
-        val intent = Intent("com.bruno13palhano.mais1venda.OPEN_MAIN_ACTIVITY").apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
 
         ordersList.forEachIndexed { index, order ->
+            val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
+                data = "mais1venda://orders/newOrder/${order.id}".toUri()
+                setPackage(context.packageName)
+            }
+
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                order.id.toInt(),
+                deepLinkIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
             val orderTitle = context.getString(R.string.new_order_notification_title)
             val orderText = context.getString(
                 R.string.new_order_notification_text,
@@ -128,14 +132,29 @@ class NewOrdersPollingWorker @AssistedInject constructor(
                 .setContentIntent(pendingIntent)
                 .setGroup(GROUP_KEY_ORDERS)
                 .build()
-            notificationManager.notify(order.id.toInt(), notification)
+
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    POST_NOTIFICATIONS,
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationManager.notify(order.id.toInt(), notification)
+            }
         }
 
-        val ordersTitle = context.getString(R.string.new_orders_notification_title)
-        val ordersText = context.getString(
-            R.string.new_orders_notification_text,
-            ordersList.size,
+        val summaryIntent = Intent(Intent.ACTION_VIEW).apply {
+            data = "mais1venda://orders/newOrder/${ordersList[0].id}".toUri()
+            setPackage(context.packageName)
+        }
+        val summaryPendingIntent = PendingIntent.getActivity(
+            context,
+            SUMMARY_ID,
+            summaryIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
+
+        val ordersTitle = context.getString(R.string.new_orders_notification_title)
+        val ordersText = context.getString(R.string.new_orders_notification_text, ordersList.size)
 
         val summaryNotification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -143,18 +162,24 @@ class NewOrdersPollingWorker @AssistedInject constructor(
             .setContentText(ordersText)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(summaryPendingIntent)
             .setGroup(GROUP_KEY_ORDERS)
             .setGroupSummary(true)
             .build()
-        notificationManager.notify(SUMMARY_ID, summaryNotification)
+
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                POST_NOTIFICATIONS,
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationManager.notify(SUMMARY_ID, summaryNotification)
+        }
 
         ordersList.clear()
     }
 
     private fun scheduleNextWork() {
         val nextWork = startUpNewOrderNotificationWork()
-
         WorkManager.getInstance(context).enqueueUniqueWork(
             WORK_NAME,
             ExistingWorkPolicy.KEEP,
