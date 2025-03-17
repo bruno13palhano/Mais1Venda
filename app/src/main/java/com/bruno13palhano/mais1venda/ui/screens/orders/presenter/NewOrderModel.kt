@@ -6,6 +6,7 @@ import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
 
 @Immutable
 internal data class NewOrderState(
+    val isLoading: Boolean = false,
     val order: Order? = null,
 )
 
