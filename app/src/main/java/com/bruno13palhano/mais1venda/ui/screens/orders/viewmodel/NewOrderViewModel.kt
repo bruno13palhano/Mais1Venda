@@ -8,11 +8,13 @@ import com.bruno13palhano.data.notifications.EventBus
 import com.bruno13palhano.data.notifications.OrderEvent
 import com.bruno13palhano.data.repository.OrderRepository
 import com.bruno13palhano.mais1venda.ui.screens.authentication.shared.CodeError
+import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.DialogMessageType
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrderEvent
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrderSideEffect
 import com.bruno13palhano.mais1venda.ui.screens.orders.presenter.NewOrderState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 
 @HiltViewModel
 internal class NewOrderViewModel @Inject constructor(
@@ -61,8 +63,12 @@ internal class NewOrderViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Success -> {
-                    postSideEffect(effect = NewOrderSideEffect.NavigateBack)
                     reduce { copy(isLoading = false) }
+                    postSideEffect(
+                        effect = NewOrderSideEffect.ShowDialog(messageType = DialogMessageType.OK),
+                    )
+                    delay(1000)
+                    postSideEffect(effect = NewOrderSideEffect.NavigateBack)
                 }
 
                 is Resource.ResponseError -> {
@@ -91,7 +97,10 @@ internal class NewOrderViewModel @Inject constructor(
     }
 
     private fun cancelOrder() = container.intent {
-        postSideEffect(effect = NewOrderSideEffect.ShowCancelDialog)
+        postSideEffect(
+            effect = NewOrderSideEffect.ShowDialog(messageType = DialogMessageType.CANCEL),
+        )
+        // TODO: Implement cancel order logic; for now, just navigate back
     }
 
     private fun confirmCancelOrder() = container.intent {

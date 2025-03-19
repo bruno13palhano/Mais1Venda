@@ -69,6 +69,7 @@ internal fun NewOrderRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val cancelOrderWarningMessage = stringResource(id = R.string.cancel_this_order)
+    val orderProcessedSuccessfully = stringResource(R.string.order_processed_successfully)
     val yesMessage = stringResource(id = R.string.yes)
 
     LaunchedEffect(Unit) { viewModel.handleEvent(event = NewOrderEvent.LoadOrder(id = id)) }
@@ -78,17 +79,28 @@ internal fun NewOrderRoute(
             when (effect) {
                 is NewOrderSideEffect.ShowError -> {}
 
-                NewOrderSideEffect.ShowCancelDialog -> {
+                is NewOrderSideEffect.ShowDialog -> {
                     scope.launch {
-                        val action = snackbarHostState.showSnackbar(
-                            message = cancelOrderWarningMessage,
-                            actionLabel = yesMessage,
-                            duration = SnackbarDuration.Indefinite,
-                            withDismissAction = true,
-                        )
+                        when (effect.messageType) {
+                            DialogMessageType.OK -> {
+                                snackbarHostState.showSnackbar(
+                                    message = orderProcessedSuccessfully,
+                                    withDismissAction = true,
+                                )
+                            }
 
-                        if (action == SnackbarResult.ActionPerformed) {
-                            viewModel.handleEvent(event = NewOrderEvent.ConfirmCancelOrder)
+                            DialogMessageType.CANCEL -> {
+                                val action = snackbarHostState.showSnackbar(
+                                    message = cancelOrderWarningMessage,
+                                    actionLabel = yesMessage,
+                                    duration = SnackbarDuration.Indefinite,
+                                    withDismissAction = true,
+                                )
+
+                                if (action == SnackbarResult.ActionPerformed) {
+                                    viewModel.handleEvent(event = NewOrderEvent.ConfirmCancelOrder)
+                                }
+                            }
                         }
                     }
                 }

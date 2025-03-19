@@ -24,6 +24,12 @@ internal sealed interface NewOrderEvent {
 internal sealed interface NewOrderSideEffect {
     data class ShowError(val codeError: CodeError) : NewOrderSideEffect
     data object DismissKeyboard : NewOrderSideEffect
-    data object ShowCancelDialog : NewOrderSideEffect
+    data class ShowDialog(val messageType: DialogMessageType) : NewOrderSideEffect
     data object NavigateBack : NewOrderSideEffect
+}
+
+@Immutable
+internal enum class DialogMessageType {
+    OK,
+    CANCEL,
 }

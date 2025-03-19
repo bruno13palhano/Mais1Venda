@@ -70,6 +70,7 @@
     <string name="confirm_order">Confirm Order</string>
     <string name="cancel_order">Cancel Order</string>
     <string name="cancel_this_order">Are you sure you want to cancel this order?</string>
+    <string name="order_processed_successfully">Order processed successfully</string>
     <string name="yes">Yes</string>
     <string name="price_tag">R$ %.2f</string>
     <string name="ads">Ads</string>
