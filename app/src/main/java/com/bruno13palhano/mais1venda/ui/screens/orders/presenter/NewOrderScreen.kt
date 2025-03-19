@@ -47,6 +47,7 @@ import com.bruno13palhano.data.model.shared.Address
 import com.bruno13palhano.data.model.shared.Order
 import com.bruno13palhano.data.model.shared.OrderStatus
 import com.bruno13palhano.mais1venda.R
+import com.bruno13palhano.mais1venda.ui.screens.components.CircularProgress
 import com.bruno13palhano.mais1venda.ui.screens.orders.viewmodel.NewOrderViewModel
 import com.bruno13palhano.mais1venda.ui.screens.shared.clickableWithoutRipple
 import com.bruno13palhano.mais1venda.ui.screens.shared.dateFormat
@@ -135,15 +136,23 @@ private fun NewOrderContent(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) {
-        NewOrderForm(
-            modifier = Modifier
-                .padding(it)
-                .consumeWindowInsets(it)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            state = state,
-            onEvent = onEvent,
-        )
+        if (state.isLoading) {
+            CircularProgress(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
+            )
+        } else {
+            NewOrderForm(
+                modifier = Modifier
+                    .padding(it)
+                    .consumeWindowInsets(it)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                state = state,
+                onEvent = onEvent,
+            )
+        }
     }
 }
 
@@ -276,6 +285,23 @@ private fun NewOrderPreview() {
             NewOrderContent(
                 snackbarHostState = SnackbarHostState(),
                 state = NewOrderState(order = order),
+                onEvent = {},
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun NewOrderLoadingPreview() {
+    Mais1VendaTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            NewOrderContent(
+                snackbarHostState = SnackbarHostState(),
+                state = NewOrderState(order = order, isLoading = true),
                 onEvent = {},
             )
         }
